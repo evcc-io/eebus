@@ -8,7 +8,6 @@ import (
 
 	"os"
 
-	"github.com/evcc-io/eebus"
 	"github.com/evcc-io/eebus/app"
 	certhelper "github.com/evcc-io/eebus/cert"
 	"github.com/evcc-io/eebus/communication"
@@ -59,7 +58,7 @@ func main() {
 	id := server.UniqueID{Prefix: details.BrandName}.String()
 	log := log.New(&util.LogWriter{os.Stdout, "2006/01/02 15:04:05 "}, "[server] ", 0)
 
-	srv := &eebus.Server{
+	srv := &server.Server{
 		Log:         log,
 		Addr:        ":4712",
 		Path:        "/ship/",

@@ -12,7 +12,6 @@ import (
 
 	"os"
 
-	"github.com/evcc-io/eebus"
 	"github.com/evcc-io/eebus/app"
 	certhelper "github.com/evcc-io/eebus/cert"
 	"github.com/evcc-io/eebus/communication"
@@ -99,7 +98,7 @@ func main() {
 
 	id := server.UniqueID{Prefix: details.BrandName}.String()
 
-	srv := &eebus.Server{
+	srv := &server.Server{
 		Log:         log.Default(),
 		Addr:        ":4712",
 		Path:        "/ship/",
