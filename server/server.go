@@ -1,4 +1,4 @@
-package eebus
+package server
 
 import (
 	"crypto/tls"
