@@ -1,0 +1,13 @@
+__debug_bin
+.vscode
+*.json
+*.log
+*.yaml
+linux-*.Dockerfile
+!modules/**
+dist
+*.py
+release
+out
+evcc.crt
+evcc.key
