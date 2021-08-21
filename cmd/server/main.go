@@ -56,7 +56,7 @@ func main() {
 	cert := certificate(details)
 
 	id := server.UniqueID{Prefix: details.BrandName}.String()
-	log := log.New(&util.LogWriter{os.Stdout, "2006/01/02 15:04:05 "}, "[server] ", 0)
+	log := log.New(&util.LogWriter{Writer: os.Stdout, TimeFormat: "2006/01/02 15:04:05 "}, "[server] ", 0)
 
 	srv := &server.Server{
 		Log:         log,
