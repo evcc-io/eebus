@@ -50,6 +50,9 @@ func NewFromDNSEntry(zc *zeroconf.ServiceEntry) (*Service, error) {
 	decoder, err := mapstructure.NewDecoder(decoderConfig)
 	if err == nil {
 		err = decoder.Decode(txtM)
+		if err != nil {
+			return &ss, err
+		}
 	}
 
 	baseURI, err := baseURIFromDNS(zc)

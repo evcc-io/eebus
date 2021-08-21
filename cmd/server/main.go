@@ -87,7 +87,12 @@ func main() {
 		},
 	}
 
-	go srv.Listen(ln, nil)
+	go func() {
+		err := srv.Listen(ln, nil)
+		if err != nil {
+			log.Println(err)
+		}
+	}()
 
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, os.Interrupt)

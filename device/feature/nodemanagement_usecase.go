@@ -135,9 +135,7 @@ func (f *NodeManagement) replyUseCaseData(ctrl spine.Context, data model.NodeMan
 		return errors.New("nodemanagement.replyUseCaseData: invalid UseCaseInformation")
 	}
 
-	f.updateSupportedUseCases(ctrl, remoteDevice, data)
-
-	return nil
+	return f.updateSupportedUseCases(ctrl, remoteDevice, data)
 }
 
 func (f *NodeManagement) handleUseCaseData(ctrl spine.Context, op model.CmdClassifierType, data *model.NodeManagementUseCaseDataType, isPartialForCmd bool) error {

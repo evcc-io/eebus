@@ -31,10 +31,8 @@ func (f *NodeManagement) handleSubscriptionData(ctrl spine.Context, op model.Cmd
 func (f *NodeManagement) handleSubscriptionRequestCall(ctrl spine.Context, op model.CmdClassifierType, data *model.NodeManagementSubscriptionRequestCallType, isPartialForCmd bool) error {
 	switch op {
 	case model.CmdClassifierTypeCall:
-		if err := ctrl.AddSubscription(*data.SubscriptionRequest); err != nil {
-			// subscription failed, send an resulterror reply?
-		}
-		return nil
+		return ctrl.AddSubscription(*data.SubscriptionRequest)
+		// in case of subscription failure, should we send an resulterror reply?
 
 	default:
 		return fmt.Errorf("nodemanagement.handleSubscriptionRequestCall: NodeManagementSubscriptionRequestCall CmdClassifierType not implemented: %s", op)
