@@ -234,6 +234,8 @@ func (c *ConnectionController) cmdDetails(cmd model.CmdType) string {
 		return "MeasurementDescriptionListData"
 	case cmd.MeasurementListData != nil:
 		return "MeasurementListData"
+	case cmd.TimeSeriesConstraintsData != nil:
+		return "TimeSeriesConstraintsListData"
 	case cmd.TimeSeriesDescriptionListData != nil:
 		return "TimeSeriesDescriptionListData"
 	case cmd.TimeSeriesListData != nil:

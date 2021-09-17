@@ -56,6 +56,22 @@ func (f *TimeSeries) GetTimeSeriesData() []TimeSeriesDatasetType {
 	return f.timeSeriesData
 }
 
+func (f *TimeSeries) replyConstraintsData(ctrl spine.Context, data model.TimeSeriesConstraintsDataType, isPartialCmd bool) error {
+	// example data:
+	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.1.1"},{"addressSource":[{"device":"d:_i:19667_PorscheEVSE-00016544"},{"entity":[1,1]},{"feature":7}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":9}]},{"msgCounter":1226},{"cmdClassifier":"notify"}]},{"payload":[
+	// {"cmd":[[
+	//   {"timeSeriesConstraintsListData":[
+	// 	   {"timeSeriesConstraintsData":[
+	// 		   [{"timeSeriesId":1},{"slotCountMax":29}]
+	// 	   ]}
+	//   ]}
+	// ]]}]}]}}]}
+
+	// TODO: implement processing
+
+	return nil
+}
+
 func (f *TimeSeries) requestDescriptionListData(ctrl spine.Context, rf spine.Feature) (*model.MsgCounterType, error) {
 	res := []model.CmdType{{
 		TimeSeriesDescriptionListData: &model.TimeSeriesDescriptionListDataType{},
@@ -259,6 +275,16 @@ func (f *TimeSeries) HandleRequest(ctrl spine.Context, fct model.FunctionEnumTyp
 
 func (f *TimeSeries) Handle(ctrl spine.Context, rf model.FeatureAddressType, op model.CmdClassifierType, cmd model.CmdType, isPartialForCmd bool) error {
 	switch {
+	case cmd.TimeSeriesConstraintsData != nil:
+		data := cmd.TimeSeriesConstraintsData
+		switch op {
+		case model.CmdClassifierTypeReply:
+			return f.replyConstraintsData(ctrl, *data, isPartialForCmd)
+		case model.CmdClassifierTypeNotify:
+			return f.replyConstraintsData(ctrl, *data, isPartialForCmd)
+		default:
+			return fmt.Errorf("timeseries.handle: TimeSeriesConstraintsData CmdClassifierType not implemented: %s", op)
+		}
 	case cmd.TimeSeriesDescriptionListData != nil:
 		data := cmd.TimeSeriesDescriptionListData
 		switch op {

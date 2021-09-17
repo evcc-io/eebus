@@ -125,6 +125,7 @@ type CmdType struct {
 	MeasurementDescriptionListData                   *MeasurementDescriptionListDataType                   `json:"measurementDescriptionListData,omitempty"`
 	MeasurementListData                              *MeasurementListDataType                              `json:"measurementListData,omitempty"`
 	ResultData                                       *ResultDataType                                       `json:"resultData,omitempty"`
+	TimeSeriesConstraintsData                        *TimeSeriesConstraintsDataType                        `json:"timeSeriesConstraintsData,omitempty"`
 	TimeSeriesDescriptionListData                    *TimeSeriesDescriptionListDataType                    `json:"timeSeriesDescriptionListData,omitempty"`
 	TimeSeriesListData                               *TimeSeriesListDataType                               `json:"timeSeriesListData,omitempty"`
 
