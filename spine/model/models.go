@@ -28,27 +28,6 @@ func (m *ActuatorLevelData) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// CmiActuatorLevelDataElements message container
-type CmiActuatorLevelDataElements struct {
-	ActuatorLevelDataElements ActuatorLevelDataElements `json:"actuatorLevelDataElements"`
-}
-
-// ActuatorLevelDataElements element
-type ActuatorLevelDataElements struct {
-	Function *ElementTagType           `json:"function,omitempty"`
-	Value    *ScaledNumberElementsType `json:"value,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m ActuatorLevelDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *ActuatorLevelDataElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiActuatorLevelDescriptionData message container
 type CmiActuatorLevelDescriptionData struct {
 	ActuatorLevelDescriptionData ActuatorLevelDescriptionData `json:"actuatorLevelDescriptionData"`
@@ -200,34 +179,6 @@ func (m AlarmData) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *AlarmData) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiAlarmDataElements message container
-type CmiAlarmDataElements struct {
-	AlarmDataElements AlarmDataElements `json:"alarmDataElements"`
-}
-
-// AlarmDataElements element
-type AlarmDataElements struct {
-	AlarmId          *ElementTagType           `json:"alarmId,omitempty"`
-	ThresholdId      *ElementTagType           `json:"thresholdId,omitempty"`
-	Timestamp        *ElementTagType           `json:"timestamp,omitempty"`
-	AlarmType        *ElementTagType           `json:"alarmType,omitempty"`
-	MeasuredValue    *ScaledNumberElementsType `json:"measuredValue,omitempty"`
-	EvaluationPeriod *TimePeriodElementsType   `json:"evaluationPeriod,omitempty"`
-	ScopeType        *ElementTagType           `json:"scopeType,omitempty"`
-	Label            *ElementTagType           `json:"label,omitempty"`
-	Description      *ElementTagType           `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m AlarmDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *AlarmDataElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -555,30 +506,6 @@ func (m *BindingManagementEntryData) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// CmiBindingManagementEntryDataElements message container
-type CmiBindingManagementEntryDataElements struct {
-	BindingManagementEntryDataElements BindingManagementEntryDataElements `json:"bindingManagementEntryDataElements"`
-}
-
-// BindingManagementEntryDataElements element
-type BindingManagementEntryDataElements struct {
-	BindingId     *ElementTagType             `json:"bindingId,omitempty"`
-	ClientAddress *FeatureAddressElementsType `json:"clientAddress,omitempty"`
-	ServerAddress *FeatureAddressElementsType `json:"serverAddress,omitempty"`
-	Label         *ElementTagType             `json:"label,omitempty"`
-	Description   *ElementTagType             `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m BindingManagementEntryDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *BindingManagementEntryDataElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiBindingManagementEntryListData message container
 type CmiBindingManagementEntryListData struct {
 	BindingManagementEntryListData BindingManagementEntryListData `json:"bindingManagementEntryListData"`
@@ -643,28 +570,6 @@ func (m *BindingManagementRequestCall) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// CmiBindingManagementRequestCallElements message container
-type CmiBindingManagementRequestCallElements struct {
-	BindingManagementRequestCallElements BindingManagementRequestCallElements `json:"bindingManagementRequestCallElements"`
-}
-
-// BindingManagementRequestCallElements element
-type BindingManagementRequestCallElements struct {
-	ClientAddress     *FeatureAddressElementsType `json:"clientAddress,omitempty"`
-	ServerAddress     *FeatureAddressElementsType `json:"serverAddress,omitempty"`
-	ServerFeatureType *ElementTagType             `json:"serverFeatureType,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m BindingManagementRequestCallElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *BindingManagementRequestCallElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiBindingManagementDeleteCall message container
 type CmiBindingManagementDeleteCall struct {
 	BindingManagementDeleteCall BindingManagementDeleteCall `json:"bindingManagementDeleteCall"`
@@ -684,28 +589,6 @@ func (m BindingManagementDeleteCall) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *BindingManagementDeleteCall) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiBindingManagementDeleteCallElements message container
-type CmiBindingManagementDeleteCallElements struct {
-	BindingManagementDeleteCallElements BindingManagementDeleteCallElements `json:"bindingManagementDeleteCallElements"`
-}
-
-// BindingManagementDeleteCallElements element
-type BindingManagementDeleteCallElements struct {
-	BindingId     *ElementTagType             `json:"bindingId,omitempty"`
-	ClientAddress *FeatureAddressElementsType `json:"clientAddress,omitempty"`
-	ServerAddress *FeatureAddressElementsType `json:"serverAddress,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m BindingManagementDeleteCallElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *BindingManagementDeleteCallElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -807,27 +690,6 @@ func (m DataTunnelingCall) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *DataTunnelingCall) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiDataTunnelingCallElements message container
-type CmiDataTunnelingCallElements struct {
-	DataTunnelingCallElements DataTunnelingCallElements `json:"dataTunnelingCallElements"`
-}
-
-// DataTunnelingCallElements element
-type DataTunnelingCallElements struct {
-	Header  *DataTunnelingHeaderElementsType `json:"header,omitempty"`
-	Payload *ElementTagType                  `json:"payload,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m DataTunnelingCallElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *DataTunnelingCallElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -987,28 +849,6 @@ func (m *DeviceConfigurationKeyValueData) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// CmiDeviceConfigurationKeyValueDataElements message container
-type CmiDeviceConfigurationKeyValueDataElements struct {
-	DeviceConfigurationKeyValueDataElements DeviceConfigurationKeyValueDataElements `json:"deviceConfigurationKeyValueDataElements"`
-}
-
-// DeviceConfigurationKeyValueDataElements element
-type DeviceConfigurationKeyValueDataElements struct {
-	KeyId             *ElementTagType                               `json:"keyId,omitempty"`
-	Value             *DeviceConfigurationKeyValueValueElementsType `json:"value,omitempty"`
-	IsValueChangeable *ElementTagType                               `json:"isValueChangeable,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m DeviceConfigurationKeyValueDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *DeviceConfigurationKeyValueDataElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiDeviceConfigurationKeyValueListData message container
 type CmiDeviceConfigurationKeyValueListData struct {
 	DeviceConfigurationKeyValueListData DeviceConfigurationKeyValueListData `json:"deviceConfigurationKeyValueListData"`
@@ -1163,29 +1003,6 @@ func (m *DeviceConfigurationKeyValueConstraintsData) UnmarshalJSON(data []byte) 
 	return util.Unmarshal(data, &m)
 }
 
-// CmiDeviceConfigurationKeyValueConstraintsDataElements message container
-type CmiDeviceConfigurationKeyValueConstraintsDataElements struct {
-	DeviceConfigurationKeyValueConstraintsDataElements DeviceConfigurationKeyValueConstraintsDataElements `json:"deviceConfigurationKeyValueConstraintsDataElements"`
-}
-
-// DeviceConfigurationKeyValueConstraintsDataElements element
-type DeviceConfigurationKeyValueConstraintsDataElements struct {
-	KeyId         *ElementTagType                               `json:"keyId,omitempty"`
-	ValueRangeMin *DeviceConfigurationKeyValueValueElementsType `json:"valueRangeMin,omitempty"`
-	ValueRangeMax *DeviceConfigurationKeyValueValueElementsType `json:"valueRangeMax,omitempty"`
-	ValueStepSize *DeviceConfigurationKeyValueValueElementsType `json:"valueStepSize,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m DeviceConfigurationKeyValueConstraintsDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *DeviceConfigurationKeyValueConstraintsDataElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiDeviceConfigurationKeyValueConstraintsListData message container
 type CmiDeviceConfigurationKeyValueConstraintsListData struct {
 	DeviceConfigurationKeyValueConstraintsListData DeviceConfigurationKeyValueConstraintsListData `json:"deviceConfigurationKeyValueConstraintsListData"`
@@ -1252,35 +1069,6 @@ func (m DirectControlActivityData) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *DirectControlActivityData) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiDirectControlActivityDataElements message container
-type CmiDirectControlActivityDataElements struct {
-	DirectControlActivityDataElements DirectControlActivityDataElements `json:"directControlActivityDataElements"`
-}
-
-// DirectControlActivityDataElements element
-type DirectControlActivityDataElements struct {
-	Timestamp                 *ElementTagType           `json:"timestamp,omitempty"`
-	ActivityState             *ElementTagType           `json:"activityState,omitempty"`
-	IsActivityStateChangeable *ElementTagType           `json:"isActivityStateChangeable,omitempty"`
-	EnergyMode                *ElementTagType           `json:"energyMode,omitempty"`
-	IsEnergyModeChangeable    *ElementTagType           `json:"isEnergyModeChangeable,omitempty"`
-	Power                     *ScaledNumberElementsType `json:"power,omitempty"`
-	IsPowerChangeable         *ElementTagType           `json:"isPowerChangeable,omitempty"`
-	Energy                    *ScaledNumberElementsType `json:"energy,omitempty"`
-	IsEnergyChangeable        *ElementTagType           `json:"isEnergyChangeable,omitempty"`
-	SequenceId                *ElementTagType           `json:"sequenceId,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m DirectControlActivityDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *DirectControlActivityDataElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -1492,28 +1280,6 @@ func (m ElectricalConnectionPermittedValueSetData) MarshalJSON() ([]byte, error)
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *ElectricalConnectionPermittedValueSetData) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiElectricalConnectionPermittedValueSetDataElements message container
-type CmiElectricalConnectionPermittedValueSetDataElements struct {
-	ElectricalConnectionPermittedValueSetDataElements ElectricalConnectionPermittedValueSetDataElements `json:"electricalConnectionPermittedValueSetDataElements"`
-}
-
-// ElectricalConnectionPermittedValueSetDataElements element
-type ElectricalConnectionPermittedValueSetDataElements struct {
-	ElectricalConnectionId *ElementTagType              `json:"electricalConnectionId,omitempty"`
-	ParameterId            *ElementTagType              `json:"parameterId,omitempty"`
-	PermittedValueSet      *ScaledNumberSetElementsType `json:"permittedValueSet,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m ElectricalConnectionPermittedValueSetDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *ElectricalConnectionPermittedValueSetDataElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -2537,26 +2303,6 @@ func (m *IncentiveTableData) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// CmiIncentiveTableDataElements message container
-type CmiIncentiveTableDataElements struct {
-	IncentiveTableDataElements IncentiveTableDataElements `json:"incentiveTableDataElements"`
-}
-
-// IncentiveTableDataElements element
-type IncentiveTableDataElements struct {
-	IncentiveTable *IncentiveTableElementsType `json:"incentiveTable,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m IncentiveTableDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *IncentiveTableDataElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiIncentiveTableDataSelectors message container
 type CmiIncentiveTableDataSelectors struct {
 	IncentiveTableDataSelectors IncentiveTableDataSelectors `json:"incentiveTableDataSelectors"`
@@ -2597,26 +2343,6 @@ func (m *IncentiveTableDescriptionData) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// CmiIncentiveTableDescriptionDataElements message container
-type CmiIncentiveTableDescriptionDataElements struct {
-	IncentiveTableDescriptionDataElements IncentiveTableDescriptionDataElements `json:"incentiveTableDescriptionDataElements"`
-}
-
-// IncentiveTableDescriptionDataElements element
-type IncentiveTableDescriptionDataElements struct {
-	IncentiveTableDescription *IncentiveTableDescriptionElementsType `json:"incentiveTableDescription,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m IncentiveTableDescriptionDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *IncentiveTableDescriptionDataElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiIncentiveTableDescriptionDataSelectors message container
 type CmiIncentiveTableDescriptionDataSelectors struct {
 	IncentiveTableDescriptionDataSelectors IncentiveTableDescriptionDataSelectors `json:"incentiveTableDescriptionDataSelectors"`
@@ -2654,26 +2380,6 @@ func (m IncentiveTableConstraintsData) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *IncentiveTableConstraintsData) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiIncentiveTableConstraintsDataElements message container
-type CmiIncentiveTableConstraintsDataElements struct {
-	IncentiveTableConstraintsDataElements IncentiveTableConstraintsDataElements `json:"incentiveTableConstraintsDataElements"`
-}
-
-// IncentiveTableConstraintsDataElements element
-type IncentiveTableConstraintsDataElements struct {
-	IncentiveTableConstraints *IncentiveTableConstraintsElementsType `json:"incentiveTableConstraints,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m IncentiveTableConstraintsDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *IncentiveTableConstraintsDataElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -2758,30 +2464,6 @@ func (m LoadControlEventData) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *LoadControlEventData) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiLoadControlEventDataElements message container
-type CmiLoadControlEventDataElements struct {
-	LoadControlEventDataElements LoadControlEventDataElements `json:"loadControlEventDataElements"`
-}
-
-// LoadControlEventDataElements element
-type LoadControlEventDataElements struct {
-	Timestamp          *ElementTagType         `json:"timestamp,omitempty"`
-	EventId            *ElementTagType         `json:"eventId,omitempty"`
-	EventActionConsume *ElementTagType         `json:"eventActionConsume,omitempty"`
-	EventActionProduce *ElementTagType         `json:"eventActionProduce,omitempty"`
-	TimePeriod         *TimePeriodElementsType `json:"timePeriod,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m LoadControlEventDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *LoadControlEventDataElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -2941,30 +2623,6 @@ func (m *LoadControlLimitData) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// CmiLoadControlLimitDataElements message container
-type CmiLoadControlLimitDataElements struct {
-	LoadControlLimitDataElements LoadControlLimitDataElements `json:"loadControlLimitDataElements"`
-}
-
-// LoadControlLimitDataElements element
-type LoadControlLimitDataElements struct {
-	LimitId           *ElementTagType           `json:"limitId,omitempty"`
-	IsLimitChangeable *ElementTagType           `json:"isLimitChangeable,omitempty"`
-	IsLimitActive     *ElementTagType           `json:"isLimitActive,omitempty"`
-	TimePeriod        *TimePeriodElementsType   `json:"timePeriod,omitempty"`
-	Value             *ScaledNumberElementsType `json:"value,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m LoadControlLimitDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *LoadControlLimitDataElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiLoadControlLimitListData message container
 type CmiLoadControlLimitListData struct {
 	LoadControlLimitListData LoadControlLimitListData `json:"loadControlLimitListData"`
@@ -3025,29 +2683,6 @@ func (m LoadControlLimitConstraintsData) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *LoadControlLimitConstraintsData) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiLoadControlLimitConstraintsDataElements message container
-type CmiLoadControlLimitConstraintsDataElements struct {
-	LoadControlLimitConstraintsDataElements LoadControlLimitConstraintsDataElements `json:"loadControlLimitConstraintsDataElements"`
-}
-
-// LoadControlLimitConstraintsDataElements element
-type LoadControlLimitConstraintsDataElements struct {
-	LimitId       *ElementTagType           `json:"limitId,omitempty"`
-	ValueRangeMin *ScaledNumberElementsType `json:"valueRangeMin,omitempty"`
-	ValueRangeMax *ScaledNumberElementsType `json:"valueRangeMax,omitempty"`
-	ValueStepSize *ScaledNumberElementsType `json:"valueStepSize,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m LoadControlLimitConstraintsDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *LoadControlLimitConstraintsDataElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -3218,33 +2853,6 @@ func (m *MeasurementData) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// CmiMeasurementDataElements message container
-type CmiMeasurementDataElements struct {
-	MeasurementDataElements MeasurementDataElements `json:"measurementDataElements"`
-}
-
-// MeasurementDataElements element
-type MeasurementDataElements struct {
-	MeasurementId    *ElementTagType           `json:"measurementId,omitempty"`
-	ValueType        *ElementTagType           `json:"valueType,omitempty"`
-	Timestamp        *ElementTagType           `json:"timestamp,omitempty"`
-	Value            *ScaledNumberElementsType `json:"value,omitempty"`
-	EvaluationPeriod *TimePeriodElementsType   `json:"evaluationPeriod,omitempty"`
-	ValueSource      *ElementTagType           `json:"valueSource,omitempty"`
-	ValueTendency    *ElementTagType           `json:"valueTendency,omitempty"`
-	ValueState       *ElementTagType           `json:"valueState,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m MeasurementDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *MeasurementDataElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiMeasurementListData message container
 type CmiMeasurementListData struct {
 	MeasurementListData MeasurementListData `json:"measurementListData"`
@@ -3307,29 +2915,6 @@ func (m MeasurementConstraintsData) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *MeasurementConstraintsData) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiMeasurementConstraintsDataElements message container
-type CmiMeasurementConstraintsDataElements struct {
-	MeasurementConstraintsDataElements MeasurementConstraintsDataElements `json:"measurementConstraintsDataElements"`
-}
-
-// MeasurementConstraintsDataElements element
-type MeasurementConstraintsDataElements struct {
-	MeasurementId *ElementTagType           `json:"measurementId,omitempty"`
-	ValueRangeMin *ScaledNumberElementsType `json:"valueRangeMin,omitempty"`
-	ValueRangeMax *ScaledNumberElementsType `json:"valueRangeMax,omitempty"`
-	ValueStepSize *ScaledNumberElementsType `json:"valueStepSize,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m MeasurementConstraintsDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *MeasurementConstraintsDataElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -3397,33 +2982,6 @@ func (m MeasurementDescriptionData) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *MeasurementDescriptionData) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiMeasurementDescriptionDataElements message container
-type CmiMeasurementDescriptionDataElements struct {
-	MeasurementDescriptionDataElements MeasurementDescriptionDataElements `json:"measurementDescriptionDataElements"`
-}
-
-// MeasurementDescriptionDataElements element
-type MeasurementDescriptionDataElements struct {
-	MeasurementId    *ElementTagType           `json:"measurementId,omitempty"`
-	MeasurementType  *ElementTagType           `json:"measurementType,omitempty"`
-	CommodityType    *ElementTagType           `json:"commodityType,omitempty"`
-	Unit             *ElementTagType           `json:"unit,omitempty"`
-	CalibrationValue *ScaledNumberElementsType `json:"calibrationValue,omitempty"`
-	ScopeType        *ElementTagType           `json:"scopeType,omitempty"`
-	Label            *ElementTagType           `json:"label,omitempty"`
-	Description      *ElementTagType           `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m MeasurementDescriptionDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *MeasurementDescriptionDataElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -3664,30 +3222,6 @@ func (m *NetworkManagementAddNodeCall) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// CmiNetworkManagementAddNodeCallElements message container
-type CmiNetworkManagementAddNodeCallElements struct {
-	NetworkManagementAddNodeCallElements NetworkManagementAddNodeCallElements `json:"networkManagementAddNodeCallElements"`
-}
-
-// NetworkManagementAddNodeCallElements element
-type NetworkManagementAddNodeCallElements struct {
-	NodeAddress *FeatureAddressElementsType `json:"nodeAddress,omitempty"`
-	NativeSetup *ElementTagType             `json:"nativeSetup,omitempty"`
-	Timeout     *ElementTagType             `json:"timeout,omitempty"`
-	Label       *ElementTagType             `json:"label,omitempty"`
-	Description *ElementTagType             `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NetworkManagementAddNodeCallElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NetworkManagementAddNodeCallElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiNetworkManagementRemoveNodeCall message container
 type CmiNetworkManagementRemoveNodeCall struct {
 	NetworkManagementRemoveNodeCall NetworkManagementRemoveNodeCall `json:"networkManagementRemoveNodeCall"`
@@ -3706,27 +3240,6 @@ func (m NetworkManagementRemoveNodeCall) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *NetworkManagementRemoveNodeCall) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiNetworkManagementRemoveNodeCallElements message container
-type CmiNetworkManagementRemoveNodeCallElements struct {
-	NetworkManagementRemoveNodeCallElements NetworkManagementRemoveNodeCallElements `json:"networkManagementRemoveNodeCallElements"`
-}
-
-// NetworkManagementRemoveNodeCallElements element
-type NetworkManagementRemoveNodeCallElements struct {
-	NodeAddress *FeatureAddressElementsType `json:"nodeAddress,omitempty"`
-	Timeout     *ElementTagType             `json:"timeout,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NetworkManagementRemoveNodeCallElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NetworkManagementRemoveNodeCallElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -3751,30 +3264,6 @@ func (m NetworkManagementModifyNodeCall) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *NetworkManagementModifyNodeCall) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiNetworkManagementModifyNodeCallElements message container
-type CmiNetworkManagementModifyNodeCallElements struct {
-	NetworkManagementModifyNodeCallElements NetworkManagementModifyNodeCallElements `json:"networkManagementModifyNodeCallElements"`
-}
-
-// NetworkManagementModifyNodeCallElements element
-type NetworkManagementModifyNodeCallElements struct {
-	NodeAddress *FeatureAddressElementsType `json:"nodeAddress,omitempty"`
-	NativeSetup *ElementTagType             `json:"nativeSetup,omitempty"`
-	Timeout     *ElementTagType             `json:"timeout,omitempty"`
-	Label       *ElementTagType             `json:"label,omitempty"`
-	Description *ElementTagType             `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NetworkManagementModifyNodeCallElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NetworkManagementModifyNodeCallElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -3837,26 +3326,6 @@ func (m NetworkManagementDiscoverCall) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *NetworkManagementDiscoverCall) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiNetworkManagementDiscoverCallElements message container
-type CmiNetworkManagementDiscoverCallElements struct {
-	NetworkManagementDiscoverCallElements NetworkManagementDiscoverCallElements `json:"networkManagementDiscoverCallElements"`
-}
-
-// NetworkManagementDiscoverCallElements element
-type NetworkManagementDiscoverCallElements struct {
-	DiscoverAddress *FeatureAddressElementsType `json:"discoverAddress,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NetworkManagementDiscoverCallElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NetworkManagementDiscoverCallElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -4056,36 +3525,6 @@ func (m *NetworkManagementDeviceDescriptionData) UnmarshalJSON(data []byte) erro
 	return util.Unmarshal(data, &m)
 }
 
-// CmiNetworkManagementDeviceDescriptionDataElements message container
-type CmiNetworkManagementDeviceDescriptionDataElements struct {
-	NetworkManagementDeviceDescriptionDataElements NetworkManagementDeviceDescriptionDataElements `json:"networkManagementDeviceDescriptionDataElements"`
-}
-
-// NetworkManagementDeviceDescriptionDataElements element
-type NetworkManagementDeviceDescriptionDataElements struct {
-	DeviceAddress                       *DeviceAddressElementsType `json:"deviceAddress,omitempty"`
-	DeviceType                          *ElementTagType            `json:"deviceType,omitempty"`
-	NetworkManagementResponsibleAddress *ElementTagType            `json:"networkManagementResponsibleAddress,omitempty"`
-	NativeSetup                         *ElementTagType            `json:"nativeSetup,omitempty"`
-	TechnologyAddress                   *ElementTagType            `json:"technologyAddress,omitempty"`
-	CommunicationsTechnologyInformation *ElementTagType            `json:"communicationsTechnologyInformation,omitempty"`
-	NetworkFeatureSet                   *ElementTagType            `json:"networkFeatureSet,omitempty"`
-	LastStateChange                     *ElementTagType            `json:"lastStateChange,omitempty"`
-	MinimumTrustLevel                   *ElementTagType            `json:"minimumTrustLevel,omitempty"`
-	Label                               *ElementTagType            `json:"label,omitempty"`
-	Description                         *ElementTagType            `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NetworkManagementDeviceDescriptionDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NetworkManagementDeviceDescriptionDataElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiNetworkManagementDeviceDescriptionListData message container
 type CmiNetworkManagementDeviceDescriptionListData struct {
 	NetworkManagementDeviceDescriptionListData NetworkManagementDeviceDescriptionListData `json:"networkManagementDeviceDescriptionListData"`
@@ -4149,31 +3588,6 @@ func (m NetworkManagementEntityDescriptionData) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *NetworkManagementEntityDescriptionData) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiNetworkManagementEntityDescriptionDataElements message container
-type CmiNetworkManagementEntityDescriptionDataElements struct {
-	NetworkManagementEntityDescriptionDataElements NetworkManagementEntityDescriptionDataElements `json:"networkManagementEntityDescriptionDataElements"`
-}
-
-// NetworkManagementEntityDescriptionDataElements element
-type NetworkManagementEntityDescriptionDataElements struct {
-	EntityAddress     *EntityAddressElementsType `json:"entityAddress,omitempty"`
-	EntityType        *ElementTagType            `json:"entityType,omitempty"`
-	LastStateChange   *ElementTagType            `json:"lastStateChange,omitempty"`
-	MinimumTrustLevel *ElementTagType            `json:"minimumTrustLevel,omitempty"`
-	Label             *ElementTagType            `json:"label,omitempty"`
-	Description       *ElementTagType            `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NetworkManagementEntityDescriptionDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NetworkManagementEntityDescriptionDataElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -4245,36 +3659,6 @@ func (m NetworkManagementFeatureDescriptionData) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *NetworkManagementFeatureDescriptionData) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiNetworkManagementFeatureDescriptionDataElements message container
-type CmiNetworkManagementFeatureDescriptionDataElements struct {
-	NetworkManagementFeatureDescriptionDataElements NetworkManagementFeatureDescriptionDataElements `json:"networkManagementFeatureDescriptionDataElements"`
-}
-
-// NetworkManagementFeatureDescriptionDataElements element
-type NetworkManagementFeatureDescriptionDataElements struct {
-	FeatureAddress    *FeatureAddressElementsType   `json:"featureAddress,omitempty"`
-	FeatureType       *ElementTagType               `json:"featureType,omitempty"`
-	SpecificUsage     *ElementTagType               `json:"specificUsage,omitempty"`
-	FeatureGroup      *ElementTagType               `json:"featureGroup,omitempty"`
-	Role              *ElementTagType               `json:"role,omitempty"`
-	SupportedFunction *FunctionPropertyElementsType `json:"supportedFunction,omitempty"`
-	LastStateChange   *ElementTagType               `json:"lastStateChange,omitempty"`
-	MinimumTrustLevel *ElementTagType               `json:"minimumTrustLevel,omitempty"`
-	Label             *ElementTagType               `json:"label,omitempty"`
-	Description       *ElementTagType               `json:"description,omitempty"`
-	MaxResponseDelay  *ElementTagType               `json:"maxResponseDelay,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NetworkManagementFeatureDescriptionDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NetworkManagementFeatureDescriptionDataElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -4611,30 +3995,6 @@ func (m *OperatingConstraintsPowerRangeData) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// CmiOperatingConstraintsPowerRangeDataElements message container
-type CmiOperatingConstraintsPowerRangeDataElements struct {
-	OperatingConstraintsPowerRangeDataElements OperatingConstraintsPowerRangeDataElements `json:"operatingConstraintsPowerRangeDataElements"`
-}
-
-// OperatingConstraintsPowerRangeDataElements element
-type OperatingConstraintsPowerRangeDataElements struct {
-	SequenceId *ElementTagType           `json:"sequenceId,omitempty"`
-	PowerMin   *ScaledNumberElementsType `json:"powerMin,omitempty"`
-	PowerMax   *ScaledNumberElementsType `json:"powerMax,omitempty"`
-	EnergyMin  *ScaledNumberElementsType `json:"energyMin,omitempty"`
-	EnergyMax  *ScaledNumberElementsType `json:"energyMax,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m OperatingConstraintsPowerRangeDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *OperatingConstraintsPowerRangeDataElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiOperatingConstraintsPowerRangeListData message container
 type CmiOperatingConstraintsPowerRangeListData struct {
 	OperatingConstraintsPowerRangeListData OperatingConstraintsPowerRangeListData `json:"operatingConstraintsPowerRangeListData"`
@@ -4693,27 +4053,6 @@ func (m OperatingConstraintsPowerLevelData) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *OperatingConstraintsPowerLevelData) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiOperatingConstraintsPowerLevelDataElements message container
-type CmiOperatingConstraintsPowerLevelDataElements struct {
-	OperatingConstraintsPowerLevelDataElements OperatingConstraintsPowerLevelDataElements `json:"operatingConstraintsPowerLevelDataElements"`
-}
-
-// OperatingConstraintsPowerLevelDataElements element
-type OperatingConstraintsPowerLevelDataElements struct {
-	SequenceId *ElementTagType           `json:"sequenceId,omitempty"`
-	Power      *ScaledNumberElementsType `json:"power,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m OperatingConstraintsPowerLevelDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *OperatingConstraintsPowerLevelDataElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -4778,30 +4117,6 @@ func (m OperatingConstraintsResumeImplicationData) MarshalJSON() ([]byte, error)
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *OperatingConstraintsResumeImplicationData) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiOperatingConstraintsResumeImplicationDataElements message container
-type CmiOperatingConstraintsResumeImplicationDataElements struct {
-	OperatingConstraintsResumeImplicationDataElements OperatingConstraintsResumeImplicationDataElements `json:"operatingConstraintsResumeImplicationDataElements"`
-}
-
-// OperatingConstraintsResumeImplicationDataElements element
-type OperatingConstraintsResumeImplicationDataElements struct {
-	SequenceId            *ElementTagType           `json:"sequenceId,omitempty"`
-	ResumeEnergyEstimated *ScaledNumberElementsType `json:"resumeEnergyEstimated,omitempty"`
-	EnergyUnit            *ElementTagType           `json:"energyUnit,omitempty"`
-	ResumeCostEstimated   *ScaledNumberElementsType `json:"resumeCostEstimated,omitempty"`
-	Currency              *ElementTagType           `json:"currency,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m OperatingConstraintsResumeImplicationDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *OperatingConstraintsResumeImplicationDataElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -4871,32 +4186,6 @@ func (m *PowerTimeSlotScheduleData) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// CmiPowerTimeSlotScheduleDataElements message container
-type CmiPowerTimeSlotScheduleDataElements struct {
-	PowerTimeSlotScheduleDataElements PowerTimeSlotScheduleDataElements `json:"powerTimeSlotScheduleDataElements"`
-}
-
-// PowerTimeSlotScheduleDataElements element
-type PowerTimeSlotScheduleDataElements struct {
-	SequenceId          *ElementTagType         `json:"sequenceId,omitempty"`
-	SlotNumber          *ElementTagType         `json:"slotNumber,omitempty"`
-	TimePeriod          *TimePeriodElementsType `json:"timePeriod,omitempty"`
-	DefaultDuration     *ElementTagType         `json:"defaultDuration,omitempty"`
-	DurationUncertainty *ElementTagType         `json:"durationUncertainty,omitempty"`
-	SlotActivated       *ElementTagType         `json:"slotActivated,omitempty"`
-	Description         *ElementTagType         `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m PowerTimeSlotScheduleDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *PowerTimeSlotScheduleDataElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiPowerTimeSlotScheduleListData message container
 type CmiPowerTimeSlotScheduleListData struct {
 	PowerTimeSlotScheduleListData PowerTimeSlotScheduleListData `json:"powerTimeSlotScheduleListData"`
@@ -4958,29 +4247,6 @@ func (m PowerTimeSlotValueData) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *PowerTimeSlotValueData) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiPowerTimeSlotValueDataElements message container
-type CmiPowerTimeSlotValueDataElements struct {
-	PowerTimeSlotValueDataElements PowerTimeSlotValueDataElements `json:"powerTimeSlotValueDataElements"`
-}
-
-// PowerTimeSlotValueDataElements element
-type PowerTimeSlotValueDataElements struct {
-	SequenceId *ElementTagType           `json:"sequenceId,omitempty"`
-	SlotNumber *ElementTagType           `json:"slotNumber,omitempty"`
-	ValueType  *ElementTagType           `json:"valueType,omitempty"`
-	Value      *ScaledNumberElementsType `json:"value,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m PowerTimeSlotValueDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *PowerTimeSlotValueDataElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -5589,29 +4855,6 @@ func (m *PowerSequencePriceData) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// CmiPowerSequencePriceDataElements message container
-type CmiPowerSequencePriceDataElements struct {
-	PowerSequencePriceDataElements PowerSequencePriceDataElements `json:"powerSequencePriceDataElements"`
-}
-
-// PowerSequencePriceDataElements element
-type PowerSequencePriceDataElements struct {
-	SequenceId         *ElementTagType           `json:"sequenceId,omitempty"`
-	PotentialStartTime *ElementTagType           `json:"potentialStartTime,omitempty"`
-	Price              *ScaledNumberElementsType `json:"price,omitempty"`
-	Currency           *ElementTagType           `json:"currency,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m PowerSequencePriceDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *PowerSequencePriceDataElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiPowerSequencePriceListData message container
 type CmiPowerSequencePriceListData struct {
 	PowerSequencePriceListData PowerSequencePriceListData `json:"powerSequencePriceListData"`
@@ -5910,28 +5153,6 @@ func (m *SensingData) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// CmiSensingDataElements message container
-type CmiSensingDataElements struct {
-	SensingDataElements SensingDataElements `json:"sensingDataElements"`
-}
-
-// SensingDataElements element
-type SensingDataElements struct {
-	Timestamp *ElementTagType           `json:"timestamp,omitempty"`
-	State     *ElementTagType           `json:"state,omitempty"`
-	Value     *ScaledNumberElementsType `json:"value,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SensingDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SensingDataElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiSensingListData message container
 type CmiSensingListData struct {
 	SensingListData SensingListData `json:"sensingListData"`
@@ -6045,31 +5266,6 @@ func (m *SetpointData) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// CmiSetpointDataElements message container
-type CmiSetpointDataElements struct {
-	SetpointDataElements SetpointDataElements `json:"setpointDataElements"`
-}
-
-// SetpointDataElements element
-type SetpointDataElements struct {
-	SetpointId               *ElementTagType           `json:"setpointId,omitempty"`
-	Value                    *ScaledNumberElementsType `json:"value,omitempty"`
-	ValueMin                 *ScaledNumberElementsType `json:"valueMin,omitempty"`
-	ValueMax                 *ScaledNumberElementsType `json:"valueMax,omitempty"`
-	ValueToleranceAbsolute   *ScaledNumberElementsType `json:"valueToleranceAbsolute,omitempty"`
-	ValueTolerancePercentage *ScaledNumberElementsType `json:"valueTolerancePercentage,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SetpointDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SetpointDataElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiSetpointListData message container
 type CmiSetpointListData struct {
 	SetpointListData SetpointListData `json:"setpointListData"`
@@ -6130,29 +5326,6 @@ func (m SetpointConstraintsData) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *SetpointConstraintsData) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiSetpointConstraintsDataElements message container
-type CmiSetpointConstraintsDataElements struct {
-	SetpointConstraintsDataElements SetpointConstraintsDataElements `json:"setpointConstraintsDataElements"`
-}
-
-// SetpointConstraintsDataElements element
-type SetpointConstraintsDataElements struct {
-	SetpointId       *ElementTagType           `json:"setpointId,omitempty"`
-	SetpointRangeMin *ScaledNumberElementsType `json:"setpointRangeMin,omitempty"`
-	SetpointRangeMax *ScaledNumberElementsType `json:"setpointRangeMax,omitempty"`
-	SetpointStepSize *ScaledNumberElementsType `json:"setpointStepSize,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SetpointConstraintsDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SetpointConstraintsDataElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -6315,27 +5488,6 @@ func (m *SmartEnergyManagementPsData) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// CmiSmartEnergyManagementPsDataElements message container
-type CmiSmartEnergyManagementPsDataElements struct {
-	SmartEnergyManagementPsDataElements SmartEnergyManagementPsDataElements `json:"smartEnergyManagementPsDataElements"`
-}
-
-// SmartEnergyManagementPsDataElements element
-type SmartEnergyManagementPsDataElements struct {
-	NodeScheduleInformation *PowerSequenceNodeScheduleInformationDataElementsType `json:"nodeScheduleInformation,omitempty"`
-	Alternatives            *SmartEnergyManagementPsAlternativesElementsType      `json:"alternatives,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SmartEnergyManagementPsDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SmartEnergyManagementPsDataElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiSmartEnergyManagementPsDataSelectors message container
 type CmiSmartEnergyManagementPsDataSelectors struct {
 	SmartEnergyManagementPsDataSelectors SmartEnergyManagementPsDataSelectors `json:"smartEnergyManagementPsDataSelectors"`
@@ -6379,26 +5531,6 @@ func (m *SmartEnergyManagementPsPriceData) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// CmiSmartEnergyManagementPsPriceDataElements message container
-type CmiSmartEnergyManagementPsPriceDataElements struct {
-	SmartEnergyManagementPsPriceDataElements SmartEnergyManagementPsPriceDataElements `json:"smartEnergyManagementPsPriceDataElements"`
-}
-
-// SmartEnergyManagementPsPriceDataElements element
-type SmartEnergyManagementPsPriceDataElements struct {
-	Price *PowerSequencePriceDataElementsType `json:"price,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SmartEnergyManagementPsPriceDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SmartEnergyManagementPsPriceDataElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiSmartEnergyManagementPsPriceDataSelectors message container
 type CmiSmartEnergyManagementPsPriceDataSelectors struct {
 	SmartEnergyManagementPsPriceDataSelectors SmartEnergyManagementPsPriceDataSelectors `json:"smartEnergyManagementPsPriceDataSelectors"`
@@ -6439,26 +5571,6 @@ func (m *SmartEnergyManagementPsConfigurationRequestCall) UnmarshalJSON(data []b
 	return util.Unmarshal(data, &m)
 }
 
-// CmiSmartEnergyManagementPsConfigurationRequestCallElements message container
-type CmiSmartEnergyManagementPsConfigurationRequestCallElements struct {
-	SmartEnergyManagementPsConfigurationRequestCallElements SmartEnergyManagementPsConfigurationRequestCallElements `json:"smartEnergyManagementPsConfigurationRequestCallElements"`
-}
-
-// SmartEnergyManagementPsConfigurationRequestCallElements element
-type SmartEnergyManagementPsConfigurationRequestCallElements struct {
-	ScheduleConfigurationRequest *PowerSequenceScheduleConfigurationRequestCallElementsType `json:"scheduleConfigurationRequest,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SmartEnergyManagementPsConfigurationRequestCallElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SmartEnergyManagementPsConfigurationRequestCallElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiSmartEnergyManagementPsPriceCalculationRequestCall message container
 type CmiSmartEnergyManagementPsPriceCalculationRequestCall struct {
 	SmartEnergyManagementPsPriceCalculationRequestCall SmartEnergyManagementPsPriceCalculationRequestCall `json:"smartEnergyManagementPsPriceCalculationRequestCall"`
@@ -6476,26 +5588,6 @@ func (m SmartEnergyManagementPsPriceCalculationRequestCall) MarshalJSON() ([]byt
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *SmartEnergyManagementPsPriceCalculationRequestCall) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiSmartEnergyManagementPsPriceCalculationRequestCallElements message container
-type CmiSmartEnergyManagementPsPriceCalculationRequestCallElements struct {
-	SmartEnergyManagementPsPriceCalculationRequestCallElements SmartEnergyManagementPsPriceCalculationRequestCallElements `json:"smartEnergyManagementPsPriceCalculationRequestCallElements"`
-}
-
-// SmartEnergyManagementPsPriceCalculationRequestCallElements element
-type SmartEnergyManagementPsPriceCalculationRequestCallElements struct {
-	PriceCalculationRequest *PowerSequencePriceCalculationRequestCallElementsType `json:"priceCalculationRequest,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SmartEnergyManagementPsPriceCalculationRequestCallElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SmartEnergyManagementPsPriceCalculationRequestCallElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -6520,30 +5612,6 @@ func (m SubscriptionManagementEntryData) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *SubscriptionManagementEntryData) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiSubscriptionManagementEntryDataElements message container
-type CmiSubscriptionManagementEntryDataElements struct {
-	SubscriptionManagementEntryDataElements SubscriptionManagementEntryDataElements `json:"subscriptionManagementEntryDataElements"`
-}
-
-// SubscriptionManagementEntryDataElements element
-type SubscriptionManagementEntryDataElements struct {
-	SubscriptionId *ElementTagType             `json:"subscriptionId,omitempty"`
-	ClientAddress  *FeatureAddressElementsType `json:"clientAddress,omitempty"`
-	ServerAddress  *FeatureAddressElementsType `json:"serverAddress,omitempty"`
-	Label          *ElementTagType             `json:"label,omitempty"`
-	Description    *ElementTagType             `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SubscriptionManagementEntryDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SubscriptionManagementEntryDataElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -6611,28 +5679,6 @@ func (m *SubscriptionManagementRequestCall) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// CmiSubscriptionManagementRequestCallElements message container
-type CmiSubscriptionManagementRequestCallElements struct {
-	SubscriptionManagementRequestCallElements SubscriptionManagementRequestCallElements `json:"subscriptionManagementRequestCallElements"`
-}
-
-// SubscriptionManagementRequestCallElements element
-type SubscriptionManagementRequestCallElements struct {
-	ClientAddress     *FeatureAddressElementsType `json:"clientAddress,omitempty"`
-	ServerAddress     *FeatureAddressElementsType `json:"serverAddress,omitempty"`
-	ServerFeatureType *ElementTagType             `json:"serverFeatureType,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SubscriptionManagementRequestCallElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SubscriptionManagementRequestCallElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiSubscriptionManagementDeleteCall message container
 type CmiSubscriptionManagementDeleteCall struct {
 	SubscriptionManagementDeleteCall SubscriptionManagementDeleteCall `json:"subscriptionManagementDeleteCall"`
@@ -6652,28 +5698,6 @@ func (m SubscriptionManagementDeleteCall) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *SubscriptionManagementDeleteCall) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiSubscriptionManagementDeleteCallElements message container
-type CmiSubscriptionManagementDeleteCallElements struct {
-	SubscriptionManagementDeleteCallElements SubscriptionManagementDeleteCallElements `json:"subscriptionManagementDeleteCallElements"`
-}
-
-// SubscriptionManagementDeleteCallElements element
-type SubscriptionManagementDeleteCallElements struct {
-	SubscriptionId *ElementTagType             `json:"subscriptionId,omitempty"`
-	ClientAddress  *FeatureAddressElementsType `json:"clientAddress,omitempty"`
-	ServerAddress  *FeatureAddressElementsType `json:"serverAddress,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SubscriptionManagementDeleteCallElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SubscriptionManagementDeleteCallElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -6702,34 +5726,6 @@ func (m SupplyConditionData) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *SupplyConditionData) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiSupplyConditionDataElements message container
-type CmiSupplyConditionDataElements struct {
-	SupplyConditionDataElements SupplyConditionDataElements `json:"supplyConditionDataElements"`
-}
-
-// SupplyConditionDataElements element
-type SupplyConditionDataElements struct {
-	ConditionId         *ElementTagType           `json:"conditionId,omitempty"`
-	Timestamp           *ElementTagType           `json:"timestamp,omitempty"`
-	EventType           *ElementTagType           `json:"eventType,omitempty"`
-	Originator          *ElementTagType           `json:"originator,omitempty"`
-	ThresholdId         *ElementTagType           `json:"thresholdId,omitempty"`
-	ThresholdPercentage *ScaledNumberElementsType `json:"thresholdPercentage,omitempty"`
-	RelevantPeriod      *TimePeriodElementsType   `json:"relevantPeriod,omitempty"`
-	Description         *ElementTagType           `json:"description,omitempty"`
-	GridCondition       *ElementTagType           `json:"gridCondition,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SupplyConditionDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SupplyConditionDataElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -7373,30 +6369,6 @@ func (m *TierBoundaryData) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// CmiTierBoundaryDataElements message container
-type CmiTierBoundaryDataElements struct {
-	TierBoundaryDataElements TierBoundaryDataElements `json:"tierBoundaryDataElements"`
-}
-
-// TierBoundaryDataElements element
-type TierBoundaryDataElements struct {
-	BoundaryId         *ElementTagType           `json:"boundaryId,omitempty"`
-	TimePeriod         *TimePeriodElementsType   `json:"timePeriod,omitempty"`
-	TimeTableId        *ElementTagType           `json:"timeTableId,omitempty"`
-	LowerBoundaryValue *ScaledNumberElementsType `json:"lowerBoundaryValue,omitempty"`
-	UpperBoundaryValue *ScaledNumberElementsType `json:"upperBoundaryValue,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TierBoundaryDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TierBoundaryDataElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiTierBoundaryListData message container
 type CmiTierBoundaryListData struct {
 	TierBoundaryListData TierBoundaryListData `json:"tierBoundaryListData"`
@@ -7644,29 +6616,6 @@ func (m *TierData) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// CmiTierDataElements message container
-type CmiTierDataElements struct {
-	TierDataElements TierDataElements `json:"tierDataElements"`
-}
-
-// TierDataElements element
-type TierDataElements struct {
-	TierId            *ElementTagType         `json:"tierId,omitempty"`
-	TimePeriod        *TimePeriodElementsType `json:"timePeriod,omitempty"`
-	TimeTableId       *ElementTagType         `json:"timeTableId,omitempty"`
-	ActiveIncentiveId *ElementTagType         `json:"activeIncentiveId,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TierDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TierDataElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiTierListData message container
 type CmiTierListData struct {
 	TierListData TierListData `json:"tierListData"`
@@ -7900,31 +6849,6 @@ func (m IncentiveData) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *IncentiveData) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiIncentiveDataElements message container
-type CmiIncentiveDataElements struct {
-	IncentiveDataElements IncentiveDataElements `json:"incentiveDataElements"`
-}
-
-// IncentiveDataElements element
-type IncentiveDataElements struct {
-	IncentiveId *ElementTagType         `json:"incentiveId,omitempty"`
-	ValueType   *ElementTagType         `json:"valueType,omitempty"`
-	Timestamp   *ElementTagType         `json:"timestamp,omitempty"`
-	TimePeriod  *TimePeriodElementsType `json:"timePeriod,omitempty"`
-	TimeTableId *ElementTagType         `json:"timeTableId,omitempty"`
-	Value       *ElementTagType         `json:"value,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m IncentiveDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *IncentiveDataElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -8177,31 +7101,6 @@ func (m *TaskManagementJobRelationData) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// CmiTaskManagementJobRelationDataElements message container
-type CmiTaskManagementJobRelationDataElements struct {
-	TaskManagementJobRelationDataElements TaskManagementJobRelationDataElements `json:"taskManagementJobRelationDataElements"`
-}
-
-// TaskManagementJobRelationDataElements element
-type TaskManagementJobRelationDataElements struct {
-	JobId                          *ElementTagType                                           `json:"jobId,omitempty"`
-	DirectControlRelated           *TaskManagementDirectControlRelatedElementsType           `json:"directControlRelated,omitempty"`
-	HvacRelated                    *TaskManagementHvacRelatedElementsType                    `json:"hvacRelated,omitempty"`
-	LoadControlReleated            *TaskManagementLoadControlReleatedElementsType            `json:"loadControlReleated,omitempty"`
-	PowerSequencesRelated          *TaskManagementPowerSequencesRelatedElementsType          `json:"powerSequencesRelated,omitempty"`
-	SmartEnergyManagementPsRelated *TaskManagementSmartEnergyManagementPsRelatedElementsType `json:"smartEnergyManagementPsRelated,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TaskManagementJobRelationDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TaskManagementJobRelationDataElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiTaskManagementJobRelationListData message container
 type CmiTaskManagementJobRelationListData struct {
 	TaskManagementJobRelationListData TaskManagementJobRelationListData `json:"taskManagementJobRelationListData"`
@@ -8392,27 +7291,6 @@ func (m *ThresholdData) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// CmiThresholdDataElements message container
-type CmiThresholdDataElements struct {
-	ThresholdDataElements ThresholdDataElements `json:"thresholdDataElements"`
-}
-
-// ThresholdDataElements element
-type ThresholdDataElements struct {
-	ThresholdId    *ElementTagType           `json:"thresholdId,omitempty"`
-	ThresholdValue *ScaledNumberElementsType `json:"thresholdValue,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m ThresholdDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *ThresholdDataElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiThresholdListData message container
 type CmiThresholdListData struct {
 	ThresholdListData ThresholdListData `json:"thresholdListData"`
@@ -8473,29 +7351,6 @@ func (m ThresholdConstraintsData) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *ThresholdConstraintsData) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiThresholdConstraintsDataElements message container
-type CmiThresholdConstraintsDataElements struct {
-	ThresholdConstraintsDataElements ThresholdConstraintsDataElements `json:"thresholdConstraintsDataElements"`
-}
-
-// ThresholdConstraintsDataElements element
-type ThresholdConstraintsDataElements struct {
-	ThresholdId       *ElementTagType           `json:"thresholdId,omitempty"`
-	ThresholdRangeMin *ScaledNumberElementsType `json:"thresholdRangeMin,omitempty"`
-	ThresholdRangeMax *ScaledNumberElementsType `json:"thresholdRangeMax,omitempty"`
-	ThresholdStepSize *ScaledNumberElementsType `json:"thresholdStepSize,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m ThresholdConstraintsDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *ThresholdConstraintsDataElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -8822,28 +7677,6 @@ func (m *TimeSeriesData) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// CmiTimeSeriesDataElements message container
-type CmiTimeSeriesDataElements struct {
-	TimeSeriesDataElements TimeSeriesDataElements `json:"timeSeriesDataElements"`
-}
-
-// TimeSeriesDataElements element
-type TimeSeriesDataElements struct {
-	TimeSeriesId   *ElementTagType             `json:"timeSeriesId,omitempty"`
-	TimePeriod     *TimePeriodElementsType     `json:"timePeriod,omitempty"`
-	TimeSeriesSlot *TimeSeriesSlotElementsType `json:"timeSeriesSlot,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TimeSeriesDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TimeSeriesDataElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiTimeSeriesListData message container
 type CmiTimeSeriesListData struct {
 	TimeSeriesListData TimeSeriesListData `json:"timeSeriesListData"`
@@ -9016,36 +7849,6 @@ func (m *TimeSeriesConstraintsData) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// CmiTimeSeriesConstraintsDataElements message container
-type CmiTimeSeriesConstraintsDataElements struct {
-	TimeSeriesConstraintsDataElements TimeSeriesConstraintsDataElements `json:"timeSeriesConstraintsDataElements"`
-}
-
-// TimeSeriesConstraintsDataElements element
-type TimeSeriesConstraintsDataElements struct {
-	TimeSeriesId                *ElementTagType           `json:"timeSeriesId,omitempty"`
-	SlotCountMin                *ElementTagType           `json:"slotCountMin,omitempty"`
-	SlotCountMax                *ElementTagType           `json:"slotCountMax,omitempty"`
-	SlotDurationMin             *ElementTagType           `json:"slotDurationMin,omitempty"`
-	SlotDurationMax             *ElementTagType           `json:"slotDurationMax,omitempty"`
-	SlotDurationStepSize        *ElementTagType           `json:"slotDurationStepSize,omitempty"`
-	EarliestTimeSeriesStartTime *ElementTagType           `json:"earliestTimeSeriesStartTime,omitempty"`
-	LatestTimeSeriesEndTime     *ElementTagType           `json:"latestTimeSeriesEndTime,omitempty"`
-	SlotValueMin                *ScaledNumberElementsType `json:"slotValueMin,omitempty"`
-	SlotValueMax                *ScaledNumberElementsType `json:"slotValueMax,omitempty"`
-	SlotValueStepSize           *ScaledNumberElementsType `json:"slotValueStepSize,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TimeSeriesConstraintsDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TimeSeriesConstraintsDataElements) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiTimeSeriesConstraintsListData message container
 type CmiTimeSeriesConstraintsListData struct {
 	TimeSeriesConstraintsListData TimeSeriesConstraintsListData `json:"timeSeriesConstraintsListData"`
@@ -9107,30 +7910,6 @@ func (m TimeTableData) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *TimeTableData) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CmiTimeTableDataElements message container
-type CmiTimeTableDataElements struct {
-	TimeTableDataElements TimeTableDataElements `json:"timeTableDataElements"`
-}
-
-// TimeTableDataElements element
-type TimeTableDataElements struct {
-	TimeTableId           *ElementTagType                      `json:"timeTableId,omitempty"`
-	TimeSlotId            *ElementTagType                      `json:"timeSlotId,omitempty"`
-	RecurrenceInformation *RecurrenceInformationElementsType   `json:"recurrenceInformation,omitempty"`
-	StartTime             *AbsoluteOrRecurringTimeElementsType `json:"startTime,omitempty"`
-	EndTime               *AbsoluteOrRecurringTimeElementsType `json:"endTime,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TimeTableDataElements) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TimeTableDataElements) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -9700,22 +8479,6 @@ func (m *ActuatorLevelDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// ActuatorLevelDataElementsType complex type
-type ActuatorLevelDataElementsType struct {
-	Function *ElementTagType           `json:"function"`
-	Value    *ScaledNumberElementsType `json:"value"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m ActuatorLevelDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *ActuatorLevelDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // ActuatorLevelDescriptionDataType complex type
 type ActuatorLevelDescriptionDataType struct {
 	Label            *LabelType       `json:"label"`
@@ -9730,23 +8493,6 @@ func (m ActuatorLevelDescriptionDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *ActuatorLevelDescriptionDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// ActuatorLevelDescriptionDataElementsType complex type
-type ActuatorLevelDescriptionDataElementsType struct {
-	Label            *ElementTagType `json:"label"`
-	Description      *ElementTagType `json:"description"`
-	LevelDefaultUnit *ElementTagType `json:"levelDefaultUnit"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m ActuatorLevelDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *ActuatorLevelDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -9765,21 +8511,6 @@ func (m *ActuatorSwitchDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// ActuatorSwitchDataElementsType complex type
-type ActuatorSwitchDataElementsType struct {
-	Function *ElementTagType `json:"function"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m ActuatorSwitchDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *ActuatorSwitchDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // ActuatorSwitchDescriptionDataType complex type
 type ActuatorSwitchDescriptionDataType struct {
 	Label       *LabelType       `json:"label"`
@@ -9793,22 +8524,6 @@ func (m ActuatorSwitchDescriptionDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *ActuatorSwitchDescriptionDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// ActuatorSwitchDescriptionDataElementsType complex type
-type ActuatorSwitchDescriptionDataElementsType struct {
-	Label       *ElementTagType `json:"label"`
-	Description *ElementTagType `json:"description"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m ActuatorSwitchDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *ActuatorSwitchDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -9832,29 +8547,6 @@ func (m AlarmDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *AlarmDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// AlarmDataElementsType complex type
-type AlarmDataElementsType struct {
-	AlarmId          *ElementTagType           `json:"alarmId"`
-	ThresholdId      *ElementTagType           `json:"thresholdId"`
-	Timestamp        *ElementTagType           `json:"timestamp"`
-	AlarmType        *ElementTagType           `json:"alarmType"`
-	MeasuredValue    *ScaledNumberElementsType `json:"measuredValue"`
-	EvaluationPeriod *TimePeriodElementsType   `json:"evaluationPeriod"`
-	ScopeType        *ElementTagType           `json:"scopeType"`
-	Label            *ElementTagType           `json:"label"`
-	Description      *ElementTagType           `json:"description"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m AlarmDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *AlarmDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -9907,24 +8599,6 @@ func (m *BillValueType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// BillValueElementsType complex type
-type BillValueElementsType struct {
-	ValueId         *ElementTagType           `json:"valueId"`
-	Unit            *ElementTagType           `json:"unit"`
-	Value           *ScaledNumberElementsType `json:"value"`
-	ValuePercentage *ScaledNumberElementsType `json:"valuePercentage"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m BillValueElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *BillValueElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // BillCostType complex type
 type BillCostType struct {
 	CostId         *BillCostIdType   `json:"costId"`
@@ -9943,27 +8617,6 @@ func (m BillCostType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *BillCostType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// BillCostElementsType complex type
-type BillCostElementsType struct {
-	CostId         *ElementTagType           `json:"costId"`
-	CostType       *ElementTagType           `json:"costType"`
-	ValueId        *ElementTagType           `json:"valueId"`
-	Unit           *ElementTagType           `json:"unit"`
-	Currency       *ElementTagType           `json:"currency"`
-	Cost           *ScaledNumberElementsType `json:"cost"`
-	CostPercentage *ScaledNumberElementsType `json:"costPercentage"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m BillCostElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *BillCostElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -9988,27 +8641,6 @@ func (m *BillPositionType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// BillPositionElementsType complex type
-type BillPositionElementsType struct {
-	PositionId   *ElementTagType         `json:"positionId"`
-	PositionType *ElementTagType         `json:"positionType"`
-	TimePeriod   *TimePeriodElementsType `json:"timePeriod"`
-	Value        *BillValueElementsType  `json:"value"`
-	Cost         *BillCostElementsType   `json:"cost"`
-	Label        *ElementTagType         `json:"label"`
-	Description  *ElementTagType         `json:"description"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m BillPositionElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *BillPositionElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // BillDataType complex type
 type BillDataType struct {
 	BillId    *BillIdType `json:"billId"`
@@ -10025,25 +8657,6 @@ func (m BillDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *BillDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// BillDataElementsType complex type
-type BillDataElementsType struct {
-	BillId    *ElementTagType `json:"billId"`
-	BillType  *ElementTagType `json:"billType"`
-	ScopeType *ElementTagType `json:"scopeType"`
-	Total     *Total          `json:"total"`
-	Position  *Position       `json:"position"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m BillDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *BillDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -10095,23 +8708,6 @@ func (m *BillConstraintsDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// BillConstraintsDataElementsType complex type
-type BillConstraintsDataElementsType struct {
-	BillId           *ElementTagType `json:"billId"`
-	PositionCountMin *ElementTagType `json:"positionCountMin"`
-	PositionCountMax *ElementTagType `json:"positionCountMax"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m BillConstraintsDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *BillConstraintsDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // BillConstraintsListDataType complex type
 type BillConstraintsListDataType struct {
 	BillConstraintsData []BillConstraintsDataType `json:"billConstraintsData"`
@@ -10157,24 +8753,6 @@ func (m BillDescriptionDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *BillDescriptionDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// BillDescriptionDataElementsType complex type
-type BillDescriptionDataElementsType struct {
-	BillId            *ElementTagType `json:"billId"`
-	BillWriteable     *ElementTagType `json:"billWriteable"`
-	UpdateRequired    *ElementTagType `json:"updateRequired"`
-	SupportedBillType *ElementTagType `json:"supportedBillType"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m BillDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *BillDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -10225,23 +8803,6 @@ func (m *DataTunnelingHeaderType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// DataTunnelingHeaderElementsType complex type
-type DataTunnelingHeaderElementsType struct {
-	PurposeId  *ElementTagType `json:"purposeId"`
-	ChannelId  *ElementTagType `json:"channelId"`
-	SequenceId *ElementTagType `json:"sequenceId"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m DataTunnelingHeaderElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *DataTunnelingHeaderElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // DataTunnelingCallType complex type
 type DataTunnelingCallType struct {
 	Header  *DataTunnelingHeaderType `json:"header"`
@@ -10255,22 +8816,6 @@ func (m DataTunnelingCallType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *DataTunnelingCallType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// DataTunnelingCallElementsType complex type
-type DataTunnelingCallElementsType struct {
-	Header  *DataTunnelingHeaderElementsType `json:"header"`
-	Payload *ElementTagType                  `json:"payload"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m DataTunnelingCallElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *DataTunnelingCallElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -10295,30 +8840,6 @@ func (m DirectControlActivityDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *DirectControlActivityDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// DirectControlActivityDataElementsType complex type
-type DirectControlActivityDataElementsType struct {
-	Timestamp                 *ElementTagType           `json:"timestamp"`
-	ActivityState             *ElementTagType           `json:"activityState"`
-	IsActivityStateChangeable *ElementTagType           `json:"isActivityStateChangeable"`
-	EnergyMode                *ElementTagType           `json:"energyMode"`
-	IsEnergyModeChangeable    *ElementTagType           `json:"isEnergyModeChangeable"`
-	Power                     *ScaledNumberElementsType `json:"power"`
-	IsPowerChangeable         *ElementTagType           `json:"isPowerChangeable"`
-	Energy                    *ScaledNumberElementsType `json:"energy"`
-	IsEnergyChangeable        *ElementTagType           `json:"isEnergyChangeable"`
-	SequenceId                *ElementTagType           `json:"sequenceId"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m DirectControlActivityDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *DirectControlActivityDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -10369,23 +8890,6 @@ func (m *DirectControlDescriptionDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// DirectControlDescriptionDataElementsType complex type
-type DirectControlDescriptionDataElementsType struct {
-	PositiveEnergyDirection *ElementTagType `json:"positiveEnergyDirection"`
-	PowerUnit               *ElementTagType `json:"powerUnit"`
-	EnergyUnit              *ElementTagType `json:"energyUnit"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m DirectControlDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *DirectControlDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // HvacSystemFunctionDataType complex type
 type HvacSystemFunctionDataType struct {
 	SystemFunctionId            *HvacSystemFunctionIdType `json:"systemFunctionId"`
@@ -10403,26 +8907,6 @@ func (m HvacSystemFunctionDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *HvacSystemFunctionDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// HvacSystemFunctionDataElementsType complex type
-type HvacSystemFunctionDataElementsType struct {
-	SystemFunctionId            *ElementTagType `json:"systemFunctionId"`
-	CurrentOperationModeId      *ElementTagType `json:"currentOperationModeId"`
-	IsOperationModeIdChangeable *ElementTagType `json:"isOperationModeIdChangeable"`
-	CurrentSetpointId           *ElementTagType `json:"currentSetpointId"`
-	IsSetpointIdChangeable      *ElementTagType `json:"isSetpointIdChangeable"`
-	IsOverrunActive             *ElementTagType `json:"isOverrunActive"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m HvacSystemFunctionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *HvacSystemFunctionDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -10469,22 +8953,6 @@ func (m HvacSystemFunctionOperationModeRelationDataType) MarshalJSON() ([]byte, 
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *HvacSystemFunctionOperationModeRelationDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// HvacSystemFunctionOperationModeRelationDataElementsType complex type
-type HvacSystemFunctionOperationModeRelationDataElementsType struct {
-	SystemFunctionId *ElementTagType `json:"systemFunctionId"`
-	OperationModeId  *ElementTagType `json:"operationModeId"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m HvacSystemFunctionOperationModeRelationDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *HvacSystemFunctionOperationModeRelationDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -10535,23 +9003,6 @@ func (m *HvacSystemFunctionSetpointRelationDataType) UnmarshalJSON(data []byte) 
 	return util.Unmarshal(data, &m)
 }
 
-// HvacSystemFunctionSetpointRelationDataElementsType complex type
-type HvacSystemFunctionSetpointRelationDataElementsType struct {
-	SystemFunctionId *ElementTagType `json:"systemFunctionId"`
-	OperationModeId  *ElementTagType `json:"operationModeId"`
-	SetpointId       *ElementTagType `json:"setpointId"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m HvacSystemFunctionSetpointRelationDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *HvacSystemFunctionSetpointRelationDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // HvacSystemFunctionSetpointRelationListDataType complex type
 type HvacSystemFunctionSetpointRelationListDataType struct {
 	HvacSystemFunctionSetpointRelationData []HvacSystemFunctionSetpointRelationDataType `json:"hvacSystemFunctionSetpointRelationData"`
@@ -10596,22 +9047,6 @@ func (m HvacSystemFunctionPowerSequenceRelationDataType) MarshalJSON() ([]byte, 
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *HvacSystemFunctionPowerSequenceRelationDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// HvacSystemFunctionPowerSequenceRelationDataElementsType complex type
-type HvacSystemFunctionPowerSequenceRelationDataElementsType struct {
-	SystemFunctionId *ElementTagType `json:"systemFunctionId"`
-	SequenceId       *ElementTagType `json:"sequenceId"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m HvacSystemFunctionPowerSequenceRelationDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *HvacSystemFunctionPowerSequenceRelationDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -10663,24 +9098,6 @@ func (m *HvacSystemFunctionDescriptionDataType) UnmarshalJSON(data []byte) error
 	return util.Unmarshal(data, &m)
 }
 
-// HvacSystemFunctionDescriptionDataElementsType complex type
-type HvacSystemFunctionDescriptionDataElementsType struct {
-	SystemFunctionId   *ElementTagType `json:"systemFunctionId"`
-	SystemFunctionType *ElementTagType `json:"systemFunctionType"`
-	Label              *ElementTagType `json:"label"`
-	Description        *ElementTagType `json:"description"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m HvacSystemFunctionDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *HvacSystemFunctionDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // HvacSystemFunctionDescriptionListDataType complex type
 type HvacSystemFunctionDescriptionListDataType struct {
 	HvacSystemFunctionDescriptionData []HvacSystemFunctionDescriptionDataType `json:"hvacSystemFunctionDescriptionData"`
@@ -10729,24 +9146,6 @@ func (m *HvacOperationModeDescriptionDataType) UnmarshalJSON(data []byte) error 
 	return util.Unmarshal(data, &m)
 }
 
-// HvacOperationModeDescriptionDataElementsType complex type
-type HvacOperationModeDescriptionDataElementsType struct {
-	OperationModeId   *ElementTagType `json:"operationModeId"`
-	OperationModeType *ElementTagType `json:"operationModeType"`
-	Label             *ElementTagType `json:"label"`
-	Description       *ElementTagType `json:"description"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m HvacOperationModeDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *HvacOperationModeDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // HvacOperationModeDescriptionListDataType complex type
 type HvacOperationModeDescriptionListDataType struct {
 	HvacOperationModeDescriptionData []HvacOperationModeDescriptionDataType `json:"hvacOperationModeDescriptionData"`
@@ -10792,24 +9191,6 @@ func (m HvacOverrunDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *HvacOverrunDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// HvacOverrunDataElementsType complex type
-type HvacOverrunDataElementsType struct {
-	OverrunId                 *ElementTagType `json:"overrunId"`
-	OverrunStatus             *ElementTagType `json:"overrunStatus"`
-	TimeTableId               *ElementTagType `json:"timeTableId"`
-	IsOverrunStatusChangeable *ElementTagType `json:"isOverrunStatusChangeable"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m HvacOverrunDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *HvacOverrunDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -10862,25 +9243,6 @@ func (m *HvacOverrunDescriptionDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// HvacOverrunDescriptionDataElementsType complex type
-type HvacOverrunDescriptionDataElementsType struct {
-	OverrunId                *ElementTagType `json:"overrunId"`
-	OverrunType              *ElementTagType `json:"overrunType"`
-	AffectedSystemFunctionId *ElementTagType `json:"affectedSystemFunctionId"`
-	Label                    *ElementTagType `json:"label"`
-	Description              *ElementTagType `json:"description"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m HvacOverrunDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *HvacOverrunDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // HvacOverrunDescriptionListDataType complex type
 type HvacOverrunDescriptionListDataType struct {
 	HvacOverrunDescriptionData []HvacOverrunDescriptionDataType `json:"hvacOverrunDescriptionData"`
@@ -10926,24 +9288,6 @@ func (m MessagingDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *MessagingDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// MessagingDataElementsType complex type
-type MessagingDataElementsType struct {
-	Timestamp       *ElementTagType `json:"timestamp"`
-	MessagingNumber *ElementTagType `json:"messagingNumber"`
-	Type            *ElementTagType `json:"type"`
-	Text            *ElementTagType `json:"text"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m MessagingDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *MessagingDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -10994,25 +9338,6 @@ func (m OperatingConstraintsInterruptDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *OperatingConstraintsInterruptDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// OperatingConstraintsInterruptDataElementsType complex type
-type OperatingConstraintsInterruptDataElementsType struct {
-	SequenceId                  *ElementTagType `json:"sequenceId"`
-	IsPausable                  *ElementTagType `json:"isPausable"`
-	IsStoppable                 *ElementTagType `json:"isStoppable"`
-	NotInterruptibleAtHighPower *ElementTagType `json:"notInterruptibleAtHighPower"`
-	MaxCyclesPerDay             *ElementTagType `json:"maxCyclesPerDay"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m OperatingConstraintsInterruptDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *OperatingConstraintsInterruptDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -11067,27 +9392,6 @@ func (m *OperatingConstraintsDurationDataType) UnmarshalJSON(data []byte) error 
 	return util.Unmarshal(data, &m)
 }
 
-// OperatingConstraintsDurationDataElementsType complex type
-type OperatingConstraintsDurationDataElementsType struct {
-	SequenceId           *ElementTagType `json:"sequenceId"`
-	ActiveDurationMin    *ElementTagType `json:"activeDurationMin"`
-	ActiveDurationMax    *ElementTagType `json:"activeDurationMax"`
-	PauseDurationMin     *ElementTagType `json:"pauseDurationMin"`
-	PauseDurationMax     *ElementTagType `json:"pauseDurationMax"`
-	ActiveDurationSumMin *ElementTagType `json:"activeDurationSumMin"`
-	ActiveDurationSumMax *ElementTagType `json:"activeDurationSumMax"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m OperatingConstraintsDurationDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *OperatingConstraintsDurationDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // OperatingConstraintsDurationListDataType complex type
 type OperatingConstraintsDurationListDataType struct {
 	OperatingConstraintsDurationData []OperatingConstraintsDurationDataType `json:"operatingConstraintsDurationData"`
@@ -11134,25 +9438,6 @@ func (m OperatingConstraintsPowerDescriptionDataType) MarshalJSON() ([]byte, err
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *OperatingConstraintsPowerDescriptionDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// OperatingConstraintsPowerDescriptionDataElementsType complex type
-type OperatingConstraintsPowerDescriptionDataElementsType struct {
-	SequenceId              *ElementTagType `json:"sequenceId"`
-	PositiveEnergyDirection *ElementTagType `json:"positiveEnergyDirection"`
-	PowerUnit               *ElementTagType `json:"powerUnit"`
-	EnergyUnit              *ElementTagType `json:"energyUnit"`
-	Description             *ElementTagType `json:"description"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m OperatingConstraintsPowerDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *OperatingConstraintsPowerDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -11205,25 +9490,6 @@ func (m *OperatingConstraintsPowerRangeDataType) UnmarshalJSON(data []byte) erro
 	return util.Unmarshal(data, &m)
 }
 
-// OperatingConstraintsPowerRangeDataElementsType complex type
-type OperatingConstraintsPowerRangeDataElementsType struct {
-	SequenceId *ElementTagType           `json:"sequenceId"`
-	PowerMin   *ScaledNumberElementsType `json:"powerMin"`
-	PowerMax   *ScaledNumberElementsType `json:"powerMax"`
-	EnergyMin  *ScaledNumberElementsType `json:"energyMin"`
-	EnergyMax  *ScaledNumberElementsType `json:"energyMax"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m OperatingConstraintsPowerRangeDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *OperatingConstraintsPowerRangeDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // OperatingConstraintsPowerRangeListDataType complex type
 type OperatingConstraintsPowerRangeListDataType struct {
 	OperatingConstraintsPowerRangeData []OperatingConstraintsPowerRangeDataType `json:"operatingConstraintsPowerRangeData"`
@@ -11267,22 +9533,6 @@ func (m OperatingConstraintsPowerLevelDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *OperatingConstraintsPowerLevelDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// OperatingConstraintsPowerLevelDataElementsType complex type
-type OperatingConstraintsPowerLevelDataElementsType struct {
-	SequenceId *ElementTagType           `json:"sequenceId"`
-	Power      *ScaledNumberElementsType `json:"power"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m OperatingConstraintsPowerLevelDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *OperatingConstraintsPowerLevelDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -11332,25 +9582,6 @@ func (m OperatingConstraintsResumeImplicationDataType) MarshalJSON() ([]byte, er
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *OperatingConstraintsResumeImplicationDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// OperatingConstraintsResumeImplicationDataElementsType complex type
-type OperatingConstraintsResumeImplicationDataElementsType struct {
-	SequenceId            *ElementTagType           `json:"sequenceId"`
-	ResumeEnergyEstimated *ScaledNumberElementsType `json:"resumeEnergyEstimated"`
-	EnergyUnit            *ElementTagType           `json:"energyUnit"`
-	ResumeCostEstimated   *ScaledNumberElementsType `json:"resumeCostEstimated"`
-	Currency              *ElementTagType           `json:"currency"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m OperatingConstraintsResumeImplicationDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *OperatingConstraintsResumeImplicationDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -11405,27 +9636,6 @@ func (m *PowerTimeSlotScheduleDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// PowerTimeSlotScheduleDataElementsType complex type
-type PowerTimeSlotScheduleDataElementsType struct {
-	SequenceId          *ElementTagType         `json:"sequenceId"`
-	SlotNumber          *ElementTagType         `json:"slotNumber"`
-	TimePeriod          *TimePeriodElementsType `json:"timePeriod"`
-	DefaultDuration     *ElementTagType         `json:"defaultDuration"`
-	DurationUncertainty *ElementTagType         `json:"durationUncertainty"`
-	SlotActivated       *ElementTagType         `json:"slotActivated"`
-	Description         *ElementTagType         `json:"description"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m PowerTimeSlotScheduleDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *PowerTimeSlotScheduleDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // PowerTimeSlotScheduleListDataType complex type
 type PowerTimeSlotScheduleListDataType struct {
 	PowerTimeSlotScheduleData []PowerTimeSlotScheduleDataType `json:"powerTimeSlotScheduleData"`
@@ -11472,24 +9682,6 @@ func (m PowerTimeSlotValueDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *PowerTimeSlotValueDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// PowerTimeSlotValueDataElementsType complex type
-type PowerTimeSlotValueDataElementsType struct {
-	SequenceId *ElementTagType           `json:"sequenceId"`
-	SlotNumber *ElementTagType           `json:"slotNumber"`
-	ValueType  *ElementTagType           `json:"valueType"`
-	Value      *ScaledNumberElementsType `json:"value"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m PowerTimeSlotValueDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *PowerTimeSlotValueDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -11546,27 +9738,6 @@ func (m *PowerTimeSlotScheduleConstraintsDataType) UnmarshalJSON(data []byte) er
 	return util.Unmarshal(data, &m)
 }
 
-// PowerTimeSlotScheduleConstraintsDataElementsType complex type
-type PowerTimeSlotScheduleConstraintsDataElementsType struct {
-	SequenceId        *ElementTagType `json:"sequenceId"`
-	SlotNumber        *ElementTagType `json:"slotNumber"`
-	EarliestStartTime *ElementTagType `json:"earliestStartTime"`
-	LatestEndTime     *ElementTagType `json:"latestEndTime"`
-	MinDuration       *ElementTagType `json:"minDuration"`
-	MaxDuration       *ElementTagType `json:"maxDuration"`
-	OptionalSlot      *ElementTagType `json:"optionalSlot"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m PowerTimeSlotScheduleConstraintsDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *PowerTimeSlotScheduleConstraintsDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // PowerTimeSlotScheduleConstraintsListDataType complex type
 type PowerTimeSlotScheduleConstraintsListDataType struct {
 	PowerTimeSlotScheduleConstraintsData []PowerTimeSlotScheduleConstraintsDataType `json:"powerTimeSlotScheduleConstraintsData"`
@@ -11611,22 +9782,6 @@ func (m PowerSequenceAlternativesRelationDataType) MarshalJSON() ([]byte, error)
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *PowerSequenceAlternativesRelationDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// PowerSequenceAlternativesRelationDataElementsType complex type
-type PowerSequenceAlternativesRelationDataElementsType struct {
-	AlternativesId *ElementTagType `json:"alternativesId"`
-	SequenceId     *ElementTagType `json:"sequenceId"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m PowerSequenceAlternativesRelationDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *PowerSequenceAlternativesRelationDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -11684,29 +9839,6 @@ func (m *PowerSequenceDescriptionDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// PowerSequenceDescriptionDataElementsType complex type
-type PowerSequenceDescriptionDataElementsType struct {
-	SequenceId              *ElementTagType `json:"sequenceId"`
-	Description             *ElementTagType `json:"description"`
-	PositiveEnergyDirection *ElementTagType `json:"positiveEnergyDirection"`
-	PowerUnit               *ElementTagType `json:"powerUnit"`
-	EnergyUnit              *ElementTagType `json:"energyUnit"`
-	ValueSource             *ElementTagType `json:"valueSource"`
-	Scope                   *ElementTagType `json:"scope"`
-	TaskIdentifier          *ElementTagType `json:"taskIdentifier"`
-	RepetitionsTotal        *ElementTagType `json:"repetitionsTotal"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m PowerSequenceDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *PowerSequenceDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // PowerSequenceDescriptionListDataType complex type
 type PowerSequenceDescriptionListDataType struct {
 	PowerSequenceDescriptionData []PowerSequenceDescriptionDataType `json:"powerSequenceDescriptionData"`
@@ -11759,28 +9891,6 @@ func (m *PowerSequenceStateDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// PowerSequenceStateDataElementsType complex type
-type PowerSequenceStateDataElementsType struct {
-	SequenceId                 *ElementTagType `json:"sequenceId"`
-	State                      *ElementTagType `json:"state"`
-	ActiveSlotNumber           *ElementTagType `json:"activeSlotNumber"`
-	ElapsedSlotTime            *ElementTagType `json:"elapsedSlotTime"`
-	RemainingSlotTime          *ElementTagType `json:"remainingSlotTime"`
-	SequenceRemoteControllable *ElementTagType `json:"sequenceRemoteControllable"`
-	ActiveRepetitionNumber     *ElementTagType `json:"activeRepetitionNumber"`
-	RemainingPauseTime         *ElementTagType `json:"remainingPauseTime"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m PowerSequenceStateDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *PowerSequenceStateDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // PowerSequenceStateListDataType complex type
 type PowerSequenceStateListDataType struct {
 	PowerSequenceStateData []PowerSequenceStateDataType `json:"powerSequenceStateData"`
@@ -11825,23 +9935,6 @@ func (m PowerSequenceScheduleDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *PowerSequenceScheduleDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// PowerSequenceScheduleDataElementsType complex type
-type PowerSequenceScheduleDataElementsType struct {
-	SequenceId *ElementTagType `json:"sequenceId"`
-	StartTime  *ElementTagType `json:"startTime"`
-	EndTime    *ElementTagType `json:"endTime"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m PowerSequenceScheduleDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *PowerSequenceScheduleDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -11895,26 +9988,6 @@ func (m *PowerSequenceScheduleConstraintsDataType) UnmarshalJSON(data []byte) er
 	return util.Unmarshal(data, &m)
 }
 
-// PowerSequenceScheduleConstraintsDataElementsType complex type
-type PowerSequenceScheduleConstraintsDataElementsType struct {
-	SequenceId        *ElementTagType `json:"sequenceId"`
-	EarliestStartTime *ElementTagType `json:"earliestStartTime"`
-	LatestStartTime   *ElementTagType `json:"latestStartTime"`
-	EarliestEndTime   *ElementTagType `json:"earliestEndTime"`
-	LatestEndTime     *ElementTagType `json:"latestEndTime"`
-	OptionalSequence  *ElementTagType `json:"optionalSequence"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m PowerSequenceScheduleConstraintsDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *PowerSequenceScheduleConstraintsDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // PowerSequenceScheduleConstraintsListDataType complex type
 type PowerSequenceScheduleConstraintsListDataType struct {
 	PowerSequenceScheduleConstraintsData []PowerSequenceScheduleConstraintsDataType `json:"powerSequenceScheduleConstraintsData"`
@@ -11963,24 +10036,6 @@ func (m *PowerSequencePriceDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// PowerSequencePriceDataElementsType complex type
-type PowerSequencePriceDataElementsType struct {
-	SequenceId         *ElementTagType           `json:"sequenceId"`
-	PotentialStartTime *ElementTagType           `json:"potentialStartTime"`
-	Price              *ScaledNumberElementsType `json:"price"`
-	Currency           *ElementTagType           `json:"currency"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m PowerSequencePriceDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *PowerSequencePriceDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // PowerSequencePriceListDataType complex type
 type PowerSequencePriceListDataType struct {
 	PowerSequencePriceData []PowerSequencePriceDataType `json:"powerSequencePriceData"`
@@ -12026,23 +10081,6 @@ func (m PowerSequenceSchedulePreferenceDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *PowerSequenceSchedulePreferenceDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// PowerSequenceSchedulePreferenceDataElementsType complex type
-type PowerSequenceSchedulePreferenceDataElementsType struct {
-	SequenceId *ElementTagType `json:"sequenceId"`
-	Greenest   *ElementTagType `json:"greenest"`
-	Cheapest   *ElementTagType `json:"cheapest"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m PowerSequenceSchedulePreferenceDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *PowerSequenceSchedulePreferenceDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -12095,25 +10133,6 @@ func (m *PowerSequenceNodeScheduleInformationDataType) UnmarshalJSON(data []byte
 	return util.Unmarshal(data, &m)
 }
 
-// PowerSequenceNodeScheduleInformationDataElementsType complex type
-type PowerSequenceNodeScheduleInformationDataElementsType struct {
-	NodeRemoteControllable           *ElementTagType `json:"nodeRemoteControllable"`
-	SupportsSingleSlotSchedulingOnly *ElementTagType `json:"supportsSingleSlotSchedulingOnly"`
-	AlternativesCount                *ElementTagType `json:"alternativesCount"`
-	TotalSequencesCountMax           *ElementTagType `json:"totalSequencesCountMax"`
-	SupportsReselection              *ElementTagType `json:"supportsReselection"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m PowerSequenceNodeScheduleInformationDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *PowerSequenceNodeScheduleInformationDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // PowerSequenceScheduleConfigurationRequestCallType complex type
 type PowerSequenceScheduleConfigurationRequestCallType struct {
 	SequenceId *PowerSequenceIdType `json:"sequenceId"`
@@ -12126,21 +10145,6 @@ func (m PowerSequenceScheduleConfigurationRequestCallType) MarshalJSON() ([]byte
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *PowerSequenceScheduleConfigurationRequestCallType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// PowerSequenceScheduleConfigurationRequestCallElementsType complex type
-type PowerSequenceScheduleConfigurationRequestCallElementsType struct {
-	SequenceId *ElementTagType `json:"sequenceId"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m PowerSequenceScheduleConfigurationRequestCallElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *PowerSequenceScheduleConfigurationRequestCallElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -12160,22 +10164,6 @@ func (m *PowerSequencePriceCalculationRequestCallType) UnmarshalJSON(data []byte
 	return util.Unmarshal(data, &m)
 }
 
-// PowerSequencePriceCalculationRequestCallElementsType complex type
-type PowerSequencePriceCalculationRequestCallElementsType struct {
-	SequenceId         *ElementTagType `json:"sequenceId"`
-	PotentialStartTime *ElementTagType `json:"potentialStartTime"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m PowerSequencePriceCalculationRequestCallElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *PowerSequencePriceCalculationRequestCallElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // SensingDataType complex type
 type SensingDataType struct {
 	Timestamp string            `json:"timestamp"`
@@ -12190,23 +10178,6 @@ func (m SensingDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *SensingDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// SensingDataElementsType complex type
-type SensingDataElementsType struct {
-	Timestamp *ElementTagType           `json:"timestamp"`
-	State     *ElementTagType           `json:"state"`
-	Value     *ScaledNumberElementsType `json:"value"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SensingDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SensingDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -12259,25 +10230,6 @@ func (m *SensingDescriptionDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// SensingDescriptionDataElementsType complex type
-type SensingDescriptionDataElementsType struct {
-	SensingType *ElementTagType `json:"sensingType"`
-	Unit        *ElementTagType `json:"unit"`
-	ScopeType   *ElementTagType `json:"scopeType"`
-	Label       *ElementTagType `json:"label"`
-	Description *ElementTagType `json:"description"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SensingDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SensingDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // SetpointDataType complex type
 type SetpointDataType struct {
 	SetpointId               *SetpointIdType   `json:"setpointId"`
@@ -12295,26 +10247,6 @@ func (m SetpointDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *SetpointDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// SetpointDataElementsType complex type
-type SetpointDataElementsType struct {
-	SetpointId               *ElementTagType           `json:"setpointId"`
-	Value                    *ScaledNumberElementsType `json:"value"`
-	ValueMin                 *ScaledNumberElementsType `json:"valueMin"`
-	ValueMax                 *ScaledNumberElementsType `json:"valueMax"`
-	ValueToleranceAbsolute   *ScaledNumberElementsType `json:"valueToleranceAbsolute"`
-	ValueTolerancePercentage *ScaledNumberElementsType `json:"valueTolerancePercentage"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SetpointDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SetpointDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -12363,24 +10295,6 @@ func (m SetpointConstraintsDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *SetpointConstraintsDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// SetpointConstraintsDataElementsType complex type
-type SetpointConstraintsDataElementsType struct {
-	SetpointId       *ElementTagType           `json:"setpointId"`
-	SetpointRangeMin *ScaledNumberElementsType `json:"setpointRangeMin"`
-	SetpointRangeMax *ScaledNumberElementsType `json:"setpointRangeMax"`
-	SetpointStepSize *ScaledNumberElementsType `json:"setpointStepSize"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SetpointConstraintsDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SetpointConstraintsDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -12433,28 +10347,6 @@ func (m SetpointDescriptionDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *SetpointDescriptionDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// SetpointDescriptionDataElementsType complex type
-type SetpointDescriptionDataElementsType struct {
-	SetpointId    *ElementTagType `json:"setpointId"`
-	MeasurementId *ElementTagType `json:"measurementId"`
-	TimeTableId   *ElementTagType `json:"timeTableId"`
-	SetpointType  *ElementTagType `json:"setpointType"`
-	Unit          *ElementTagType `json:"unit"`
-	ScopeType     *ElementTagType `json:"scopeType"`
-	Label         *ElementTagType `json:"label"`
-	Description   *ElementTagType `json:"description"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SetpointDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SetpointDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -12593,107 +10485,6 @@ func (m *SmartEnergyManagementPsDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// SmartEnergyManagementPsAlternativesRelationElementsType complex type
-type SmartEnergyManagementPsAlternativesRelationElementsType struct {
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SmartEnergyManagementPsAlternativesRelationElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SmartEnergyManagementPsAlternativesRelationElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// SmartEnergyManagementPsAlternativesElementsType complex type
-type SmartEnergyManagementPsAlternativesElementsType struct {
-	Relation      *SmartEnergyManagementPsAlternativesRelationElementsType `json:"relation"`
-	PowerSequence *SmartEnergyManagementPsPowerSequenceElementsType        `json:"powerSequence"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SmartEnergyManagementPsAlternativesElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SmartEnergyManagementPsAlternativesElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// SmartEnergyManagementPsPowerSequenceElementsType complex type
-type SmartEnergyManagementPsPowerSequenceElementsType struct {
-	Description                           *PowerSequenceDescriptionDataElementsType              `json:"description"`
-	State                                 *PowerSequenceStateDataElementsType                    `json:"state"`
-	Schedule                              *PowerSequenceScheduleDataElementsType                 `json:"schedule"`
-	ScheduleConstraints                   *PowerSequenceScheduleConstraintsDataElementsType      `json:"scheduleConstraints"`
-	SchedulePreference                    *PowerSequenceSchedulePreferenceDataElementsType       `json:"schedulePreference"`
-	OperatingConstraintsInterrupt         *OperatingConstraintsInterruptDataElementsType         `json:"operatingConstraintsInterrupt"`
-	OperatingConstraintsDuration          *OperatingConstraintsDurationDataElementsType          `json:"operatingConstraintsDuration"`
-	OperatingConstraintsResumeImplication *OperatingConstraintsResumeImplicationDataElementsType `json:"operatingConstraintsResumeImplication"`
-	PowerTimeSlot                         *SmartEnergyManagementPsPowerTimeSlotElementsType      `json:"powerTimeSlot"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SmartEnergyManagementPsPowerSequenceElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SmartEnergyManagementPsPowerSequenceElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// SmartEnergyManagementPsPowerTimeSlotElementsType complex type
-type SmartEnergyManagementPsPowerTimeSlotElementsType struct {
-	Schedule            *PowerTimeSlotScheduleDataElementsType                     `json:"schedule"`
-	ValueList           *SmartEnergyManagementPsPowerTimeSlotValueListElementsType `json:"valueList"`
-	ScheduleConstraints *PowerTimeSlotScheduleConstraintsDataElementsType          `json:"scheduleConstraints"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SmartEnergyManagementPsPowerTimeSlotElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SmartEnergyManagementPsPowerTimeSlotElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// SmartEnergyManagementPsPowerTimeSlotValueListElementsType complex type
-type SmartEnergyManagementPsPowerTimeSlotValueListElementsType struct {
-	Value *PowerTimeSlotValueDataElementsType `json:"value"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SmartEnergyManagementPsPowerTimeSlotValueListElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SmartEnergyManagementPsPowerTimeSlotValueListElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// SmartEnergyManagementPsDataElementsType complex type
-type SmartEnergyManagementPsDataElementsType struct {
-	NodeScheduleInformation *PowerSequenceNodeScheduleInformationDataElementsType `json:"nodeScheduleInformation"`
-	Alternatives            *SmartEnergyManagementPsAlternativesElementsType      `json:"alternatives"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SmartEnergyManagementPsDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SmartEnergyManagementPsDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // SmartEnergyManagementPsDataSelectorsType complex type
 type SmartEnergyManagementPsDataSelectorsType struct {
 	AlternativesRelation     *AlternativesRelation     `json:"alternativesRelation"`
@@ -12727,21 +10518,6 @@ func (m *SmartEnergyManagementPsPriceDataType) UnmarshalJSON(data []byte) error 
 	return util.Unmarshal(data, &m)
 }
 
-// SmartEnergyManagementPsPriceDataElementsType complex type
-type SmartEnergyManagementPsPriceDataElementsType struct {
-	Price *PowerSequencePriceDataElementsType `json:"price"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SmartEnergyManagementPsPriceDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SmartEnergyManagementPsPriceDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // SmartEnergyManagementPsPriceDataSelectorsType complex type
 type SmartEnergyManagementPsPriceDataSelectorsType struct {
 	Price *PowerSequencePriceListDataSelectorsType `json:"price"`
@@ -12772,21 +10548,6 @@ func (m *SmartEnergyManagementPsConfigurationRequestCallType) UnmarshalJSON(data
 	return util.Unmarshal(data, &m)
 }
 
-// SmartEnergyManagementPsConfigurationRequestCallElementsType complex type
-type SmartEnergyManagementPsConfigurationRequestCallElementsType struct {
-	ScheduleConfigurationRequest *PowerSequenceScheduleConfigurationRequestCallElementsType `json:"scheduleConfigurationRequest"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SmartEnergyManagementPsConfigurationRequestCallElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SmartEnergyManagementPsConfigurationRequestCallElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // SmartEnergyManagementPsPriceCalculationRequestCallType complex type
 type SmartEnergyManagementPsPriceCalculationRequestCallType struct {
 	PriceCalculationRequest *PowerSequencePriceCalculationRequestCallType `json:"priceCalculationRequest"`
@@ -12799,21 +10560,6 @@ func (m SmartEnergyManagementPsPriceCalculationRequestCallType) MarshalJSON() ([
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *SmartEnergyManagementPsPriceCalculationRequestCallType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// SmartEnergyManagementPsPriceCalculationRequestCallElementsType complex type
-type SmartEnergyManagementPsPriceCalculationRequestCallElementsType struct {
-	PriceCalculationRequest *PowerSequencePriceCalculationRequestCallElementsType `json:"priceCalculationRequest"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SmartEnergyManagementPsPriceCalculationRequestCallElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SmartEnergyManagementPsPriceCalculationRequestCallElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -12837,29 +10583,6 @@ func (m SupplyConditionDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *SupplyConditionDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// SupplyConditionDataElementsType complex type
-type SupplyConditionDataElementsType struct {
-	ConditionId         *ElementTagType           `json:"conditionId"`
-	Timestamp           *ElementTagType           `json:"timestamp"`
-	EventType           *ElementTagType           `json:"eventType"`
-	Originator          *ElementTagType           `json:"originator"`
-	ThresholdId         *ElementTagType           `json:"thresholdId"`
-	ThresholdPercentage *ScaledNumberElementsType `json:"thresholdPercentage"`
-	RelevantPeriod      *TimePeriodElementsType   `json:"relevantPeriod"`
-	Description         *ElementTagType           `json:"description"`
-	GridCondition       *ElementTagType           `json:"gridCondition"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SupplyConditionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SupplyConditionDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -12915,25 +10638,6 @@ func (m *SupplyConditionDescriptionDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// SupplyConditionDescriptionDataElementsType complex type
-type SupplyConditionDescriptionDataElementsType struct {
-	ConditionId             *ElementTagType `json:"conditionId"`
-	CommodityType           *ElementTagType `json:"commodityType"`
-	PositiveEnergyDirection *ElementTagType `json:"positiveEnergyDirection"`
-	Label                   *ElementTagType `json:"label"`
-	Description             *ElementTagType `json:"description"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SupplyConditionDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SupplyConditionDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // SupplyConditionDescriptionListDataType complex type
 type SupplyConditionDescriptionListDataType struct {
 	SupplyConditionDescriptionData []SupplyConditionDescriptionDataType `json:"supplyConditionDescriptionData"`
@@ -12977,22 +10681,6 @@ func (m SupplyConditionThresholdRelationDataType) MarshalJSON() ([]byte, error) 
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *SupplyConditionThresholdRelationDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// SupplyConditionThresholdRelationDataElementsType complex type
-type SupplyConditionThresholdRelationDataElementsType struct {
-	ConditionId *ElementTagType `json:"conditionId"`
-	ThresholdId *ElementTagType `json:"thresholdId"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SupplyConditionThresholdRelationDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SupplyConditionThresholdRelationDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -13041,20 +10729,6 @@ func (m *TaskManagementDirectControlRelatedType) UnmarshalJSON(data []byte) erro
 	return util.Unmarshal(data, &m)
 }
 
-// TaskManagementDirectControlRelatedElementsType complex type
-type TaskManagementDirectControlRelatedElementsType struct {
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TaskManagementDirectControlRelatedElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TaskManagementDirectControlRelatedElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // TaskManagementHvacRelatedType complex type
 type TaskManagementHvacRelatedType struct {
 	OverrunId *HvacOverrunIdType `json:"overrunId"`
@@ -13067,21 +10741,6 @@ func (m TaskManagementHvacRelatedType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *TaskManagementHvacRelatedType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// TaskManagementHvacRelatedElementsType complex type
-type TaskManagementHvacRelatedElementsType struct {
-	OverrunId *ElementTagType `json:"overrunId"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TaskManagementHvacRelatedElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TaskManagementHvacRelatedElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -13100,21 +10759,6 @@ func (m *TaskManagementLoadControlReleatedType) UnmarshalJSON(data []byte) error
 	return util.Unmarshal(data, &m)
 }
 
-// TaskManagementLoadControlReleatedElementsType complex type
-type TaskManagementLoadControlReleatedElementsType struct {
-	EventId *ElementTagType `json:"eventId"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TaskManagementLoadControlReleatedElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TaskManagementLoadControlReleatedElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // TaskManagementPowerSequencesRelatedType complex type
 type TaskManagementPowerSequencesRelatedType struct {
 	SequenceId *PowerSequenceIdType `json:"sequenceId"`
@@ -13130,21 +10774,6 @@ func (m *TaskManagementPowerSequencesRelatedType) UnmarshalJSON(data []byte) err
 	return util.Unmarshal(data, &m)
 }
 
-// TaskManagementPowerSequencesRelatedElementsType complex type
-type TaskManagementPowerSequencesRelatedElementsType struct {
-	SequenceId *ElementTagType `json:"sequenceId"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TaskManagementPowerSequencesRelatedElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TaskManagementPowerSequencesRelatedElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // TaskManagementSmartEnergyManagementPsRelatedType complex type
 type TaskManagementSmartEnergyManagementPsRelatedType struct {
 	SequenceId *PowerSequenceIdType `json:"sequenceId"`
@@ -13157,21 +10786,6 @@ func (m TaskManagementSmartEnergyManagementPsRelatedType) MarshalJSON() ([]byte,
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *TaskManagementSmartEnergyManagementPsRelatedType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// TaskManagementSmartEnergyManagementPsRelatedElementsType complex type
-type TaskManagementSmartEnergyManagementPsRelatedElementsType struct {
-	SequenceId *ElementTagType `json:"sequenceId"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TaskManagementSmartEnergyManagementPsRelatedElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TaskManagementSmartEnergyManagementPsRelatedElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -13191,25 +10805,6 @@ func (m TaskManagementJobDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *TaskManagementJobDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// TaskManagementJobDataElementsType complex type
-type TaskManagementJobDataElementsType struct {
-	JobId         *ElementTagType `json:"jobId"`
-	Timestamp     *ElementTagType `json:"timestamp"`
-	JobState      *ElementTagType `json:"jobState"`
-	ElapsedTime   *ElementTagType `json:"elapsedTime"`
-	RemainingTime *ElementTagType `json:"remainingTime"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TaskManagementJobDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TaskManagementJobDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -13264,26 +10859,6 @@ func (m *TaskManagementJobRelationDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// TaskManagementJobRelationDataElementsType complex type
-type TaskManagementJobRelationDataElementsType struct {
-	JobId                          *ElementTagType                                           `json:"jobId"`
-	DirectControlRelated           *TaskManagementDirectControlRelatedElementsType           `json:"directControlRelated"`
-	HvacRelated                    *TaskManagementHvacRelatedElementsType                    `json:"hvacRelated"`
-	LoadControlReleated            *TaskManagementLoadControlReleatedElementsType            `json:"loadControlReleated"`
-	PowerSequencesRelated          *TaskManagementPowerSequencesRelatedElementsType          `json:"powerSequencesRelated"`
-	SmartEnergyManagementPsRelated *TaskManagementSmartEnergyManagementPsRelatedElementsType `json:"smartEnergyManagementPsRelated"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TaskManagementJobRelationDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TaskManagementJobRelationDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // TaskManagementJobRelationListDataType complex type
 type TaskManagementJobRelationListDataType struct {
 	TaskManagementJobRelationData []TaskManagementJobRelationDataType `json:"taskManagementJobRelationData"`
@@ -13329,24 +10904,6 @@ func (m TaskManagementJobDescriptionDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *TaskManagementJobDescriptionDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// TaskManagementJobDescriptionDataElementsType complex type
-type TaskManagementJobDescriptionDataElementsType struct {
-	JobId       *ElementTagType `json:"jobId"`
-	JobSource   *ElementTagType `json:"jobSource"`
-	Label       *ElementTagType `json:"label"`
-	Description *ElementTagType `json:"description"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TaskManagementJobDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TaskManagementJobDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -13397,22 +10954,6 @@ func (m *TaskManagementOverviewDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// TaskManagementOverviewDataElementsType complex type
-type TaskManagementOverviewDataElementsType struct {
-	RemoteControllable *ElementTagType `json:"remoteControllable"`
-	JobsActive         *ElementTagType `json:"jobsActive"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TaskManagementOverviewDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TaskManagementOverviewDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // ThresholdDataType complex type
 type ThresholdDataType struct {
 	ThresholdId    *ThresholdIdType  `json:"thresholdId"`
@@ -13426,22 +10967,6 @@ func (m ThresholdDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *ThresholdDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// ThresholdDataElementsType complex type
-type ThresholdDataElementsType struct {
-	ThresholdId    *ElementTagType           `json:"thresholdId"`
-	ThresholdValue *ScaledNumberElementsType `json:"thresholdValue"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m ThresholdDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *ThresholdDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -13490,24 +11015,6 @@ func (m ThresholdConstraintsDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *ThresholdConstraintsDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// ThresholdConstraintsDataElementsType complex type
-type ThresholdConstraintsDataElementsType struct {
-	ThresholdId       *ElementTagType           `json:"thresholdId"`
-	ThresholdRangeMin *ScaledNumberElementsType `json:"thresholdRangeMin"`
-	ThresholdRangeMax *ScaledNumberElementsType `json:"thresholdRangeMax"`
-	ThresholdStepSize *ScaledNumberElementsType `json:"thresholdStepSize"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m ThresholdConstraintsDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *ThresholdConstraintsDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -13561,26 +11068,6 @@ func (m *ThresholdDescriptionDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// ThresholdDescriptionDataElementsType complex type
-type ThresholdDescriptionDataElementsType struct {
-	ThresholdId   *ElementTagType `json:"thresholdId"`
-	ThresholdType *ElementTagType `json:"thresholdType"`
-	Unit          *ElementTagType `json:"unit"`
-	ScopeType     *ElementTagType `json:"scopeType"`
-	Label         *ElementTagType `json:"label"`
-	Description   *ElementTagType `json:"description"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m ThresholdDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *ThresholdDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // ThresholdDescriptionListDataType complex type
 type ThresholdDescriptionListDataType struct {
 	ThresholdDescriptionData []ThresholdDescriptionDataType `json:"thresholdDescriptionData"`
@@ -13630,24 +11117,6 @@ func (m *TimeInformationDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// TimeInformationDataElementsType complex type
-type TimeInformationDataElementsType struct {
-	Utc          *ElementTagType `json:"utc"`
-	UtcOffset    *ElementTagType `json:"utcOffset"`
-	DayOfWeek    *ElementTagType `json:"dayOfWeek"`
-	CalendarWeek *ElementTagType `json:"calendarWeek"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TimeInformationDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TimeInformationDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // TimeDistributorDataType complex type
 type TimeDistributorDataType struct {
 	IsTimeDistributor   *bool `json:"isTimeDistributor"`
@@ -13661,22 +11130,6 @@ func (m TimeDistributorDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *TimeDistributorDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// TimeDistributorDataElementsType complex type
-type TimeDistributorDataElementsType struct {
-	IsTimeDistributor   *ElementTagType `json:"isTimeDistributor"`
-	DistributorPriority *ElementTagType `json:"distributorPriority"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TimeDistributorDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TimeDistributorDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -13697,23 +11150,6 @@ func (m *TimePrecisionDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// TimePrecisionDataElementsType complex type
-type TimePrecisionDataElementsType struct {
-	IsSynchronised *ElementTagType `json:"isSynchronised"`
-	LastSyncAt     *ElementTagType `json:"lastSyncAt"`
-	ClockDrift     *ElementTagType `json:"clockDrift"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TimePrecisionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TimePrecisionDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // TimeDistributorEnquiryCallType complex type
 type TimeDistributorEnquiryCallType struct {
 }
@@ -13725,20 +11161,6 @@ func (m TimeDistributorEnquiryCallType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *TimeDistributorEnquiryCallType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// TimeDistributorEnquiryCallElementsType complex type
-type TimeDistributorEnquiryCallElementsType struct {
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TimeDistributorEnquiryCallElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TimeDistributorEnquiryCallElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 

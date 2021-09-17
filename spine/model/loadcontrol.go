@@ -83,21 +83,6 @@ func (m *LoadControlNodeDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// LoadControlNodeDataElementsType complex type
-type LoadControlNodeDataElementsType struct {
-	IsNodeRemoteControllable *ElementTagType `json:"isNodeRemoteControllable,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m LoadControlNodeDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *LoadControlNodeDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // LoadControlEventDataType complex type
 type LoadControlEventDataType struct {
 	Timestamp          *string                     `json:"timestamp,omitempty"`
@@ -114,25 +99,6 @@ func (m LoadControlEventDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *LoadControlEventDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// LoadControlEventDataElementsType complex type
-type LoadControlEventDataElementsType struct {
-	Timestamp          *ElementTagType         `json:"timestamp,omitempty"`
-	EventId            *ElementTagType         `json:"eventId,omitempty"`
-	EventActionConsume *ElementTagType         `json:"eventActionConsume,omitempty"`
-	EventActionProduce *ElementTagType         `json:"eventActionProduce,omitempty"`
-	TimePeriod         *TimePeriodElementsType `json:"timePeriod,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m LoadControlEventDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *LoadControlEventDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -187,26 +153,6 @@ func (m *LoadControlStateDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// LoadControlStateDataElementsType complex type
-type LoadControlStateDataElementsType struct {
-	Timestamp                 *ElementTagType `json:"timestamp,omitempty"`
-	EventId                   *ElementTagType `json:"eventId,omitempty"`
-	EventStateConsume         *ElementTagType `json:"eventStateConsume,omitempty"`
-	AppliedEventActionConsume *ElementTagType `json:"appliedEventActionConsume,omitempty"`
-	EventStateProduce         *ElementTagType `json:"eventStateProduce,omitempty"`
-	AppliedEventActionProduce *ElementTagType `json:"appliedEventActionProduce,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m LoadControlStateDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *LoadControlStateDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // LoadControlStateListDataType complex type
 type LoadControlStateListDataType struct {
 	LoadControlStateData []LoadControlStateDataType `json:"loadControlStateData,omitempty"`
@@ -257,25 +203,6 @@ func (m *LoadControlLimitDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// LoadControlLimitDataElementsType complex type
-type LoadControlLimitDataElementsType struct {
-	LimitId           *ElementTagType           `json:"limitId,omitempty"`
-	IsLimitChangeable *ElementTagType           `json:"isLimitChangeable,omitempty"`
-	IsLimitActive     *ElementTagType           `json:"isLimitActive,omitempty"`
-	TimePeriod        *TimePeriodElementsType   `json:"timePeriod,omitempty"`
-	Value             *ScaledNumberElementsType `json:"value,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m LoadControlLimitDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *LoadControlLimitDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // LoadControlLimitListDataType complex type
 type LoadControlLimitListDataType struct {
 	LoadControlLimitData []LoadControlLimitDataType `json:"loadControlLimitData,omitempty"`
@@ -321,24 +248,6 @@ func (m LoadControlLimitConstraintsDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *LoadControlLimitConstraintsDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// LoadControlLimitConstraintsDataElementsType complex type
-type LoadControlLimitConstraintsDataElementsType struct {
-	LimitId       *ElementTagType           `json:"limitId,omitempty"`
-	ValueRangeMin *ScaledNumberElementsType `json:"valueRangeMin,omitempty"`
-	ValueRangeMax *ScaledNumberElementsType `json:"valueRangeMax,omitempty"`
-	ValueStepSize *ScaledNumberElementsType `json:"valueStepSize,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m LoadControlLimitConstraintsDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *LoadControlLimitConstraintsDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -392,29 +301,6 @@ func (m LoadControlLimitDescriptionDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *LoadControlLimitDescriptionDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// LoadControlLimitDescriptionDataElementsType complex type
-type LoadControlLimitDescriptionDataElementsType struct {
-	LimitId        *ElementTagType `json:"limitId,omitempty"`
-	LimitType      *ElementTagType `json:"limitType,omitempty"`
-	LimitCategory  *ElementTagType `json:"limitCategory,omitempty"`
-	LimitDirection *ElementTagType `json:"limitDirection,omitempty"`
-	MeasurementId  *ElementTagType `json:"measurementId,omitempty"`
-	Unit           *ElementTagType `json:"unit,omitempty"`
-	ScopeType      *ElementTagType `json:"scopeType,omitempty"`
-	Label          *ElementTagType `json:"label,omitempty"`
-	Description    *ElementTagType `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m LoadControlLimitDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *LoadControlLimitDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 

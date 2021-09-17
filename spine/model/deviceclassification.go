@@ -49,32 +49,6 @@ func (m *DeviceClassificationManufacturerDataType) UnmarshalJSON(data []byte) er
 	return util.Unmarshal(data, &m)
 }
 
-// DeviceClassificationManufacturerDataElementsType complex type
-type DeviceClassificationManufacturerDataElementsType struct {
-	DeviceName                     *ElementTagType `json:"deviceName,omitempty"`
-	DeviceCode                     *ElementTagType `json:"deviceCode,omitempty"`
-	SerialNumber                   *ElementTagType `json:"serialNumber,omitempty"`
-	SoftwareRevision               *ElementTagType `json:"softwareRevision,omitempty"`
-	HardwareRevision               *ElementTagType `json:"hardwareRevision,omitempty"`
-	VendorName                     *ElementTagType `json:"vendorName,omitempty"`
-	VendorCode                     *ElementTagType `json:"vendorCode,omitempty"`
-	BrandName                      *ElementTagType `json:"brandName,omitempty"`
-	PowerSource                    *ElementTagType `json:"powerSource,omitempty"`
-	ManufacturerNodeIdentification *ElementTagType `json:"manufacturerNodeIdentification,omitempty"`
-	ManufacturerLabel              *ElementTagType `json:"manufacturerLabel,omitempty"`
-	ManufacturerDescription        *ElementTagType `json:"manufacturerDescription,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m DeviceClassificationManufacturerDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *DeviceClassificationManufacturerDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // DeviceClassificationUserDataType complex type
 type DeviceClassificationUserDataType struct {
 	UserNodeIdentification *DeviceClassificationStringType `json:"userNodeIdentification,omitempty"`
@@ -89,22 +63,5 @@ func (m DeviceClassificationUserDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *DeviceClassificationUserDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// DeviceClassificationUserDataElementsType complex type
-type DeviceClassificationUserDataElementsType struct {
-	UserNodeIdentification *ElementTagType `json:"userNodeIdentification,omitempty"`
-	UserLabel              *ElementTagType `json:"userLabel,omitempty"`
-	UserDescription        *ElementTagType `json:"userDescription,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m DeviceClassificationUserDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *DeviceClassificationUserDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }

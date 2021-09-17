@@ -53,24 +53,6 @@ func (m *UseCaseSupportType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// UseCaseSupportElementsType complex type
-type UseCaseSupportElementsType struct {
-	UseCaseName      *ElementTagType `json:"useCaseName,omitempty"`
-	UseCaseVersion   *ElementTagType `json:"useCaseVersion,omitempty"`
-	UseCaseAvailable *ElementTagType `json:"useCaseAvailable,omitempty"`
-	ScenarioSupport  *ElementTagType `json:"scenarioSupport,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m UseCaseSupportElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *UseCaseSupportElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // UseCaseSupportSelectorsType complex type
 type UseCaseSupportSelectorsType struct {
 	UseCaseName     *UseCaseNameType            `json:"useCaseName,omitempty"`
@@ -102,23 +84,6 @@ func (m UseCaseInformationDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *UseCaseInformationDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// UseCaseInformationDataElementsType complex type
-type UseCaseInformationDataElementsType struct {
-	Address        *FeatureAddressElementsType `json:"address,omitempty"`
-	Actor          *ElementTagType             `json:"actor,omitempty"`
-	UseCaseSupport *UseCaseSupportElementsType `json:"useCaseSupport,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m UseCaseInformationDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *UseCaseInformationDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 

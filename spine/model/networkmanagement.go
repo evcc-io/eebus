@@ -79,25 +79,6 @@ func (m *NetworkManagementAddNodeCallType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// NetworkManagementAddNodeCallElementsType complex type
-type NetworkManagementAddNodeCallElementsType struct {
-	NodeAddress *FeatureAddressElementsType `json:"nodeAddress,omitempty"`
-	NativeSetup *ElementTagType             `json:"nativeSetup,omitempty"`
-	Timeout     *ElementTagType             `json:"timeout,omitempty"`
-	Label       *ElementTagType             `json:"label,omitempty"`
-	Description *ElementTagType             `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NetworkManagementAddNodeCallElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NetworkManagementAddNodeCallElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // NetworkManagementRemoveNodeCallType complex type
 type NetworkManagementRemoveNodeCallType struct {
 	NodeAddress *FeatureAddressType                  `json:"nodeAddress,omitempty"`
@@ -111,22 +92,6 @@ func (m NetworkManagementRemoveNodeCallType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *NetworkManagementRemoveNodeCallType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// NetworkManagementRemoveNodeCallElementsType complex type
-type NetworkManagementRemoveNodeCallElementsType struct {
-	NodeAddress *FeatureAddressElementsType `json:"nodeAddress,omitempty"`
-	Timeout     *ElementTagType             `json:"timeout,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NetworkManagementRemoveNodeCallElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NetworkManagementRemoveNodeCallElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -149,25 +114,6 @@ func (m *NetworkManagementModifyNodeCallType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// NetworkManagementModifyNodeCallElementsType complex type
-type NetworkManagementModifyNodeCallElementsType struct {
-	NodeAddress *FeatureAddressElementsType `json:"nodeAddress,omitempty"`
-	NativeSetup *ElementTagType             `json:"nativeSetup,omitempty"`
-	Timeout     *ElementTagType             `json:"timeout,omitempty"`
-	Label       *ElementTagType             `json:"label,omitempty"`
-	Description *ElementTagType             `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NetworkManagementModifyNodeCallElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NetworkManagementModifyNodeCallElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // NetworkManagementScanNetworkCallType complex type
 type NetworkManagementScanNetworkCallType struct {
 	ScanSetup *NetworkManagementScanSetupType      `json:"scanSetup,omitempty"`
@@ -181,22 +127,6 @@ func (m NetworkManagementScanNetworkCallType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *NetworkManagementScanNetworkCallType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// NetworkManagementScanNetworkCallElementsType complex type
-type NetworkManagementScanNetworkCallElementsType struct {
-	ScanSetup *ElementTagType `json:"scanSetup,omitempty"`
-	Timeout   *ElementTagType `json:"timeout,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NetworkManagementScanNetworkCallElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NetworkManagementScanNetworkCallElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -215,21 +145,6 @@ func (m *NetworkManagementDiscoverCallType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// NetworkManagementDiscoverCallElementsType complex type
-type NetworkManagementDiscoverCallElementsType struct {
-	DiscoverAddress *FeatureAddressElementsType `json:"discoverAddress,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NetworkManagementDiscoverCallElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NetworkManagementDiscoverCallElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // NetworkManagementAbortCallType complex type
 type NetworkManagementAbortCallType struct {
 }
@@ -241,20 +156,6 @@ func (m NetworkManagementAbortCallType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *NetworkManagementAbortCallType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// NetworkManagementAbortCallElementsType complex type
-type NetworkManagementAbortCallElementsType struct {
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NetworkManagementAbortCallElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NetworkManagementAbortCallElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -274,22 +175,6 @@ func (m *NetworkManagementProcessStateDataType) UnmarshalJSON(data []byte) error
 	return util.Unmarshal(data, &m)
 }
 
-// NetworkManagementProcessStateDataElementsType complex type
-type NetworkManagementProcessStateDataElementsType struct {
-	State       *ElementTagType `json:"state,omitempty"`
-	Description *ElementTagType `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NetworkManagementProcessStateDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NetworkManagementProcessStateDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // NetworkManagementJoiningModeDataType complex type
 type NetworkManagementJoiningModeDataType struct {
 	Setup *NetworkManagementSetupType `json:"setup,omitempty"`
@@ -302,21 +187,6 @@ func (m NetworkManagementJoiningModeDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *NetworkManagementJoiningModeDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// NetworkManagementJoiningModeDataElementsType complex type
-type NetworkManagementJoiningModeDataElementsType struct {
-	Setup *ElementTagType `json:"setup,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NetworkManagementJoiningModeDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NetworkManagementJoiningModeDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -335,24 +205,6 @@ func (m NetworkManagementReportCandidateDataType) MarshalJSON() ([]byte, error) 
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *NetworkManagementReportCandidateDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// NetworkManagementReportCandidateDataElementsType complex type
-type NetworkManagementReportCandidateDataElementsType struct {
-	CandidateSetup    *ElementTagType `json:"candidateSetup,omitempty"`
-	SetupUsableForAdd *ElementTagType `json:"setupUsableForAdd,omitempty"`
-	Label             *ElementTagType `json:"label,omitempty"`
-	Description       *ElementTagType `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NetworkManagementReportCandidateDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NetworkManagementReportCandidateDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -378,31 +230,6 @@ func (m NetworkManagementDeviceDescriptionDataType) MarshalJSON() ([]byte, error
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *NetworkManagementDeviceDescriptionDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// NetworkManagementDeviceDescriptionDataElementsType complex type
-type NetworkManagementDeviceDescriptionDataElementsType struct {
-	DeviceAddress                       *DeviceAddressElementsType `json:"deviceAddress,omitempty"`
-	DeviceType                          *ElementTagType            `json:"deviceType,omitempty"`
-	NetworkManagementResponsibleAddress *ElementTagType            `json:"networkManagementResponsibleAddress,omitempty"`
-	NativeSetup                         *ElementTagType            `json:"nativeSetup,omitempty"`
-	TechnologyAddress                   *ElementTagType            `json:"technologyAddress,omitempty"`
-	CommunicationsTechnologyInformation *ElementTagType            `json:"communicationsTechnologyInformation,omitempty"`
-	NetworkFeatureSet                   *ElementTagType            `json:"networkFeatureSet,omitempty"`
-	LastStateChange                     *ElementTagType            `json:"lastStateChange,omitempty"`
-	MinimumTrustLevel                   *ElementTagType            `json:"minimumTrustLevel,omitempty"`
-	Label                               *ElementTagType            `json:"label,omitempty"`
-	Description                         *ElementTagType            `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NetworkManagementDeviceDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NetworkManagementDeviceDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -454,26 +281,6 @@ func (m NetworkManagementEntityDescriptionDataType) MarshalJSON() ([]byte, error
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *NetworkManagementEntityDescriptionDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// NetworkManagementEntityDescriptionDataElementsType complex type
-type NetworkManagementEntityDescriptionDataElementsType struct {
-	EntityAddress     *EntityAddressElementsType `json:"entityAddress,omitempty"`
-	EntityType        *ElementTagType            `json:"entityType,omitempty"`
-	LastStateChange   *ElementTagType            `json:"lastStateChange,omitempty"`
-	MinimumTrustLevel *ElementTagType            `json:"minimumTrustLevel,omitempty"`
-	Label             *ElementTagType            `json:"label,omitempty"`
-	Description       *ElementTagType            `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NetworkManagementEntityDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NetworkManagementEntityDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -530,31 +337,6 @@ func (m NetworkManagementFeatureDescriptionDataType) MarshalJSON() ([]byte, erro
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *NetworkManagementFeatureDescriptionDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// NetworkManagementFeatureDescriptionDataElementsType complex type
-type NetworkManagementFeatureDescriptionDataElementsType struct {
-	FeatureAddress    *FeatureAddressElementsType   `json:"featureAddress,omitempty"`
-	FeatureType       *ElementTagType               `json:"featureType,omitempty"`
-	SpecificUsage     *ElementTagType               `json:"specificUsage,omitempty"`
-	FeatureGroup      *ElementTagType               `json:"featureGroup,omitempty"`
-	Role              *ElementTagType               `json:"role,omitempty"`
-	SupportedFunction *FunctionPropertyElementsType `json:"supportedFunction,omitempty"`
-	LastStateChange   *ElementTagType               `json:"lastStateChange,omitempty"`
-	MinimumTrustLevel *ElementTagType               `json:"minimumTrustLevel,omitempty"`
-	Label             *ElementTagType               `json:"label,omitempty"`
-	Description       *ElementTagType               `json:"description,omitempty"`
-	MaxResponseDelay  *ElementTagType               `json:"maxResponseDelay,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NetworkManagementFeatureDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NetworkManagementFeatureDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 

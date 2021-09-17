@@ -27,25 +27,6 @@ func (m *BindingManagementEntryDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// BindingManagementEntryDataElementsType complex type
-type BindingManagementEntryDataElementsType struct {
-	BindingId     *ElementTagType             `json:"bindingId,omitempty"`
-	ClientAddress *FeatureAddressElementsType `json:"clientAddress,omitempty"`
-	ServerAddress *FeatureAddressElementsType `json:"serverAddress,omitempty"`
-	Label         *ElementTagType             `json:"label,omitempty"`
-	Description   *ElementTagType             `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m BindingManagementEntryDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *BindingManagementEntryDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // BindingManagementEntryListDataType complex type
 type BindingManagementEntryListDataType struct {
 	BindingManagementEntryData []BindingManagementEntryDataType `json:"bindingManagementEntryData,omitempty"`
@@ -95,23 +76,6 @@ func (m *BindingManagementRequestCallType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// BindingManagementRequestCallElementsType complex type
-type BindingManagementRequestCallElementsType struct {
-	ClientAddress     *FeatureAddressElementsType `json:"clientAddress,omitempty"`
-	ServerAddress     *FeatureAddressElementsType `json:"serverAddress,omitempty"`
-	ServerFeatureType *ElementTagType             `json:"serverFeatureType,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m BindingManagementRequestCallElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *BindingManagementRequestCallElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // BindingManagementDeleteCallType complex type
 type BindingManagementDeleteCallType struct {
 	BindingId     *BindingIdType      `json:"bindingId,omitempty"`
@@ -126,22 +90,5 @@ func (m BindingManagementDeleteCallType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *BindingManagementDeleteCallType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// BindingManagementDeleteCallElementsType complex type
-type BindingManagementDeleteCallElementsType struct {
-	BindingId     *ElementTagType             `json:"bindingId,omitempty"`
-	ClientAddress *FeatureAddressElementsType `json:"clientAddress,omitempty"`
-	ServerAddress *FeatureAddressElementsType `json:"serverAddress,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m BindingManagementDeleteCallElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *BindingManagementDeleteCallElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }

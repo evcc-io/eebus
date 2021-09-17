@@ -42,24 +42,6 @@ func (m *IdentificationDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// IdentificationDataElementsType complex type
-type IdentificationDataElementsType struct {
-	IdentificationId    *ElementTagType `json:"identificationId,omitempty"`
-	IdentificationType  *ElementTagType `json:"identificationType,omitempty"`
-	IdentificationValue *ElementTagType `json:"identificationValue,omitempty"`
-	Authorized          *ElementTagType `json:"authorized,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m IdentificationDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *IdentificationDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // IdentificationListDataType complex type
 type IdentificationListDataType struct {
 	IdentificationData []IdentificationDataType `json:"identificationData,omitempty"`

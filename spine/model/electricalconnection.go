@@ -110,32 +110,6 @@ func (m *ElectricalConnectionParameterDescriptionDataType) UnmarshalJSON(data []
 	return util.Unmarshal(data, &m)
 }
 
-// ElectricalConnectionParameterDescriptionDataElementsType complex type
-type ElectricalConnectionParameterDescriptionDataElementsType struct {
-	ElectricalConnectionId  *ElementTagType `json:"electricalConnectionId,omitempty"`
-	ParameterId             *ElementTagType `json:"parameterId,omitempty"`
-	MeasurementId           *ElementTagType `json:"measurementId,omitempty"`
-	VoltageType             *ElementTagType `json:"voltageType,omitempty"`
-	AcMeasuredPhases        *ElementTagType `json:"acMeasuredPhases,omitempty"`
-	AcMeasuredInReferenceTo *ElementTagType `json:"acMeasuredInReferenceTo,omitempty"`
-	AcMeasurementType       *ElementTagType `json:"acMeasurementType,omitempty"`
-	AcMeasurementVariant    *ElementTagType `json:"acMeasurementVariant,omitempty"`
-	AcMeasuredHarmonic      *ElementTagType `json:"acMeasuredHarmonic,omitempty"`
-	ScopeType               *ElementTagType `json:"scopeType,omitempty"`
-	Label                   *ElementTagType `json:"label,omitempty"`
-	Description             *ElementTagType `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m ElectricalConnectionParameterDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *ElectricalConnectionParameterDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // ElectricalConnectionParameterDescriptionListDataType complex type
 type ElectricalConnectionParameterDescriptionListDataType struct {
 	ElectricalConnectionParameterDescriptionData []ElectricalConnectionParameterDescriptionDataType `json:"electricalConnectionParameterDescriptionData,omitempty"`
@@ -183,23 +157,6 @@ func (m ElectricalConnectionPermittedValueSetDataType) MarshalJSON() ([]byte, er
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *ElectricalConnectionPermittedValueSetDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// ElectricalConnectionPermittedValueSetDataElementsType complex type
-type ElectricalConnectionPermittedValueSetDataElementsType struct {
-	ElectricalConnectionId *ElementTagType              `json:"electricalConnectionId,omitempty"`
-	ParameterId            *ElementTagType              `json:"parameterId,omitempty"`
-	PermittedValueSet      *ScaledNumberSetElementsType `json:"permittedValueSet,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m ElectricalConnectionPermittedValueSetDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *ElectricalConnectionPermittedValueSetDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -255,27 +212,6 @@ func (m *ElectricalConnectionStateDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// ElectricalConnectionStateDataElementsType complex type
-type ElectricalConnectionStateDataElementsType struct {
-	ElectricalConnectionId *ElementTagType `json:"electricalConnectionId,omitempty"`
-	Timestamp              *ElementTagType `json:"timestamp,omitempty"`
-	CurrentEnergyMode      *ElementTagType `json:"currentEnergyMode,omitempty"`
-	ConsumptionTime        *ElementTagType `json:"consumptionTime,omitempty"`
-	ProductionTime         *ElementTagType `json:"productionTime,omitempty"`
-	TotalConsumptionTime   *ElementTagType `json:"totalConsumptionTime,omitempty"`
-	TotalProductionTime    *ElementTagType `json:"totalProductionTime,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m ElectricalConnectionStateDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *ElectricalConnectionStateDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // ElectricalConnectionStateListDataType complex type
 type ElectricalConnectionStateListDataType struct {
 	ElectricalConnectionStateData []ElectricalConnectionStateDataType `json:"electricalConnectionStateData,omitempty"`
@@ -325,28 +261,6 @@ func (m ElectricalConnectionDescriptionDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *ElectricalConnectionDescriptionDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// ElectricalConnectionDescriptionDataElementsType complex type
-type ElectricalConnectionDescriptionDataElementsType struct {
-	ElectricalConnectionId  *ElementTagType `json:"electricalConnectionId,omitempty"`
-	PowerSupplyType         *ElementTagType `json:"powerSupplyType,omitempty"`
-	AcConnectedPhases       *ElementTagType `json:"acConnectedPhases,omitempty"`
-	AcRmsPeriodDuration     *ElementTagType `json:"acRmsPeriodDuration,omitempty"`
-	PositiveEnergyDirection *ElementTagType `json:"positiveEnergyDirection,omitempty"`
-	ScopeType               *ElementTagType `json:"scopeType,omitempty"`
-	Label                   *ElementTagType `json:"label,omitempty"`
-	Description             *ElementTagType `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m ElectricalConnectionDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *ElectricalConnectionDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 

@@ -46,25 +46,6 @@ func (m *TimeTableDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// TimeTableDataElementsType complex type
-type TimeTableDataElementsType struct {
-	TimeTableId           *ElementTagType                      `json:"timeTableId,omitempty"`
-	TimeSlotId            *ElementTagType                      `json:"timeSlotId,omitempty"`
-	RecurrenceInformation *RecurrenceInformationElementsType   `json:"recurrenceInformation,omitempty"`
-	StartTime             *AbsoluteOrRecurringTimeElementsType `json:"startTime,omitempty"`
-	EndTime               *AbsoluteOrRecurringTimeElementsType `json:"endTime,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TimeTableDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TimeTableDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // TimeTableListDataType complex type
 type TimeTableListDataType struct {
 	TimeTableData []TimeTableDataType `json:"timeTableData,omitempty"`
@@ -118,28 +99,6 @@ func (m *TimeTableConstraintsDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// TimeTableConstraintsDataElementsType complex type
-type TimeTableConstraintsDataElementsType struct {
-	TimeTableId          *ElementTagType `json:"timeTableId,omitempty"`
-	SlotCountMin         *ElementTagType `json:"slotCountMin,omitempty"`
-	SlotCountMax         *ElementTagType `json:"slotCountMax,omitempty"`
-	SlotDurationMin      *ElementTagType `json:"slotDurationMin,omitempty"`
-	SlotDurationMax      *ElementTagType `json:"slotDurationMax,omitempty"`
-	SlotDurationStepSize *ElementTagType `json:"slotDurationStepSize,omitempty"`
-	SlotShiftStepSize    *ElementTagType `json:"slotShiftStepSize,omitempty"`
-	FirstSlotBeginsAt    *ElementTagType `json:"firstSlotBeginsAt,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TimeTableConstraintsDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TimeTableConstraintsDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // TimeTableConstraintsListDataType complex type
 type TimeTableConstraintsListDataType struct {
 	TimeTableConstraintsData []TimeTableConstraintsDataType `json:"timeTableConstraintsData,omitempty"`
@@ -187,26 +146,6 @@ func (m TimeTableDescriptionDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *TimeTableDescriptionDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// TimeTableDescriptionDataElementsType complex type
-type TimeTableDescriptionDataElementsType struct {
-	TimeTableId             *ElementTagType `json:"timeTableId,omitempty"`
-	TimeSlotCountChangeable *ElementTagType `json:"timeSlotCountChangeable,omitempty"`
-	TimeSlotTimesChangeable *ElementTagType `json:"timeSlotTimesChangeable,omitempty"`
-	TimeSlotTimeMode        *ElementTagType `json:"timeSlotTimeMode,omitempty"`
-	Label                   *ElementTagType `json:"label,omitempty"`
-	Description             *ElementTagType `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TimeTableDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TimeTableDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 

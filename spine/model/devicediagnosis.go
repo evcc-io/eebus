@@ -65,27 +65,6 @@ func (m *DeviceDiagnosisStateDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// DeviceDiagnosisStateDataElementsType complex type
-type DeviceDiagnosisStateDataElementsType struct {
-	Timestamp            *ElementTagType `json:"timestamp,omitempty"`
-	OperatingState       *ElementTagType `json:"operatingState,omitempty"`
-	VendorStateCode      *ElementTagType `json:"vendorStateCode,omitempty"`
-	LastErrorCode        *ElementTagType `json:"lastErrorCode,omitempty"`
-	UpTime               *ElementTagType `json:"upTime,omitempty"`
-	TotalUpTime          *ElementTagType `json:"totalUpTime,omitempty"`
-	PowerSupplyCondition *ElementTagType `json:"powerSupplyCondition,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m DeviceDiagnosisStateDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *DeviceDiagnosisStateDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // DeviceDiagnosisHeartbeatDataType complex type
 type DeviceDiagnosisHeartbeatDataType struct {
 	Timestamp        *string `json:"timestamp,omitempty"`
@@ -100,23 +79,6 @@ func (m DeviceDiagnosisHeartbeatDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *DeviceDiagnosisHeartbeatDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// DeviceDiagnosisHeartbeatDataElementsType complex type
-type DeviceDiagnosisHeartbeatDataElementsType struct {
-	Timestamp        *ElementTagType `json:"timestamp"`
-	HeartbeatCounter *ElementTagType `json:"heartbeatCounter"`
-	HeartbeatTimeout *ElementTagType `json:"heartbeatTimeout"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m DeviceDiagnosisHeartbeatDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *DeviceDiagnosisHeartbeatDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -135,23 +97,5 @@ func (m DeviceDiagnosisServiceDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *DeviceDiagnosisServiceDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// DeviceDiagnosisServiceDataElementsType complex type
-type DeviceDiagnosisServiceDataElementsType struct {
-	Timestamp        *ElementTagType `json:"timestamp"`
-	InstallationTime *ElementTagType `json:"installationTime"`
-	BootCounter      *ElementTagType `json:"bootCounter"`
-	NextService      *ElementTagType `json:"nextService"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m DeviceDiagnosisServiceDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *DeviceDiagnosisServiceDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }

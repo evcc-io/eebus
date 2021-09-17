@@ -27,25 +27,6 @@ func (m *SubscriptionManagementEntryDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// SubscriptionManagementEntryDataElementsType complex type
-type SubscriptionManagementEntryDataElementsType struct {
-	SubscriptionId *ElementTagType             `json:"subscriptionId,omitempty"`
-	ClientAddress  *FeatureAddressElementsType `json:"clientAddress,omitempty"`
-	ServerAddress  *FeatureAddressElementsType `json:"serverAddress,omitempty"`
-	Label          *ElementTagType             `json:"label,omitempty"`
-	Description    *ElementTagType             `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SubscriptionManagementEntryDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SubscriptionManagementEntryDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // SubscriptionManagementEntryListDataType complex type
 type SubscriptionManagementEntryListDataType struct {
 	SubscriptionManagementEntryData []SubscriptionManagementEntryDataType `json:"subscriptionManagementEntryData,omitempty"`
@@ -95,23 +76,6 @@ func (m *SubscriptionManagementRequestCallType) UnmarshalJSON(data []byte) error
 	return util.Unmarshal(data, &m)
 }
 
-// SubscriptionManagementRequestCallElementsType complex type
-type SubscriptionManagementRequestCallElementsType struct {
-	ClientAddress     *FeatureAddressElementsType `json:"clientAddress,omitempty"`
-	ServerAddress     *FeatureAddressElementsType `json:"serverAddress,omitempty"`
-	ServerFeatureType *ElementTagType             `json:"serverFeatureType,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SubscriptionManagementRequestCallElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SubscriptionManagementRequestCallElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // SubscriptionManagementDeleteCallType complex type
 type SubscriptionManagementDeleteCallType struct {
 	SubscriptionId *SubscriptionIdType `json:"subscriptionId,omitempty"`
@@ -126,22 +90,5 @@ func (m SubscriptionManagementDeleteCallType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *SubscriptionManagementDeleteCallType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// SubscriptionManagementDeleteCallElementsType complex type
-type SubscriptionManagementDeleteCallElementsType struct {
-	SubscriptionId *ElementTagType             `json:"subscriptionId,omitempty"`
-	ClientAddress  *FeatureAddressElementsType `json:"clientAddress,omitempty"`
-	ServerAddress  *FeatureAddressElementsType `json:"serverAddress,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SubscriptionManagementDeleteCallElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SubscriptionManagementDeleteCallElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }

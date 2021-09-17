@@ -88,84 +88,6 @@ func (m *NodeManagementDetailedDiscoveryDataType) UnmarshalJSON(data []byte) err
 	return util.Unmarshal(data, &m)
 }
 
-// NodeManagementSpecificationVersionListElementsType complex type
-type NodeManagementSpecificationVersionListElementsType struct {
-	SpecificationVersion *SpecificationVersionDataElementsType `json:"specificationVersion,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NodeManagementSpecificationVersionListElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NodeManagementSpecificationVersionListElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// NodeManagementDetailedDiscoveryDeviceInformationElementsType complex type
-type NodeManagementDetailedDiscoveryDeviceInformationElementsType struct {
-	Description *NetworkManagementDeviceDescriptionDataElementsType `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NodeManagementDetailedDiscoveryDeviceInformationElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NodeManagementDetailedDiscoveryDeviceInformationElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// NodeManagementDetailedDiscoveryEntityInformationElementsType complex type
-type NodeManagementDetailedDiscoveryEntityInformationElementsType struct {
-	Description *NetworkManagementEntityDescriptionDataElementsType `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NodeManagementDetailedDiscoveryEntityInformationElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NodeManagementDetailedDiscoveryEntityInformationElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// NodeManagementDetailedDiscoveryFeatureInformationElementsType complex type
-type NodeManagementDetailedDiscoveryFeatureInformationElementsType struct {
-	Description *NetworkManagementFeatureDescriptionDataElementsType `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NodeManagementDetailedDiscoveryFeatureInformationElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NodeManagementDetailedDiscoveryFeatureInformationElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// NodeManagementDetailedDiscoveryDataElementsType complex type
-type NodeManagementDetailedDiscoveryDataElementsType struct {
-	SpecificationVersionList *NodeManagementSpecificationVersionListElementsType            `json:"specificationVersionList,omitempty"`
-	DeviceInformation        *NodeManagementDetailedDiscoveryDeviceInformationElementsType  `json:"deviceInformation,omitempty"`
-	EntityInformation        *NodeManagementDetailedDiscoveryEntityInformationElementsType  `json:"entityInformation,omitempty"`
-	FeatureInformation       *NodeManagementDetailedDiscoveryFeatureInformationElementsType `json:"featureInformation,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NodeManagementDetailedDiscoveryDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NodeManagementDetailedDiscoveryDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // NodeManagementDetailedDiscoveryDataSelectorsType complex type
 type NodeManagementDetailedDiscoveryDataSelectorsType struct {
 	DeviceInformation  *NetworkManagementDeviceDescriptionListDataSelectorsType  `json:"deviceInformation,omitempty"`
@@ -195,21 +117,6 @@ func (m NodeManagementBindingDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *NodeManagementBindingDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// NodeManagementBindingDataElementsType complex type
-type NodeManagementBindingDataElementsType struct {
-	BindingEntry *BindingManagementEntryDataElementsType `json:"bindingEntry,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NodeManagementBindingDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NodeManagementBindingDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -243,51 +150,6 @@ func (m *NodeManagementBindingRequestCallType) UnmarshalJSON(data []byte) error 
 	return util.Unmarshal(data, &m)
 }
 
-// NodeManagementBindingRequestCallElementsType complex type
-type NodeManagementBindingRequestCallElementsType struct {
-	BindingRequest *BindingManagementRequestCallElementsType `json:"bindingRequest,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NodeManagementBindingRequestCallElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NodeManagementBindingRequestCallElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// NodeManagementBindingDeleteCallType complex type
-type NodeManagementBindingDeleteCallType struct {
-	BindingDelete *BindingManagementDeleteCallType `json:"bindingDelete,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NodeManagementBindingDeleteCallType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NodeManagementBindingDeleteCallType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// NodeManagementBindingDeleteCallElementsType complex type
-type NodeManagementBindingDeleteCallElementsType struct {
-	BindingDelete *BindingManagementDeleteCallElementsType `json:"bindingDelete,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NodeManagementBindingDeleteCallElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NodeManagementBindingDeleteCallElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // NodeManagementSubscriptionDataType complex type
 type NodeManagementSubscriptionDataType struct {
 	SubscriptionEntry []SubscriptionManagementEntryDataType `json:"subscriptionEntry,omitempty"`
@@ -300,21 +162,6 @@ func (m NodeManagementSubscriptionDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *NodeManagementSubscriptionDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// NodeManagementSubscriptionDataElementsType complex type
-type NodeManagementSubscriptionDataElementsType struct {
-	SubscriptionEntry *SubscriptionManagementEntryDataElementsType `json:"subscriptionEntry,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NodeManagementSubscriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NodeManagementSubscriptionDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -348,21 +195,6 @@ func (m *NodeManagementSubscriptionRequestCallType) UnmarshalJSON(data []byte) e
 	return util.Unmarshal(data, &m)
 }
 
-// NodeManagementSubscriptionRequestCallElementsType complex type
-type NodeManagementSubscriptionRequestCallElementsType struct {
-	SubscriptionRequest *SubscriptionManagementRequestCallElementsType `json:"subscriptionRequest,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NodeManagementSubscriptionRequestCallElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NodeManagementSubscriptionRequestCallElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // NodeManagementSubscriptionDeleteCallType complex type
 type NodeManagementSubscriptionDeleteCallType struct {
 	SubscriptionDelete *SubscriptionManagementDeleteCallType `json:"subscriptionDelete,omitempty"`
@@ -378,21 +210,6 @@ func (m *NodeManagementSubscriptionDeleteCallType) UnmarshalJSON(data []byte) er
 	return util.Unmarshal(data, &m)
 }
 
-// NodeManagementSubscriptionDeleteCallElementsType complex type
-type NodeManagementSubscriptionDeleteCallElementsType struct {
-	SubscriptionDelete *SubscriptionManagementDeleteCallElementsType `json:"subscriptionDelete,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NodeManagementSubscriptionDeleteCallElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NodeManagementSubscriptionDeleteCallElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // NodeManagementDestinationDataType complex type
 type NodeManagementDestinationDataType struct {
 	DeviceDescription *NetworkManagementDeviceDescriptionDataType `json:"deviceDescription,omitempty"`
@@ -405,21 +222,6 @@ func (m NodeManagementDestinationDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *NodeManagementDestinationDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// NodeManagementDestinationDataElementsType complex type
-type NodeManagementDestinationDataElementsType struct {
-	DeviceDescription *NetworkManagementDeviceDescriptionDataElementsType `json:"deviceDescription,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NodeManagementDestinationDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NodeManagementDestinationDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -465,21 +267,6 @@ func (m NodeManagementUseCaseDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *NodeManagementUseCaseDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// NodeManagementUseCaseDataElementsType complex type
-type NodeManagementUseCaseDataElementsType struct {
-	UseCaseInformation []UseCaseInformationDataElementsType `json:"useCaseInformation,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m NodeManagementUseCaseDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *NodeManagementUseCaseDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 

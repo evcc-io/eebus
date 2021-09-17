@@ -69,70 +69,6 @@ func (m *IncentiveTableDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// IncentiveTableElementsType complex type
-type IncentiveTableElementsType struct {
-	Tariff        *TariffDataElementsType                  `json:"tariff,omitempty"`
-	IncentiveSlot *IncentiveTableIncentiveSlotElementsType `json:"incentiveSlot,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m IncentiveTableElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *IncentiveTableElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// IncentiveTableIncentiveSlotElementsType complex type
-type IncentiveTableIncentiveSlotElementsType struct {
-	TimeInterval *TimeTableDataElementsType      `json:"timeInterval,omitempty"`
-	Tier         *IncentiveTableTierElementsType `json:"tier,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m IncentiveTableIncentiveSlotElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *IncentiveTableIncentiveSlotElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// IncentiveTableTierElementsType complex type
-type IncentiveTableTierElementsType struct {
-	Tier      *TierDataElementsType         `json:"tier,omitempty"`
-	Boundary  *TierBoundaryDataElementsType `json:"boundary,omitempty"`
-	Incentive *IncentiveDataElementsType    `json:"incentive,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m IncentiveTableTierElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *IncentiveTableTierElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// IncentiveTableDataElementsType complex type
-type IncentiveTableDataElementsType struct {
-	IncentiveTable *IncentiveTableElementsType `json:"incentiveTable,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m IncentiveTableDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *IncentiveTableDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // IncentiveTableDataSelectorsType complex type
 type IncentiveTableDataSelectorsType struct {
 	Tariff *TariffListDataSelectorsType `json:"tariff,omitempty"`
@@ -196,54 +132,6 @@ func (m *IncentiveTableDescriptionDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// IncentiveTableDescriptionElementsType complex type
-type IncentiveTableDescriptionElementsType struct {
-	TariffDescription *TariffDescriptionDataElementsType         `json:"tariffDescription,omitempty"`
-	Tier              *IncentiveTableDescriptionTierElementsType `json:"tier,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m IncentiveTableDescriptionElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *IncentiveTableDescriptionElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// IncentiveTableDescriptionTierElementsType complex type
-type IncentiveTableDescriptionTierElementsType struct {
-	TierDescription      *TierDescriptionDataElementsType         `json:"tierDescription,omitempty"`
-	BoundaryDescription  *TierBoundaryDescriptionDataElementsType `json:"boundaryDescription,omitempty"`
-	IncentiveDescription *IncentiveDescriptionDataElementsType    `json:"incentiveDescription,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m IncentiveTableDescriptionTierElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *IncentiveTableDescriptionTierElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// IncentiveTableDescriptionDataElementsType complex type
-type IncentiveTableDescriptionDataElementsType struct {
-	IncentiveTableDescription *IncentiveTableDescriptionElementsType `json:"incentiveTableDescription,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m IncentiveTableDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *IncentiveTableDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // IncentiveTableDescriptionDataSelectorsType complex type
 type IncentiveTableDescriptionDataSelectorsType struct {
 	TariffDescription *TariffDescriptionListDataSelectorsType `json:"tariffDescription,omitempty"`
@@ -288,38 +176,6 @@ func (m IncentiveTableConstraintsDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *IncentiveTableConstraintsDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// IncentiveTableConstraintsElementsType complex type
-type IncentiveTableConstraintsElementsType struct {
-	Tariff                   *TariffDataElementsType                   `json:"tariff,omitempty"`
-	TariffConstraints        *TariffOverallConstraintsDataElementsType `json:"tariffConstraints,omitempty"`
-	IncentiveSlotConstraints *TimeTableConstraintsDataElementsType     `json:"incentiveSlotConstraints,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m IncentiveTableConstraintsElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *IncentiveTableConstraintsElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// IncentiveTableConstraintsDataElementsType complex type
-type IncentiveTableConstraintsDataElementsType struct {
-	IncentiveTableConstraints *IncentiveTableConstraintsElementsType `json:"incentiveTableConstraints,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m IncentiveTableConstraintsDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *IncentiveTableConstraintsDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 

@@ -110,28 +110,6 @@ func (m *TariffOverallConstraintsDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// TariffOverallConstraintsDataElementsType complex type
-type TariffOverallConstraintsDataElementsType struct {
-	MaxTariffCount         *ElementTagType `json:"maxTariffCount,omitempty"`
-	MaxBoundaryCount       *ElementTagType `json:"maxBoundaryCount,omitempty"`
-	MaxTierCount           *ElementTagType `json:"maxTierCount,omitempty"`
-	MaxIncentiveCount      *ElementTagType `json:"maxIncentiveCount,omitempty"`
-	MaxBoundariesPerTariff *ElementTagType `json:"maxBoundariesPerTariff,omitempty"`
-	MaxTiersPerTariff      *ElementTagType `json:"maxTiersPerTariff,omitempty"`
-	MaxBoundariesPerTier   *ElementTagType `json:"maxBoundariesPerTier,omitempty"`
-	MaxIncentivesPerTier   *ElementTagType `json:"maxIncentivesPerTier,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TariffOverallConstraintsDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TariffOverallConstraintsDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // TariffDataType complex type
 type TariffDataType struct {
 	TariffId     *TariffIdType `json:"tariffId,omitempty"`
@@ -145,22 +123,6 @@ func (m TariffDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *TariffDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// TariffDataElementsType complex type
-type TariffDataElementsType struct {
-	TariffId     *ElementTagType `json:"tariffId,omitempty"`
-	ActiveTierId *ElementTagType `json:"activeTierId,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TariffDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TariffDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -211,22 +173,6 @@ func (m *TariffTierRelationDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// TariffTierRelationDataElementsType complex type
-type TariffTierRelationDataElementsType struct {
-	TariffId *ElementTagType `json:"tariffId,omitempty"`
-	TierId   *ElementTagType `json:"tierId,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TariffTierRelationDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TariffTierRelationDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // TariffTierRelationListDataType complex type
 type TariffTierRelationListDataType struct {
 	TariffTierRelationData []TariffTierRelationDataType `json:"tariffTierRelationData,omitempty"`
@@ -271,22 +217,6 @@ func (m TariffBoundaryRelationDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *TariffBoundaryRelationDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// TariffBoundaryRelationDataElementsType complex type
-type TariffBoundaryRelationDataElementsType struct {
-	TariffId   *ElementTagType `json:"tariffId,omitempty"`
-	BoundaryId *ElementTagType `json:"boundaryId,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TariffBoundaryRelationDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TariffBoundaryRelationDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -344,29 +274,6 @@ func (m *TariffDescriptionDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// TariffDescriptionDataElementsType complex type
-type TariffDescriptionDataElementsType struct {
-	TariffId        *ElementTagType `json:"tariffId,omitempty"`
-	CommodityId     *ElementTagType `json:"commodityId,omitempty"`
-	MeasurementId   *ElementTagType `json:"measurementId,omitempty"`
-	TariffWriteable *ElementTagType `json:"tariffWriteable,omitempty"`
-	UpdateRequired  *ElementTagType `json:"updateRequired,omitempty"`
-	ScopeType       *ElementTagType `json:"scopeType,omitempty"`
-	Label           *ElementTagType `json:"label,omitempty"`
-	Description     *ElementTagType `json:"description,omitempty"`
-	SlotIdSupport   *ElementTagType `json:"slotIdSupport,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TariffDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TariffDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // TariffDescriptionListDataType complex type
 type TariffDescriptionListDataType struct {
 	TariffDescriptionData []TariffDescriptionDataType `json:"tariffDescriptionData,omitempty"`
@@ -416,25 +323,6 @@ func (m TierBoundaryDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *TierBoundaryDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// TierBoundaryDataElementsType complex type
-type TierBoundaryDataElementsType struct {
-	BoundaryId         *ElementTagType           `json:"boundaryId,omitempty"`
-	TimePeriod         *TimePeriodElementsType   `json:"timePeriod,omitempty"`
-	TimeTableId        *ElementTagType           `json:"timeTableId,omitempty"`
-	LowerBoundaryValue *ScaledNumberElementsType `json:"lowerBoundaryValue,omitempty"`
-	UpperBoundaryValue *ScaledNumberElementsType `json:"upperBoundaryValue,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TierBoundaryDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TierBoundaryDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -490,28 +378,6 @@ func (m *TierBoundaryDescriptionDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// TierBoundaryDescriptionDataElementsType complex type
-type TierBoundaryDescriptionDataElementsType struct {
-	BoundaryId               *ElementTagType `json:"boundaryId,omitempty"`
-	BoundaryType             *ElementTagType `json:"boundaryType,omitempty"`
-	ValidForTierId           *ElementTagType `json:"validForTierId,omitempty"`
-	SwitchToTierIdWhenLower  *ElementTagType `json:"switchToTierIdWhenLower,omitempty"`
-	SwitchToTierIdWhenHigher *ElementTagType `json:"switchToTierIdWhenHigher,omitempty"`
-	BoundaryUnit             *ElementTagType `json:"boundaryUnit,omitempty"`
-	Label                    *ElementTagType `json:"label,omitempty"`
-	Description              *ElementTagType `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TierBoundaryDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TierBoundaryDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // TierBoundaryDescriptionListDataType complex type
 type TierBoundaryDescriptionListDataType struct {
 	TierBoundaryDescriptionData []TierBoundaryDescriptionDataType `json:"tierBoundaryDescriptionData,omitempty"`
@@ -559,25 +425,6 @@ func (m CommodityDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *CommodityDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// CommodityDataElementsType complex type
-type CommodityDataElementsType struct {
-	CommodityId             *ElementTagType `json:"commodityId,omitempty"`
-	CommodityType           *ElementTagType `json:"commodityType,omitempty"`
-	PositiveEnergyDirection *ElementTagType `json:"positiveEnergyDirection,omitempty"`
-	Label                   *ElementTagType `json:"label,omitempty"`
-	Description             *ElementTagType `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m CommodityDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *CommodityDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -630,24 +477,6 @@ func (m *TierDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// TierDataElementsType complex type
-type TierDataElementsType struct {
-	TierId            *ElementTagType         `json:"tierId,omitempty"`
-	TimePeriod        *TimePeriodElementsType `json:"timePeriod,omitempty"`
-	TimeTableId       *ElementTagType         `json:"timeTableId,omitempty"`
-	ActiveIncentiveId *ElementTagType         `json:"activeIncentiveId,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TierDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TierDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // TierListDataType complex type
 type TierListDataType struct {
 	TierData []TierDataType `json:"tierData,omitempty"`
@@ -692,22 +521,6 @@ func (m TierIncentiveRelationDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *TierIncentiveRelationDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// TierIncentiveRelationDataElementsType complex type
-type TierIncentiveRelationDataElementsType struct {
-	TierId      *ElementTagType `json:"tierId,omitempty"`
-	IncentiveId *ElementTagType `json:"incentiveId,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TierIncentiveRelationDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TierIncentiveRelationDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -757,24 +570,6 @@ func (m TierDescriptionDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *TierDescriptionDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// TierDescriptionDataElementsType complex type
-type TierDescriptionDataElementsType struct {
-	TierId      *ElementTagType `json:"tierId,omitempty"`
-	TierType    *ElementTagType `json:"tierType,omitempty"`
-	Label       *ElementTagType `json:"label,omitempty"`
-	Description *ElementTagType `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TierDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TierDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -829,26 +624,6 @@ func (m *IncentiveDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// IncentiveDataElementsType complex type
-type IncentiveDataElementsType struct {
-	IncentiveId *ElementTagType         `json:"incentiveId,omitempty"`
-	ValueType   *ElementTagType         `json:"valueType,omitempty"`
-	Timestamp   *ElementTagType         `json:"timestamp,omitempty"`
-	TimePeriod  *TimePeriodElementsType `json:"timePeriod,omitempty"`
-	TimeTableId *ElementTagType         `json:"timeTableId,omitempty"`
-	Value       *ElementTagType         `json:"value,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m IncentiveDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *IncentiveDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // IncentiveListDataType complex type
 type IncentiveListDataType struct {
 	IncentiveData []IncentiveDataType `json:"incentiveData,omitempty"`
@@ -899,27 +674,6 @@ func (m IncentiveDescriptionDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *IncentiveDescriptionDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// IncentiveDescriptionDataElementsType complex type
-type IncentiveDescriptionDataElementsType struct {
-	IncentiveId       *ElementTagType `json:"incentiveId,omitempty"`
-	IncentiveType     *ElementTagType `json:"incentiveType,omitempty"`
-	IncentivePriority *ElementTagType `json:"incentivePriority,omitempty"`
-	Currency          *ElementTagType `json:"currency,omitempty"`
-	Unit              *ElementTagType `json:"unit,omitempty"`
-	Label             *ElementTagType `json:"label,omitempty"`
-	Description       *ElementTagType `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m IncentiveDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *IncentiveDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 

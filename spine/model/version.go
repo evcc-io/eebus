@@ -8,20 +8,6 @@ import "github.com/evcc-io/eebus/util"
 // SpecificationVersionDataType complex type
 type SpecificationVersionDataType SpecificationVersionType
 
-// SpecificationVersionDataElementsType complex type
-type SpecificationVersionDataElementsType struct {
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m SpecificationVersionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *SpecificationVersionDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // SpecificationVersionListDataType complex type
 type SpecificationVersionListDataType struct {
 	SpecificationVersionData []SpecificationVersionDataType `json:"specificationVersionData,omitempty"`

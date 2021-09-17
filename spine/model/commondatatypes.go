@@ -41,22 +41,6 @@ func (m *TimePeriodType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// TimePeriodElementsType complex type
-type TimePeriodElementsType struct {
-	StartTime *ElementTagType `json:"startTime,omitempty"`
-	EndTime   *ElementTagType `json:"endTime,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TimePeriodElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TimePeriodElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // TimestampIntervalType complex type
 type TimestampIntervalType struct {
 	StartTime *string `json:"startTime,omitempty"`
@@ -193,28 +177,6 @@ func (m *AbsoluteOrRecurringTimeType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// AbsoluteOrRecurringTimeElementsType complex type
-type AbsoluteOrRecurringTimeElementsType struct {
-	DateTime            *ElementTagType `json:"dateTime,omitempty"`
-	Month               *ElementTagType `json:"month,omitempty"`
-	DayOfMonth          *ElementTagType `json:"dayOfMonth,omitempty"`
-	CalendarWeek        *ElementTagType `json:"calendarWeek,omitempty"`
-	DayOfWeekOccurrence *ElementTagType `json:"dayOfWeekOccurrence,omitempty"`
-	DaysOfWeek          *ElementTagType `json:"daysOfWeek,omitempty"`
-	Time                *ElementTagType `json:"time,omitempty"`
-	Relative            *ElementTagType `json:"relative,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m AbsoluteOrRecurringTimeElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *AbsoluteOrRecurringTimeElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // RecurrenceInformationType complex type
 type RecurrenceInformationType struct {
 	RecurringInterval     *string `json:"recurringInterval,omitempty"`
@@ -234,25 +196,6 @@ func (m *RecurrenceInformationType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// RecurrenceInformationElementsType complex type
-type RecurrenceInformationElementsType struct {
-	RecurringInterval     *ElementTagType `json:"recurringInterval,omitempty"`
-	RecurringIntervalStep *ElementTagType `json:"recurringIntervalStep,omitempty"`
-	FirstExecution        *ElementTagType `json:"firstExecution,omitempty"`
-	ExecutionCount        *ElementTagType `json:"executionCount,omitempty"`
-	LastExecution         *ElementTagType `json:"lastExecution,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m RecurrenceInformationElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *RecurrenceInformationElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // ScaledNumberRangeType complex type
 type ScaledNumberRangeType struct {
 	Min *ScaledNumberType `json:"min,omitempty"`
@@ -269,22 +212,6 @@ func (m *ScaledNumberRangeType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// ScaledNumberRangeElementsType complex type
-type ScaledNumberRangeElementsType struct {
-	Min *ScaledNumberElementsType `json:"min,omitempty"`
-	Max *ScaledNumberElementsType `json:"max,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m ScaledNumberRangeElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *ScaledNumberRangeElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // ScaledNumberSetType complex type
 type ScaledNumberSetType struct {
 	Value []ScaledNumberType      `json:"value,omitempty"`
@@ -298,22 +225,6 @@ func (m ScaledNumberSetType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *ScaledNumberSetType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// ScaledNumberSetElementsType complex type
-type ScaledNumberSetElementsType struct {
-	Value *ScaledNumberElementsType      `json:"value,omitempty"`
-	Range *ScaledNumberRangeElementsType `json:"range,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m ScaledNumberSetElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *ScaledNumberSetElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -336,22 +247,6 @@ func (m ScaledNumberType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *ScaledNumberType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// ScaledNumberElementsType complex type
-type ScaledNumberElementsType struct {
-	Number *ElementTagType `json:"number"`
-	Scale  *ElementTagType `json:"scale"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m ScaledNumberElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *ScaledNumberElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -721,21 +616,6 @@ func (m *DeviceAddressType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// DeviceAddressElementsType complex type
-type DeviceAddressElementsType struct {
-	Device *ElementTagType `json:"device,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m DeviceAddressElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *DeviceAddressElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // EntityAddressType complex type
 type EntityAddressType struct {
 	Device *AddressDeviceType  `json:"device,omitempty"`
@@ -749,22 +629,6 @@ func (m EntityAddressType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *EntityAddressType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// EntityAddressElementsType complex type
-type EntityAddressElementsType struct {
-	Entity *ElementTagType `json:"entity,omitempty"`
-	Device *ElementTagType `json:"device,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m EntityAddressElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *EntityAddressElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -782,23 +646,6 @@ func (m FeatureAddressType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *FeatureAddressType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// FeatureAddressElementsType complex type
-type FeatureAddressElementsType struct {
-	Feature *ElementTagType `json:"feature,omitempty"`
-	Entity  *ElementTagType `json:"entity,omitempty"`
-	Device  *ElementTagType `json:"device,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m FeatureAddressElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *FeatureAddressElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -1245,22 +1092,6 @@ func (m *PossibleOperationsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// PossibleOperationsElementsType complex type
-type PossibleOperationsElementsType struct {
-	Read  *ElementTagType `json:"read,omitempty"`
-	Write *ElementTagType `json:"write,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m PossibleOperationsElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *PossibleOperationsElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // FunctionPropertyType complex type
 type FunctionPropertyType struct {
 	Function           *FunctionType           `json:"function,omitempty"`
@@ -1274,21 +1105,5 @@ func (m FunctionPropertyType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *FunctionPropertyType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// FunctionPropertyElementsType complex type
-type FunctionPropertyElementsType struct {
-	Function           *ElementTagType                 `json:"function,omitempty"`
-	PossibleOperations *PossibleOperationsElementsType `json:"possibleOperations,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m FunctionPropertyElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *FunctionPropertyElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }

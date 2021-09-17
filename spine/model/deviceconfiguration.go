@@ -60,27 +60,6 @@ func (m *DeviceConfigurationKeyValueValueType) UnmarshalJSON(data []byte) error 
 	return util.Unmarshal(data, &m)
 }
 
-// DeviceConfigurationKeyValueValueElementsType complex type
-type DeviceConfigurationKeyValueValueElementsType struct {
-	Boolean      *ElementTagType           `json:"boolean,omitempty"`
-	Date         *ElementTagType           `json:"date,omitempty"`
-	DateTime     *ElementTagType           `json:"dateTime,omitempty"`
-	Duration     *ElementTagType           `json:"duration,omitempty"`
-	String       *ElementTagType           `json:"string,omitempty"`
-	Time         *ElementTagType           `json:"time,omitempty"`
-	ScaledNumber *ScaledNumberElementsType `json:"scaledNumber,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m DeviceConfigurationKeyValueValueElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *DeviceConfigurationKeyValueValueElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // DeviceConfigurationKeyValueDataType complex type
 type DeviceConfigurationKeyValueDataType struct {
 	KeyId             *DeviceConfigurationKeyIdType         `json:"keyId,omitempty"`
@@ -95,23 +74,6 @@ func (m DeviceConfigurationKeyValueDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *DeviceConfigurationKeyValueDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// DeviceConfigurationKeyValueDataElementsType complex type
-type DeviceConfigurationKeyValueDataElementsType struct {
-	KeyId             *ElementTagType                               `json:"keyId,omitempty"`
-	Value             *DeviceConfigurationKeyValueValueElementsType `json:"value,omitempty"`
-	IsValueChangeable *ElementTagType                               `json:"isValueChangeable,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m DeviceConfigurationKeyValueDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *DeviceConfigurationKeyValueDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -165,26 +127,6 @@ func (m *DeviceConfigurationKeyValueDescriptionDataType) UnmarshalJSON(data []by
 	return util.Unmarshal(data, &m)
 }
 
-// DeviceConfigurationKeyValueDescriptionDataElementsType complex type
-type DeviceConfigurationKeyValueDescriptionDataElementsType struct {
-	KeyId       *ElementTagType `json:"keyId,omitempty"`
-	KeyName     *ElementTagType `json:"keyName,omitempty"`
-	ValueType   *ElementTagType `json:"valueType,omitempty"`
-	Unit        *ElementTagType `json:"unit,omitempty"`
-	Label       *ElementTagType `json:"label,omitempty"`
-	Description *ElementTagType `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m DeviceConfigurationKeyValueDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *DeviceConfigurationKeyValueDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // DeviceConfigurationKeyValueDescriptionListDataType complex type
 type DeviceConfigurationKeyValueDescriptionListDataType struct {
 	DeviceConfigurationKeyValueDescriptionData []DeviceConfigurationKeyValueDescriptionDataType `json:"deviceConfigurationKeyValueDescriptionData,omitempty"`
@@ -231,24 +173,6 @@ func (m DeviceConfigurationKeyValueConstraintsDataType) MarshalJSON() ([]byte, e
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *DeviceConfigurationKeyValueConstraintsDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// DeviceConfigurationKeyValueConstraintsDataElementsType complex type
-type DeviceConfigurationKeyValueConstraintsDataElementsType struct {
-	KeyId         *ElementTagType                               `json:"keyId,omitempty"`
-	ValueRangeMin *DeviceConfigurationKeyValueValueElementsType `json:"valueRangeMin,omitempty"`
-	ValueRangeMax *DeviceConfigurationKeyValueValueElementsType `json:"valueRangeMax,omitempty"`
-	ValueStepSize *DeviceConfigurationKeyValueValueElementsType `json:"valueStepSize,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m DeviceConfigurationKeyValueConstraintsDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *DeviceConfigurationKeyValueConstraintsDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 

@@ -136,28 +136,6 @@ func (m *MeasurementDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// MeasurementDataElementsType complex type
-type MeasurementDataElementsType struct {
-	MeasurementId    *ElementTagType           `json:"measurementId,omitempty"`
-	ValueType        *ElementTagType           `json:"valueType,omitempty"`
-	Timestamp        *ElementTagType           `json:"timestamp,omitempty"`
-	Value            *ScaledNumberElementsType `json:"value,omitempty"`
-	EvaluationPeriod *TimePeriodElementsType   `json:"evaluationPeriod,omitempty"`
-	ValueSource      *ElementTagType           `json:"valueSource,omitempty"`
-	ValueTendency    *ElementTagType           `json:"valueTendency,omitempty"`
-	ValueState       *ElementTagType           `json:"valueState,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m MeasurementDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *MeasurementDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // MeasurementListDataType complex type
 type MeasurementListDataType struct {
 	MeasurementData []MeasurementDataType `json:"measurementData,omitempty"`
@@ -205,24 +183,6 @@ func (m MeasurementConstraintsDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *MeasurementConstraintsDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// MeasurementConstraintsDataElementsType complex type
-type MeasurementConstraintsDataElementsType struct {
-	MeasurementId *ElementTagType           `json:"measurementId,omitempty"`
-	ValueRangeMin *ScaledNumberElementsType `json:"valueRangeMin,omitempty"`
-	ValueRangeMax *ScaledNumberElementsType `json:"valueRangeMax,omitempty"`
-	ValueStepSize *ScaledNumberElementsType `json:"valueStepSize,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m MeasurementConstraintsDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *MeasurementConstraintsDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -278,28 +238,6 @@ func (m *MeasurementDescriptionDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// MeasurementDescriptionDataElementsType complex type
-type MeasurementDescriptionDataElementsType struct {
-	MeasurementId    *ElementTagType           `json:"measurementId,omitempty"`
-	MeasurementType  *ElementTagType           `json:"measurementType,omitempty"`
-	CommodityType    *ElementTagType           `json:"commodityType,omitempty"`
-	Unit             *ElementTagType           `json:"unit,omitempty"`
-	CalibrationValue *ScaledNumberElementsType `json:"calibrationValue,omitempty"`
-	ScopeType        *ElementTagType           `json:"scopeType,omitempty"`
-	Label            *ElementTagType           `json:"label,omitempty"`
-	Description      *ElementTagType           `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m MeasurementDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *MeasurementDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // MeasurementDescriptionListDataType complex type
 type MeasurementDescriptionListDataType struct {
 	MeasurementDescriptionData []MeasurementDescriptionDataType `json:"measurementDescriptionData,omitempty"`
@@ -346,22 +284,6 @@ func (m MeasurementThresholdRelationDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *MeasurementThresholdRelationDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// MeasurementThresholdRelationDataElementsType complex type
-type MeasurementThresholdRelationDataElementsType struct {
-	MeasurementId *ElementTagType `json:"measurementId,omitempty"`
-	ThresholdId   *ElementTagType `json:"thresholdId,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m MeasurementThresholdRelationDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *MeasurementThresholdRelationDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 

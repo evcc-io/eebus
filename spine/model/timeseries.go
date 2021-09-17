@@ -48,27 +48,6 @@ func (m *TimeSeriesSlotType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// TimeSeriesSlotElementsType complex type
-type TimeSeriesSlotElementsType struct {
-	TimeSeriesSlotId      *ElementTagType                      `json:"timeSeriesSlotId,omitempty"`
-	TimePeriod            *TimePeriodElementsType              `json:"timePeriod,omitempty"`
-	Duration              *ElementTagType                      `json:"duration,omitempty"`
-	RecurrenceInformation *AbsoluteOrRecurringTimeElementsType `json:"recurrenceInformation,omitempty"`
-	Value                 *ElementTagType                      `json:"value,omitempty"`
-	MinValue              *ElementTagType                      `json:"minValue,omitempty"`
-	MaxValue              *ElementTagType                      `json:"maxValue,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TimeSeriesSlotElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TimeSeriesSlotElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // TimeSeriesDataType complex type
 type TimeSeriesDataType struct {
 	TimeSeriesId   *TimeSeriesIdType    `json:"timeSeriesId,omitempty"`
@@ -83,23 +62,6 @@ func (m TimeSeriesDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *TimeSeriesDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// TimeSeriesDataElementsType complex type
-type TimeSeriesDataElementsType struct {
-	TimeSeriesId   *ElementTagType             `json:"timeSeriesId,omitempty"`
-	TimePeriod     *TimePeriodElementsType     `json:"timePeriod,omitempty"`
-	TimeSeriesSlot *TimeSeriesSlotElementsType `json:"timeSeriesSlot,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TimeSeriesDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TimeSeriesDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
@@ -158,30 +120,6 @@ func (m *TimeSeriesDescriptionDataType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
-// TimeSeriesDescriptionDataElementsType complex type
-type TimeSeriesDescriptionDataElementsType struct {
-	TimeSeriesId        *ElementTagType `json:"timeSeriesId,omitempty"`
-	TimeSeriesType      *ElementTagType `json:"timeSeriesType,omitempty"`
-	TimeSeriesWriteable *ElementTagType `json:"timeSeriesWriteable,omitempty"`
-	UpdateRequired      *ElementTagType `json:"updateRequired,omitempty"`
-	MeasurementId       *ElementTagType `json:"measurementId,omitempty"`
-	Currency            *ElementTagType `json:"currency,omitempty"`
-	Unit                *ElementTagType `json:"unit,omitempty"`
-	Label               *ElementTagType `json:"label,omitempty"`
-	Description         *ElementTagType `json:"description,omitempty"`
-	ScopeType           *ElementTagType `json:"scopeType,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TimeSeriesDescriptionDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TimeSeriesDescriptionDataElementsType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // TimeSeriesDescriptionListDataType complex type
 type TimeSeriesDescriptionListDataType struct {
 	TimeSeriesDescriptionData []TimeSeriesDescriptionDataType `json:"timeSeriesDescriptionData,omitempty"`
@@ -237,31 +175,6 @@ func (m TimeSeriesConstraintsDataType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON is the SHIP serialization unmarshaller
 func (m *TimeSeriesConstraintsDataType) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
-// TimeSeriesConstraintsDataElementsType complex type
-type TimeSeriesConstraintsDataElementsType struct {
-	TimeSeriesId                *ElementTagType           `json:"timeSeriesId,omitempty"`
-	SlotCountMin                *ElementTagType           `json:"slotCountMin,omitempty"`
-	SlotCountMax                *ElementTagType           `json:"slotCountMax,omitempty"`
-	SlotDurationMin             *ElementTagType           `json:"slotDurationMin,omitempty"`
-	SlotDurationMax             *ElementTagType           `json:"slotDurationMax,omitempty"`
-	SlotDurationStepSize        *ElementTagType           `json:"slotDurationStepSize,omitempty"`
-	EarliestTimeSeriesStartTime *ElementTagType           `json:"earliestTimeSeriesStartTime,omitempty"`
-	LatestTimeSeriesEndTime     *ElementTagType           `json:"latestTimeSeriesEndTime,omitempty"`
-	SlotValueMin                *ScaledNumberElementsType `json:"slotValueMin,omitempty"`
-	SlotValueMax                *ScaledNumberElementsType `json:"slotValueMax,omitempty"`
-	SlotValueStepSize           *ScaledNumberElementsType `json:"slotValueStepSize,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m TimeSeriesConstraintsDataElementsType) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *TimeSeriesConstraintsDataElementsType) UnmarshalJSON(data []byte) error {
 	return util.Unmarshal(data, &m)
 }
 
