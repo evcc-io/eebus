@@ -15,16 +15,16 @@ import (
 )
 
 type ConnectionController struct {
+	msgNum               uint64 // 64bit values need to be defined on top of the struct to make atomic commands work on 32bit systems
+	heartBeatNum         uint64 // see https://github.com/golang/go/issues/11891
+	subscriptionNum      uint64
 	log                  util.Logger
 	conn                 ship.Conn
 	localDevice          spine.Device
 	remoteDevice         spine.Device // TODO multiple remote devices
 	sequencesController  *SequencesController
-	msgNum               uint64
-	heartBeatNum         uint64
 	stopMux              sync.Mutex
 	stopHeartbeatC       chan struct{}
-	subscriptionNum      uint64
 	subscriptionEntries  []model.SubscriptionManagementEntryDataType
 	specificationVersion model.SpecificationVersionType
 	// EV specific data
