@@ -26,7 +26,7 @@ type ServiceDescription struct {
 // Service is the ship service
 type Service struct {
 	ServiceDescription
-	URI  string
+	URIs []string
 	Conn *ship.Connector
 }
 
@@ -55,36 +55,36 @@ func NewFromDNSEntry(zc *zeroconf.ServiceEntry) (*Service, error) {
 		}
 	}
 
-	baseURI, err := baseURIFromDNS(zc)
-	if err == nil {
-		ss.URI = baseURI + ss.ServiceDescription.Path
-	}
+	ss.URIs, err = URIsFromDNS(zc, ss.ServiceDescription.Path)
 
 	return &ss, err
 }
 
-// baseURIFromDNS returns the service URI
-func baseURIFromDNS(zc *zeroconf.ServiceEntry) (string, error) {
-	var address net.IP
-	var hostname string
-	var uri string
+// URIsFromDNS returns the service URI and appends the path
+func URIsFromDNS(zc *zeroconf.ServiceEntry, path string) ([]string, error) {
+	var uris []string
 
 	if len(zc.HostName) > 0 {
-		hostname = zc.HostName
-	} else if len(zc.AddrIPv4) > 0 {
-		address = zc.AddrIPv4[0]
-	} else if len(zc.AddrIPv6) > 0 {
-		address = zc.AddrIPv6[0]
-	} else {
-		return uri, errors.New("mDNS record doesn't contain an IP address")
-	}
-	if len(hostname) > 0 {
-		uri = ship.Scheme + net.JoinHostPort(hostname, fmt.Sprintf("%d", zc.Port))
-	} else {
-		uri = ship.Scheme + net.JoinHostPort(address.String(), fmt.Sprintf("%d", zc.Port))
+		uris = append(uris, createURI(zc.HostName, zc.Port)+path)
 	}
 
-	return uri, nil
+	for _, address := range zc.AddrIPv4 {
+		uris = append(uris, createURI(address.String(), zc.Port)+path)
+	}
+
+	for _, address := range zc.AddrIPv6 {
+		uris = append(uris, createURI(address.String(), zc.Port)+path)
+	}
+
+	if len(uris) == 0 {
+		return uris, errors.New("mDNS record doesn't contain an IP address")
+	}
+
+	return uris, nil
+}
+
+func createURI(host string, port int) string {
+	return ship.Scheme + net.JoinHostPort(host, fmt.Sprintf("%d", port))
 }
 
 // WebsocketConnector is the connector used for establishing new websocket connections
@@ -94,18 +94,25 @@ var WebsocketConnector func(uri string) (*websocket.Conn, error)
 func (ss *Service) Connect(log util.Logger, accessMethod string, cert tls.Certificate, closeHandler func(string)) (ship.Conn, error) {
 	WebsocketConnector = ship.TLSConnection(cert)
 
-	ws, err := WebsocketConnector(ss.URI)
-	if err != nil {
-		return nil, err
+	for _, uri := range ss.URIs {
+		ws, err := WebsocketConnector(uri)
+		if err != nil {
+			return nil, err
+		}
+
+		sc := &ship.Connector{
+			Log:          log,
+			Local:        ship.Service{Pin: "", Methods: accessMethod},
+			Remote:       ship.Service{Pin: ""},
+			CloseHandler: closeHandler,
+			SKI:          ss.ServiceDescription.SKI,
+		}
+
+		conn, err := sc.Connect(ws)
+		if err == nil {
+			return conn, nil
+		}
 	}
 
-	sc := &ship.Connector{
-		Log:          log,
-		Local:        ship.Service{Pin: "", Methods: accessMethod},
-		Remote:       ship.Service{Pin: ""},
-		CloseHandler: closeHandler,
-		SKI:          ss.ServiceDescription.SKI,
-	}
-
-	return sc.Connect(ws)
+	return nil, errors.New("cannot connect to any service endpoint")
 }
