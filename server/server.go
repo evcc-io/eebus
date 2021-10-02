@@ -19,6 +19,7 @@ type Server struct {
 	Log                    util.Logger
 	Addr, Path             string
 	ID, Brand, Model, Type string
+	Interfaces             []string
 	Register               bool
 	Certificate            tls.Certificate
 }
@@ -48,6 +49,17 @@ func (c *Server) Announce() (*zeroconf.Server, error) {
 		c.Log.Printf("mDNS: announcing id: %s ski: %s", c.ID, ski)
 	}
 
+	var ifaces []net.Interface = nil
+	if len(c.Interfaces) > 0 {
+		ifaces = make([]net.Interface, len(c.Interfaces))
+		for i, iface := range c.Interfaces {
+			ifaceInt, err := net.InterfaceByName(iface)
+			if err != nil {
+				return nil, err
+			}
+			ifaces[i] = *ifaceInt
+		}
+	}
 	server, err := zeroconf.Register(c.Model, ship.ZeroconfType, ship.ZeroconfDomain, portInt, []string{
 		"txtvers=1",
 		"path=" + path,
@@ -57,7 +69,7 @@ func (c *Server) Announce() (*zeroconf.Server, error) {
 		"model=" + c.Model,
 		"type=" + c.Type,
 		"register=" + fmt.Sprintf("%v", c.Register),
-	}, nil)
+	}, ifaces)
 
 	if err != nil {
 		err = fmt.Errorf("mDNS: failed registering service: %w", err)
