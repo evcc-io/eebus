@@ -128,6 +128,7 @@ func (c *ConnectionController) Run() {
 
 			if err = json.Unmarshal(data, &datagram); err != nil {
 				c.log.Println("error unmarshaling datagram: ", err, string(data))
+				err = nil // don't break, otherwise charing will go to max limit
 				continue
 			}
 
