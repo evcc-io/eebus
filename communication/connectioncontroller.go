@@ -3,8 +3,10 @@ package communication
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"reflect"
 	"sync"
+	"time"
 
 	"github.com/evcc-io/eebus/device"
 	"github.com/evcc-io/eebus/device/feature"
@@ -12,6 +14,7 @@ import (
 	"github.com/evcc-io/eebus/spine"
 	"github.com/evcc-io/eebus/spine/model"
 	"github.com/evcc-io/eebus/util"
+	"github.com/rickb777/date/period"
 )
 
 type ConnectionController struct {
@@ -536,43 +539,207 @@ func (c *ConnectionController) UpdateLoadControlLimitData(f *feature.LoadControl
 	}
 }
 
-func (c *ConnectionController) UpdateTimeSeriesData(f *feature.TimeSeries) {
+func (c *ConnectionController) UpdateTimeSeriesDescriptionData(f *feature.TimeSeries) {
 	timeSeriesDescriptionData := f.GetTimeSeriesDescriptionData()
-	timeSeriesData := f.GetTimeSeriesData()
+
+	for _, item := range timeSeriesDescriptionData {
+		// TODO: add processing
+		switch item.TimeSeriesType {
+		case model.TimeSeriesTypeEnumTypeConstraints:
+			if item.UpdateRequired {
+				// we need to send a response with a plan (within 20s or something like that)
+				c.callDataUpdateHandler(EVDataElementUpdateChargingPlanRequired)
+			}
+			return
+		case model.TimeSeriesTypeEnumTypePlan:
+			return
+		case model.TimeSeriesTypeEnumTypeSingleDemand:
+			return
+		}
+	}
+}
+
+func (c *ConnectionController) UpdateTimeSeriesData(f *feature.TimeSeries, timeSeriesData feature.TimeSeriesDatasetType) {
+	timeSeriesDescriptionData := f.GetTimeSeriesDescriptionData()
 
 	c.clientData.EVData.ChargingStrategy = EVChargingStrategyEnumTypeUnknown
 
-	if timeSeriesDescriptionData == nil || timeSeriesData == nil {
+	if timeSeriesDescriptionData == nil {
 		return
 	}
 
-	for _, item := range timeSeriesDescriptionData {
-		for _, dataItem := range timeSeriesData {
-			if dataItem.TimeSeriesId == item.TimeSeriesId {
-				// TODO: add processing
-				switch item.TimeSeriesType {
-				case model.TimeSeriesTypeEnumTypeConstraints:
-					return
-				case model.TimeSeriesTypeEnumTypePlan:
-					return
-				case model.TimeSeriesTypeEnumTypeSingleDemand:
-					demand := dataItem.TimeSeriesSlots[0].Value.GetValue()
-					if demand > 0 {
-						// if demand is > 0 and duration is not existing, the EV is not charging via a timer
-						// but either via direct charging enabled or charging to minimum SoC using a profile
-						if dataItem.TimeSeriesSlots[0].Duration == nil {
-							c.clientData.EVData.ChargingStrategy = EVChargingStrategyEnumTypeDirectCharging
-						} else {
-							c.clientData.EVData.ChargingStrategy = EVChargingStrategyEnumTypeTimedCharging
-						}
-					} else {
-						c.clientData.EVData.ChargingStrategy = EVChargingStrategyEnumTypeNoDemand
-					}
+	timeSeriesType, err := f.GetTimeSeriesTypeForId(timeSeriesData.TimeSeriesId)
+	if err != nil {
+		c.log.Printf("Error getting Time Series Type for ID %d: %s\n", timeSeriesData.TimeSeriesId, err)
+		return
+	}
+
+	// TODO: add processing
+	switch timeSeriesType {
+	case model.TimeSeriesTypeEnumTypeConstraints:
+		return
+	case model.TimeSeriesTypeEnumTypePlan:
+		output := "EV informed about its charging plan:\n"
+		if timeSeriesData.TimePeriod.StartTime != nil {
+			output += fmt.Sprintf("\tStartTime: %s\n", *timeSeriesData.TimePeriod.StartTime)
+		}
+		if timeSeriesData.TimePeriod.EndTime != nil {
+			output += fmt.Sprintf("\tEndTime: %s\n", *timeSeriesData.TimePeriod.EndTime)
+		}
+		for _, slot := range timeSeriesData.TimeSeriesSlots {
+			output += fmt.Sprintf("\t%.1f: %s\n", slot.MaxValue.GetValue(), *slot.Duration)
+		}
+		c.log.Println(output)
+		return
+	case model.TimeSeriesTypeEnumTypeSingleDemand:
+		demand := timeSeriesData.TimeSeriesSlots[0].Value.GetValue()
+		c.clientData.EVData.ChargingDemand = demand / 1000 // return kWh
+		c.clientData.EVData.ChargingTargetDuration = time.Duration(24) * time.Hour
+
+		if demand > 0 {
+			// if demand is > 0 and duration is not existing, the EV is not charging via a timer
+			// but either via direct charging enabled or charging to minimum SoC using a profile
+			if timeSeriesData.TimeSeriesSlots[0].Duration == nil {
+				c.clientData.EVData.ChargingStrategy = EVChargingStrategyEnumTypeDirectCharging
+				c.log.Printf("EV is charging via direct charging. Demand: %.1f kWh\n", (demand / 1000))
+			} else {
+				p, err := period.Parse(*timeSeriesData.TimeSeriesSlots[0].Duration)
+				if err != nil {
+					c.log.Printf("Error parsing duration: %s\n", err)
 					return
 				}
+				c.clientData.EVData.ChargingTargetDuration, _ = p.Duration()
+				c.clientData.EVData.ChargingStrategy = EVChargingStrategyEnumTypeTimedCharging
+				c.log.Printf("EV is charging via timed charging. Demand: %.1f kWh, Duration: %s\n", (demand / 1000), c.clientData.EVData.ChargingTargetDuration.String())
 			}
+		} else {
+			c.clientData.EVData.ChargingStrategy = EVChargingStrategyEnumTypeNoDemand
+			c.log.Println("EV not reporting a demand")
+		}
+		c.callDataUpdateHandler(EVDataElementUpdateChargingStrategy)
+		return
+	}
+}
+
+func (c *ConnectionController) UpdateIncentiveConstraintsData(f *feature.IncentiveTable) {
+	// we received tariff, tiers, boundaries, incentives and slotcount limits
+
+	// now we need to reply with the incentiveTableDescription
+
+	if c.remoteDevice == nil {
+		// errors.New("charger is not connected")
+		return
+	}
+
+	evEntity := c.remoteDevice.EntityByType(model.EntityTypeType(model.EntityTypeEnumTypeEV))
+	if evEntity == nil {
+		// errors.New("no ev connected")
+		return
+	}
+
+	rf := evEntity.FeatureByProps(model.FeatureTypeEnumTypeLoadControl, model.RoleTypeServer)
+
+	ctx := c.context(nil)
+
+	lf := c.localDevice.EntityByType(model.EntityTypeType(model.EntityTypeEnumTypeCEM)).FeatureByProps(model.FeatureTypeEnumTypeIncentiveTable, model.RoleTypeClient)
+	if l, ok := lf.(*feature.IncentiveTable); ok {
+		l.WriteDescriptionData(ctx, rf)
+	}
+}
+
+func (c *ConnectionController) WriteChargingPlan(chargingPlan EVChargingPlan) error {
+	if c.remoteDevice == nil {
+		return errors.New("charger is not connected")
+	}
+
+	evEntity := c.remoteDevice.EntityByType(model.EntityTypeType(model.EntityTypeEnumTypeEV))
+	if evEntity == nil {
+		return errors.New("no ev connected")
+	}
+
+	ctx := c.context(nil)
+
+	// at first we need to send the power limits plan
+	lf := c.localDevice.EntityByType(model.EntityTypeType(model.EntityTypeEnumTypeCEM)).FeatureByProps(model.FeatureTypeEnumTypeTimeSeries, model.RoleTypeClient)
+	l, ok := lf.(*feature.TimeSeries)
+
+	if !ok {
+		return errors.New("timeseries feature is not available on local device")
+	}
+
+	rf := evEntity.FeatureByProps(model.FeatureTypeEnumTypeTimeSeries, model.RoleTypeServer)
+
+	timeSeriesSlots := []feature.TimeSeriesChargingSlot{}
+	for _, slot := range chargingPlan.Slots {
+		timeSeriesSlots = append(timeSeriesSlots, feature.TimeSeriesChargingSlot{
+			MaxValue: slot.MaxValue,
+			Duration: slot.Duration,
+		})
+	}
+
+	timeSeriesChargingPlan := feature.TimeSeriesChargingPlan{
+		Duration: chargingPlan.Duration,
+		Slots:    timeSeriesSlots,
+	}
+
+	output := "Sending time Series slots:\n"
+	for index, slot := range timeSeriesSlots {
+		if index > 0 && index%4 == 0 {
+			output += "\n"
+		}
+		output += fmt.Sprintf("\t%.1f: %s", slot.MaxValue, slot.Duration.String())
+		if (index + 1) == len(timeSeriesSlots) {
+			output += "\n"
 		}
 	}
+	c.log.Println(output)
+
+	if err := l.WriteTimeSeriesPlanData(ctx, rf, timeSeriesChargingPlan); err != nil {
+		c.log.Println("error sending loadcontrol limits ", err)
+		return err
+	}
+
+	// now we need to send the incentive plan
+	lf2 := c.localDevice.EntityByType(model.EntityTypeType(model.EntityTypeEnumTypeCEM)).FeatureByProps(model.FeatureTypeEnumTypeIncentiveTable, model.RoleTypeClient)
+	l2, ok := lf2.(*feature.IncentiveTable)
+
+	if !ok {
+		return errors.New("incentivetable feature is not available on local device")
+	}
+
+	rf2 := evEntity.FeatureByProps(model.FeatureTypeEnumTypeIncentiveTable, model.RoleTypeServer)
+
+	incentiveSlots := []feature.IncentiveChargingSlot{}
+	for _, slot := range chargingPlan.Slots {
+		incentiveSlots = append(incentiveSlots, feature.IncentiveChargingSlot{
+			Pricing:  slot.Pricing,
+			Duration: slot.Duration,
+		})
+	}
+
+	incentiveChargingPlan := feature.IncentiveChargingPlan{
+		Duration: chargingPlan.Duration,
+		Slots:    incentiveSlots,
+	}
+
+	output = "Sending incentive slots:\n"
+	for index, slot := range incentiveSlots {
+		if index > 0 && index%4 == 0 {
+			output += "\n"
+		}
+		output += fmt.Sprintf("\t%.3f: %s", slot.Pricing, slot.Duration.String())
+		if (index + 1) == len(incentiveSlots) {
+			output += "\n"
+		}
+	}
+	c.log.Println(output)
+
+	if err := l2.WriteIncentiveTablePlanData(ctx, rf2, incentiveChargingPlan); err != nil {
+		c.log.Println("error sending loadcontrol limits ", err)
+		return err
+	}
+
+	return nil
 }
 
 // TODO error handling and returning
