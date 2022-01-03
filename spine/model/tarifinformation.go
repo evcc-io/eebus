@@ -25,9 +25,9 @@ type TierBoundaryTypeEnumType string
 
 // TierBoundaryTypeEnumType constants
 const (
-	TierBoundaryTypeEnumTypePowerboundary  TierBoundaryTypeEnumType = "powerBoundary"
-	TierBoundaryTypeEnumTypeEnergyboundary TierBoundaryTypeEnumType = "energyBoundary"
-	TierBoundaryTypeEnumTypeCountboundary  TierBoundaryTypeEnumType = "countBoundary"
+	TierBoundaryTypeEnumTypePowerBoundary  TierBoundaryTypeEnumType = "powerBoundary"
+	TierBoundaryTypeEnumTypeEnergyBoundary TierBoundaryTypeEnumType = "energyBoundary"
+	TierBoundaryTypeEnumTypeCountBoundary  TierBoundaryTypeEnumType = "countBoundary"
 )
 
 // CommodityIdType type

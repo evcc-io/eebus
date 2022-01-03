@@ -8,5 +8,6 @@ require (
 	github.com/gorilla/websocket v1.4.2
 	github.com/grandcat/zeroconf v1.0.0
 	github.com/mitchellh/mapstructure v1.4.1
+	github.com/rickb777/date v1.17.0
 	github.com/thoas/go-funk v0.9.0
 )

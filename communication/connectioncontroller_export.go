@@ -85,6 +85,8 @@ type EVDataType struct {
 	SoCDataAvailable               bool
 	ConnectedPhases                uint
 	ChargingStrategy               EVChargingStrategyEnumType
+	ChargingDemand                 float64
+	ChargingTargetDuration         time.Duration
 	Manufacturer                   ManufacturerDetails
 	Identification                 string
 	ChargeState                    EVChargeStateEnumType
@@ -107,7 +109,20 @@ const (
 	EVDataElementUpdateConnectedPhases            EVDataElementUpdateType = "connectedphases"
 	EVDataElementUpdatePowerLimits                EVDataElementUpdateType = "powerlimits"
 	EVDataElementUpdateAmperageLimits             EVDataElementUpdateType = "amperagelimits"
+	EVDataElementUpdateChargingStrategy           EVDataElementUpdateType = "chargingstrategy"
+	EVDataElementUpdateChargingPlanRequired       EVDataElementUpdateType = "chargingplanrequired"
 )
+
+type EVChargingSlot struct {
+	Duration time.Duration
+	MaxValue float64 // Watts
+	Pricing  float64
+}
+
+type EVChargingPlan struct {
+	Duration time.Duration
+	Slots    []EVChargingSlot
+}
 
 func (c *ConnectionController) GetData() (*EVSEClientDataType, error) {
 	if c == nil {
