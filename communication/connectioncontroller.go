@@ -580,6 +580,10 @@ func (c *ConnectionController) UpdateTimeSeriesData(f *feature.TimeSeries, timeS
 		return
 	case model.TimeSeriesTypeEnumTypePlan:
 		output := "EV informed about its charging plan:\n"
+		if timeSeriesData.TimePeriod == nil {
+			c.log.Printf("The time series plan is empty %d: %s\n", timeSeriesData.TimeSeriesId, err)
+			return
+		}
 		if timeSeriesData.TimePeriod.StartTime != nil {
 			output += fmt.Sprintf("\tStartTime: %s\n", *timeSeriesData.TimePeriod.StartTime)
 		}
@@ -592,6 +596,10 @@ func (c *ConnectionController) UpdateTimeSeriesData(f *feature.TimeSeries, timeS
 		c.log.Println(output)
 		return
 	case model.TimeSeriesTypeEnumTypeSingleDemand:
+		if timeSeriesData.TimeSeriesSlots == nil {
+			c.log.Printf("The time series slots are empty %d: %s\n", timeSeriesData.TimeSeriesId, err)
+			return
+		}
 		demand := timeSeriesData.TimeSeriesSlots[0].Value.GetValue()
 		c.clientData.EVData.ChargingDemand = demand / 1000 // return kWh
 		c.clientData.EVData.ChargingTargetDuration = time.Duration(24) * time.Hour
