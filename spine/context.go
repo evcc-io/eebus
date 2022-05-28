@@ -3,6 +3,7 @@ package spine
 import "github.com/evcc-io/eebus/spine/model"
 
 type Context interface {
+	CloseConnectionBecauseOfError(err error)
 	SetDevice(Device)
 	GetDevice() Device
 	UpdateDevice(model.NetworkManagementStateChangeType)

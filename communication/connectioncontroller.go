@@ -115,6 +115,11 @@ func (c *ConnectionController) Boot() error {
 	return err
 }
 
+func (c *ConnectionController) CloseConnection(err error) {
+	c.stopHeartbeat()
+	_ = c.conn.Close()
+}
+
 func (c *ConnectionController) Run() {
 	var err error
 	for err == nil {

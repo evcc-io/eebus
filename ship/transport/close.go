@@ -17,7 +17,11 @@ func (c *Transport) AcceptClose() error {
 	})
 
 	// stop read/write pump
-	close(c.closeC)
+	if !c.isChannelClosed() {
+		close(c.closeC)
+	}
+	c.conn.Close()
+	c.handleConnectionClose()
 	if c.CloseHandler != nil {
 		c.CloseHandler()
 	}
@@ -50,10 +54,23 @@ func (c *Transport) Close() error {
 	}
 
 	// stop read/write pump
-	close(c.closeC)
+	if !c.isChannelClosed() {
+		close(c.closeC)
+	}
+	c.conn.Close()
+	c.handleConnectionClose()
 	if c.CloseHandler != nil {
 		c.CloseHandler()
 	}
 
 	return err
+}
+
+func (c *Transport) isChannelClosed() bool {
+	select {
+	case <-c.closeC:
+		return false
+	default:
+		return true
+	}
 }
