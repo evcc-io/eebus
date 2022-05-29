@@ -11,6 +11,8 @@ import (
 func (f *NodeManagement) readUseCaseData(ctrl spine.Context, data model.NodeManagementUseCaseDataType) error {
 	// TODO: generate this!
 
+	ucTrue := true
+
 	deviceAddress := f.GetEntity().GetDevice().GetAddress()
 	actor := model.UseCaseActorType("CEM")
 	var useCaseSupport []model.UseCaseSupportType
@@ -19,18 +21,20 @@ func (f *NodeManagement) readUseCaseData(ctrl spine.Context, data model.NodeMana
 	{
 		useCaseName := model.UseCaseNameType(model.UseCaseNameEnumTypeEVSECommissioningAndConfiguration)
 		useCaseItem := model.UseCaseSupportType{
-			UseCaseVersion:  &useCaseVersion,
-			UseCaseName:     &useCaseName,
-			ScenarioSupport: []model.UseCaseScenarioSupportType{1, 2},
+			UseCaseVersion:   &useCaseVersion,
+			UseCaseName:      &useCaseName,
+			ScenarioSupport:  []model.UseCaseScenarioSupportType{1, 2},
+			UseCaseAvailable: &ucTrue,
 		}
 		useCaseSupport = append(useCaseSupport, useCaseItem)
 	}
 	{
 		useCaseName := model.UseCaseNameType(model.UseCaseNameEnumTypeEVCommissioningAndConfiguration)
 		useCaseItem := model.UseCaseSupportType{
-			UseCaseVersion:  &useCaseVersion,
-			UseCaseName:     &useCaseName,
-			ScenarioSupport: []model.UseCaseScenarioSupportType{1, 2, 3, 4, 5, 6, 7, 8},
+			UseCaseVersion:   &useCaseVersion,
+			UseCaseName:      &useCaseName,
+			ScenarioSupport:  []model.UseCaseScenarioSupportType{1, 2, 3, 4, 5, 6, 7, 8},
+			UseCaseAvailable: &ucTrue,
 		}
 		useCaseSupport = append(useCaseSupport, useCaseItem)
 	}
@@ -46,9 +50,10 @@ func (f *NodeManagement) readUseCaseData(ctrl spine.Context, data model.NodeMana
 	{
 		useCaseName := model.UseCaseNameType(model.UseCaseNameEnumTypeMeasurementOfElectricityDuringEVCharging)
 		useCaseItem := model.UseCaseSupportType{
-			UseCaseVersion:  &useCaseVersion,
-			UseCaseName:     &useCaseName,
-			ScenarioSupport: []model.UseCaseScenarioSupportType{1, 2, 3},
+			UseCaseVersion:   &useCaseVersion,
+			UseCaseName:      &useCaseName,
+			ScenarioSupport:  []model.UseCaseScenarioSupportType{1, 2, 3},
+			UseCaseAvailable: &ucTrue,
 		}
 		useCaseSupport = append(useCaseSupport, useCaseItem)
 	}
@@ -59,33 +64,37 @@ func (f *NodeManagement) readUseCaseData(ctrl spine.Context, data model.NodeMana
 			UseCaseName:     &useCaseName,
 			ScenarioSupport: []model.UseCaseScenarioSupportType{1, 3, 4, 5, 6, 7, 8},
 			// ScenarioSupport: []model.UseCaseScenarioSupportType{1, 2, 3, 4, 5, 6, 7, 8},
+			UseCaseAvailable: &ucTrue,
 		}
 		useCaseSupport = append(useCaseSupport, useCaseItem)
 	}
 	{
 		useCaseName := model.UseCaseNameType(model.UseCaseNameEnumTypeOptimizationOfSelfConsumptionDuringEVCharging)
 		useCaseItem := model.UseCaseSupportType{
-			UseCaseVersion:  &useCaseVersion,
-			UseCaseName:     &useCaseName,
-			ScenarioSupport: []model.UseCaseScenarioSupportType{1, 2, 3},
+			UseCaseVersion:   &useCaseVersion,
+			UseCaseName:      &useCaseName,
+			ScenarioSupport:  []model.UseCaseScenarioSupportType{1, 2, 3},
+			UseCaseAvailable: &ucTrue,
 		}
 		useCaseSupport = append(useCaseSupport, useCaseItem)
 	}
 	{
 		useCaseName := model.UseCaseNameType(model.UseCaseNameEnumTypeEVStateOfCharge)
 		useCaseItem := model.UseCaseSupportType{
-			UseCaseVersion:  &useCaseVersion,
-			UseCaseName:     &useCaseName,
-			ScenarioSupport: []model.UseCaseScenarioSupportType{1},
+			UseCaseVersion:   &useCaseVersion,
+			UseCaseName:      &useCaseName,
+			ScenarioSupport:  []model.UseCaseScenarioSupportType{1},
+			UseCaseAvailable: &ucTrue,
 		}
 		useCaseSupport = append(useCaseSupport, useCaseItem)
 	}
 	{
 		useCaseName := model.UseCaseNameType(model.UseCaseNameEnumTypeOverloadProtectionByEVChargingCurrentCurtailment)
 		useCaseItem := model.UseCaseSupportType{
-			UseCaseVersion:  &useCaseVersion,
-			UseCaseName:     &useCaseName,
-			ScenarioSupport: []model.UseCaseScenarioSupportType{1, 2, 3},
+			UseCaseVersion:   &useCaseVersion,
+			UseCaseName:      &useCaseName,
+			ScenarioSupport:  []model.UseCaseScenarioSupportType{1, 2, 3},
+			UseCaseAvailable: &ucTrue,
 		}
 		useCaseSupport = append(useCaseSupport, useCaseItem)
 	}
