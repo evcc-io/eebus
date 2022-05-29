@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"sort"
 	"sync"
 	"time"
 
@@ -656,7 +657,7 @@ func (c *ConnectionController) UpdateIncentiveConstraintsData(f *feature.Incenti
 
 	lf := c.localDevice.EntityByType(model.EntityTypeType(model.EntityTypeEnumTypeCEM)).FeatureByProps(model.FeatureTypeEnumTypeIncentiveTable, model.RoleTypeClient)
 	if l, ok := lf.(*feature.IncentiveTable); ok {
-		l.WriteDescriptionData(ctx, rf)
+		_ = l.WriteDescriptionData(ctx, rf)
 	}
 }
 
@@ -875,6 +876,10 @@ func (c *ConnectionController) WriteCurrentLimitData(overloadProtectionCurrentsP
 	if limitItems == nil {
 		return errors.New("no limits available")
 	}
+
+	sort.Slice(limitItems, func(i, j int) bool {
+		return limitItems[i].LimitId < limitItems[j].LimitId
+	})
 
 	ctx := c.context(nil)
 
