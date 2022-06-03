@@ -143,6 +143,9 @@ func (f *TimeSeries) replyDescriptionListData(ctrl spine.Context, data model.Tim
 		f.timeSeriesDescriptionData = nil
 	}
 	for _, item := range data.TimeSeriesDescriptionData {
+		if item.TimeSeriesId == nil || item.TimeSeriesType == nil || item.TimeSeriesWriteable == nil || item.UpdateRequired == nil || item.Unit == nil {
+			continue
+		}
 		newItem := TimeSeriesDescriptionListDatasetType{
 			TimeSeriesId:     uint(*item.TimeSeriesId),
 			TimeSeriesType:   model.TimeSeriesTypeEnumType(*item.TimeSeriesType),

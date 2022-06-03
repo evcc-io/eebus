@@ -125,7 +125,11 @@ func (f *NodeManagement) updateSupportedUseCases(ctrl spine.Context, remoteDevic
 		if *actorItem.Actor == model.UseCaseActorType(model.UseCaseActorEnumTypeEV) {
 			for _, item := range actorItem.UseCaseSupport {
 				if f.Delegate != nil {
-					f.Delegate.UpdateUseCaseSupportData(f, *item.UseCaseName, *item.UseCaseAvailable)
+					useCaseAvailable := true
+					if item.UseCaseAvailable != nil {
+						useCaseAvailable = *item.UseCaseAvailable
+					}
+					f.Delegate.UpdateUseCaseSupportData(f, *item.UseCaseName, useCaseAvailable)
 				}
 			}
 		}

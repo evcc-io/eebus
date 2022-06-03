@@ -144,6 +144,9 @@ func (f *LoadControl) replyLimitListData(ctrl spine.Context, data model.LoadCont
 
 	f.limitData = nil
 	for _, item := range data.LoadControlLimitData {
+		if item.Value == nil || item.LimitId == nil || item.IsLimitChangeable == nil || item.IsLimitActive == nil {
+			continue
+		}
 		newItem := LoadControlLimitDatasetType{
 			LimitId:           uint(*item.LimitId),
 			IsLimitChangeable: *item.IsLimitChangeable,

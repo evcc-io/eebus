@@ -126,9 +126,19 @@ func (f *ElectricalConnection) replyDescriptionListData(ctrl spine.Context, data
 
 	f.descriptionData = nil
 	for _, item := range data.ElectricalConnectionDescriptionData {
+		if item.ElectricalConnectionId == nil {
+			continue
+		}
+
 		newItem := ElectricalConnectionDatasetDataType{
 			ElectricalConnectionId: uint(*item.ElectricalConnectionId),
-			ConnectedPhases:        *item.AcConnectedPhases,
+		}
+
+		if item.AcConnectedPhases != nil {
+			newItem.ConnectedPhases = *item.AcConnectedPhases
+		} else {
+			// Assume this
+			newItem.ConnectedPhases = 3
 		}
 		f.descriptionData = append(f.descriptionData, newItem)
 	}
@@ -199,10 +209,76 @@ func (f *ElectricalConnection) replyPermittedValueSetData(ctrl spine.Context, da
 			rangeData := item.PermittedValueSet[0].Range
 			if len(rangeData) > 0 {
 				rangeValue := rangeData[0]
-				newItem.MinValue = rangeValue.Min.GetValue()
-				newItem.MaxValue = rangeValue.Max.GetValue()
+				if rangeValue.Min != nil {
+					newItem.MinValue = rangeValue.Min.GetValue()
+				}
+				if rangeValue.Max != nil {
+					newItem.MaxValue = rangeValue.Max.GetValue()
+				}
 			}
 			f.permittedData = append(f.permittedData, newItem)
+		}
+	}
+
+	if f.Delegate != nil {
+		f.Delegate.UpdateElectricalConnectionData(f)
+	}
+
+	return nil
+}
+
+func (f *ElectricalConnection) notifyPermittedValueSetData(ctrl spine.Context, data model.ElectricalConnectionPermittedValueSetListDataType, isPartialForCmd bool) error {
+	// example data:
+	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.3.0"},{"addressSource":[{"device":"d:_i:47859_Elli-Wallbox-2019A0OV8H"},{"entity":[1,1]},{"feature":7}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":8}]},{"msgCounter":768},{"cmdClassifier":"notify"}]},{"payload":[{"cmd":[[{"function":"electricalConnectionPermittedValueSetListData"},{"filter":[[{"cmdControl":[{"partial":[]}]}]]},{"electricalConnectionPermittedValueSetListData":[{"electricalConnectionPermittedValueSetData":[[{"electricalConnectionId":0},{"parameterId":1},{"permittedValueSet":[[{"range":[[{"min":[{"number":6},{"scale":0}]},{"max":[{"number":6},{"scale":0}]}]]}]]}],[{"electricalConnectionId":0},{"parameterId":2},{"permittedValueSet":[[{"range":[[{"min":[{"number":6},{"scale":0}]},{"max":[{"number":6},{"scale":0}]}]]}]]}],[{"electricalConnectionId":0},{"parameterId":3},{"permittedValueSet":[[{"range":[[{"min":[{"number":6},{"scale":0}]},{"max":[{"number":6},{"scale":0}]}]]}]]}]]}]}]]}]}]}}]}
+
+	for _, item := range data.ElectricalConnectionPermittedValueSetData {
+		if item.ElectricalConnectionId == nil || item.ParameterId == nil {
+			continue
+		}
+
+		var updatedDataSetItem ElectricalConnectionPermittedDataType
+		var updatedDataSetIndex int
+		itemFound := false
+		for index, datasetItem := range f.permittedData {
+			if datasetItem.ElectricalConnectionId == uint(*item.ElectricalConnectionId) && datasetItem.ParameterId == uint(*item.ParameterId) {
+				updatedDataSetItem = datasetItem
+				updatedDataSetIndex = index
+				itemFound = true
+				break
+			}
+		}
+
+		var dataSetItem ElectricalConnectionPermittedDataType
+
+		if !itemFound {
+			dataSetItem = ElectricalConnectionPermittedDataType{
+				ElectricalConnectionId: uint(*item.ElectricalConnectionId),
+				ParameterId:            uint(*item.ParameterId),
+			}
+		} else {
+			dataSetItem = updatedDataSetItem
+		}
+		if len(item.PermittedValueSet) > 0 {
+			valueData := item.PermittedValueSet[0].Value
+			if len(valueData) > 0 {
+				valueItem := valueData[0]
+				dataSetItem.Value = valueItem.GetValue()
+			}
+			rangeData := item.PermittedValueSet[0].Range
+			if len(rangeData) > 0 {
+				rangeValue := rangeData[0]
+				if rangeValue.Min != nil {
+					dataSetItem.MinValue = rangeValue.Min.GetValue()
+				}
+				if rangeValue.Max != nil {
+					dataSetItem.MaxValue = rangeValue.Max.GetValue()
+				}
+			}
+			if !itemFound {
+				f.permittedData = append(f.permittedData, dataSetItem)
+			} else {
+				f.permittedData[updatedDataSetIndex] = dataSetItem
+			}
 		}
 	}
 
@@ -273,7 +349,7 @@ func (f *ElectricalConnection) Handle(ctrl spine.Context, rf model.FeatureAddres
 			return f.replyPermittedValueSetData(ctrl, *data)
 
 		case model.CmdClassifierTypeNotify:
-			return f.replyPermittedValueSetData(ctrl, *data)
+			return f.notifyPermittedValueSetData(ctrl, *data, isPartialForCmd)
 
 		default:
 			return fmt.Errorf("electricalconnection.Handle: ElectricalConnectionPermittedValueSetListData CmdClassifierType not implemented: %s", op)

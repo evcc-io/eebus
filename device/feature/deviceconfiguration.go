@@ -76,14 +76,11 @@ func (f *DeviceConfiguration) requestKeyValueListData(ctrl spine.Context, rf spi
 	return ctrl.Request(model.CmdClassifierTypeRead, *spine.FeatureAddressType(f), *spine.FeatureAddressType(rf), true, res)
 }
 
-func (f *DeviceConfiguration) replyKeyValueListData(ctrl spine.Context, data model.DeviceConfigurationKeyValueListDataType, isNotify bool) error {
+func (f *DeviceConfiguration) replyKeyValueListData(ctrl spine.Context, data model.DeviceConfigurationKeyValueListDataType) error {
 	// example data:
 	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.2.0"},{"addressSource":[{"device":"d:_i:19667_PorscheEVSE-00016544"},{"entity":[1,1]},{"feature":5}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":4}]},{"msgCounter":24307},{"msgCounterReference":34},{"cmdClassifier":"reply"}]},{"payload":[{"cmd":[[{"deviceConfigurationKeyValueListData":[{"deviceConfigurationKeyValueData":[[{"keyId":1},{"value":[{"boolean":false}]}],[{"keyId":2},{"value":[{"string":"iso15118-2ed2"}]}]]}]}]]}]}]}}]}
 
 	if f.descriptionData == nil {
-		if isNotify {
-			return nil
-		}
 		return errors.New("deviceconfiguration.replyKeyValueListData: descriptionData is not set, needs to be requested first")
 	}
 
@@ -134,6 +131,86 @@ func (f *DeviceConfiguration) replyKeyValueListData(ctrl spine.Context, data mod
 	return nil
 }
 
+func (f *DeviceConfiguration) notifyKeyValueListData(ctrl spine.Context, data model.DeviceConfigurationKeyValueListDataType, isPartialForCmd bool) error {
+	// example data:
+	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.3.0"},{"addressSource":[{"device":"d:_i:47859_Elli-Wallbox-2019A0OV8H"},{"entity":[1,1]},{"feature":24}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":4}]},{"msgCounter":767},{"cmdClassifier":"notify"}]},{"payload":[{"cmd":[[{"function":"deviceConfigurationKeyValueListData"},{"filter":[[{"cmdControl":[{"partial":[]}]}]]},{"deviceConfigurationKeyValueListData":[{"deviceConfigurationKeyValueData":[[{"keyId":1},{"value":[{"string":"iec61851"}]}]]}]}]]}]}]}}]}
+
+	if f.descriptionData == nil {
+		return errors.New("deviceconfiguration.replyKeyValueListData: descriptionData is not set, needs to be requested first")
+	}
+
+	for _, item := range data.DeviceConfigurationKeyValueData {
+		if item.KeyId == nil || item.Value == nil {
+			continue
+		}
+
+		var keyId uint = uint(*item.KeyId)
+		var valueTypeForKeyID model.DeviceConfigurationKeyValueTypeType
+		var nameForKeyID model.DeviceConfigurationKeyNameEnumType
+		found := false
+
+		for _, descriptionItem := range f.descriptionData {
+			if keyId == descriptionItem.KeyId {
+				valueTypeForKeyID = descriptionItem.KeyValueType
+				nameForKeyID = descriptionItem.KeyName
+				found = true
+				break
+			}
+		}
+
+		if !found {
+			continue
+		}
+
+		var updatedDataSetItem DeviceConfigurationDatasetDataType
+		var updatedDataSetIndex int
+		itemFound := false
+		for index, datasetItem := range f.datasetData {
+			if datasetItem.KeyName == nameForKeyID {
+				updatedDataSetItem = datasetItem
+				updatedDataSetIndex = index
+				itemFound = true
+				break
+			}
+		}
+
+		var dataSetItem DeviceConfigurationDatasetDataType
+
+		if !itemFound {
+			dataSetItem = DeviceConfigurationDatasetDataType{
+				KeyName:      nameForKeyID,
+				KeyValueType: valueTypeForKeyID,
+			}
+		} else {
+			dataSetItem = updatedDataSetItem
+		}
+
+		valid := true
+		switch valueTypeForKeyID {
+		case model.DeviceConfigurationKeyValueTypeTypeBoolean:
+			dataSetItem.KeyValueBoolean = *item.Value.Boolean
+		case model.DeviceConfigurationKeyValueTypeTypeString:
+			dataSetItem.KeyValueString = string(*item.Value.String)
+		default:
+			valid = false
+		}
+
+		if valid {
+			if !itemFound {
+				f.datasetData = append(f.datasetData, dataSetItem)
+			} else {
+				f.datasetData[updatedDataSetIndex] = dataSetItem
+			}
+		}
+	}
+
+	if f.Delegate != nil {
+		f.Delegate.UpdateDeviceConfigurationData(f, f.datasetData)
+	}
+
+	return nil
+}
+
 func (f *DeviceConfiguration) HandleRequest(ctrl spine.Context, fct model.FunctionEnumType, op model.CmdClassifierType, rf spine.Feature) (*model.MsgCounterType, error) {
 	switch fct {
 	case model.FunctionEnumTypeDeviceConfigurationKeyValueDescriptionListData:
@@ -169,9 +246,9 @@ func (f *DeviceConfiguration) Handle(ctrl spine.Context, rf model.FeatureAddress
 		data := cmd.DeviceConfigurationKeyValueListData
 		switch op {
 		case model.CmdClassifierTypeReply:
-			return f.replyKeyValueListData(ctrl, *data, true)
+			return f.replyKeyValueListData(ctrl, *data)
 		case model.CmdClassifierTypeNotify:
-			return f.replyKeyValueListData(ctrl, *data, false)
+			return f.notifyKeyValueListData(ctrl, *data, isPartialForCmd)
 
 		default:
 			return fmt.Errorf("deviceconfiguration.Handle: DeviceConfigurationKeyValueListData CmdClassifierType not implemented: %s", op)

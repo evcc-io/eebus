@@ -48,6 +48,9 @@ func (f *Identification) replyListData(ctrl spine.Context, data model.Identifica
 
 	f.datasetData = nil
 	for _, item := range data.IdentificationData {
+		if item.IdentificationId != nil || item.IdentificationType != nil || item.IdentificationValue != nil {
+			continue
+		}
 		newItem := IdentificationDatasetDataType{
 			IdentificationId:    uint(*item.IdentificationId),
 			IdentificationType:  model.IdentificationTypeEnumType(*item.IdentificationType),

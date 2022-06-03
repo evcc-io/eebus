@@ -378,7 +378,7 @@ func (c *ConnectionController) updateMeasurementData() {
 			}
 			c.callDataUpdateHandler(EVDataElementUpdateAmperageLimits)
 		}
-		if powerLimitsUpdated {
+		if !powerLimitsUpdated {
 			// Min power data is only properly provided via VAS in ISO15118-2!
 			// So use the known min limits and calculate a more likely min power
 			if c.clientData.EVData.ConnectedPhases == 1 {
@@ -386,10 +386,19 @@ func (c *ConnectionController) updateMeasurementData() {
 				if c.clientData.EVData.LimitsPower.Min < minPower {
 					c.clientData.EVData.LimitsPower.Min = minPower
 				}
+				maxPower := c.clientData.EVData.LimitsL1.Max * 230
+				if c.clientData.EVData.LimitsPower.Max != maxPower {
+					c.clientData.EVData.LimitsPower.Max = maxPower
+				}
+
 			} else if c.clientData.EVData.ConnectedPhases == 3 {
 				minPower := c.clientData.EVData.LimitsL1.Min*230 + c.clientData.EVData.LimitsL2.Min*230 + c.clientData.EVData.LimitsL3.Min*230
 				if c.clientData.EVData.LimitsPower.Min < minPower {
 					c.clientData.EVData.LimitsPower.Min = minPower
+				}
+				maxPower := c.clientData.EVData.LimitsL1.Max*230 + c.clientData.EVData.LimitsL2.Max*230 + c.clientData.EVData.LimitsL3.Max*230
+				if c.clientData.EVData.LimitsPower.Max != maxPower {
+					c.clientData.EVData.LimitsPower.Max = maxPower
 				}
 			}
 			c.callDataUpdateHandler(EVDataElementUpdatePowerLimits)
@@ -427,15 +436,62 @@ func (c *ConnectionController) updateMeasurementData() {
 			c.clientData.EVData.Measurements.Timestamp = item.Timestamp
 			switch measurementIdsToPhase[item.MeasurementId] {
 			case 1:
+				// in case we didn't receive power measurements, use current measurements
+				if item.Value == 0 && c.clientData.EVData.Measurements.CurrentL1 != 0 {
+					c.log.Println("L1 power fallback")
+					item.Value = c.clientData.EVData.Measurements.CurrentL1 * 230
+				}
 				c.clientData.EVData.Measurements.PowerL1 = item.Value
 			case 2:
+				// in case we didn't receive power measurements, use current measurements
+				if item.Value == 0 && c.clientData.EVData.Measurements.CurrentL2 != 0 {
+					c.log.Println("L2 power fallback")
+					item.Value = c.clientData.EVData.Measurements.CurrentL2 * 230
+				}
 				c.clientData.EVData.Measurements.PowerL2 = item.Value
 			case 3:
+				// in case we didn't receive power measurements, use current measurements
+				if item.Value == 0 && c.clientData.EVData.Measurements.CurrentL3 != 0 {
+					c.log.Println("L3 power fallback")
+					item.Value = c.clientData.EVData.Measurements.CurrentL3 * 230
+				}
+				c.clientData.EVData.Measurements.PowerL3 = item.Value
+			default:
+			}
+		} else {
+			c.clientData.EVData.Measurements.Timestamp = item.Timestamp
+			item.Value = 0
+			switch measurementIdsToPhase[item.MeasurementId] {
+			case 1:
+				// in case we didn't receive power measurements, use current measurements
+				if c.clientData.EVData.Measurements.CurrentL1 != 0 {
+					item.Value = c.clientData.EVData.Measurements.CurrentL1 * 230
+				}
+				c.clientData.EVData.Measurements.PowerL1 = item.Value
+			case 2:
+				// in case we didn't receive power measurements, use current measurements
+				if c.clientData.EVData.Measurements.CurrentL2 != 0 {
+					item.Value = c.clientData.EVData.Measurements.CurrentL2 * 230
+				}
+				c.clientData.EVData.Measurements.PowerL2 = item.Value
+			case 3:
+				// in case we didn't receive power measurements, use current measurements
+				if c.clientData.EVData.Measurements.CurrentL3 != 0 {
+					item.Value = c.clientData.EVData.Measurements.CurrentL3 * 230
+				}
 				c.clientData.EVData.Measurements.PowerL3 = item.Value
 			default:
 			}
 		}
 	}
+
+	if len(measurementPowerIds) == 0 {
+		// we did not receive any Power measurements, so calculate them
+		c.clientData.EVData.Measurements.PowerL1 = c.clientData.EVData.Measurements.CurrentL1 * 230
+		c.clientData.EVData.Measurements.PowerL2 = c.clientData.EVData.Measurements.CurrentL2 * 230
+		c.clientData.EVData.Measurements.PowerL3 = c.clientData.EVData.Measurements.CurrentL3 * 230
+	}
+
 	c.log.Println("phases: ", c.clientData.EVData.ConnectedPhases, ", charged energy: ", c.clientData.EVData.Measurements.ChargedEnergy, "Wh")
 	c.log.Println("current current: L1 ", c.clientData.EVData.Measurements.CurrentL1, "A, L2 ", c.clientData.EVData.Measurements.CurrentL2, "A L3 ", c.clientData.EVData.Measurements.CurrentL3, "A")
 	c.log.Println("current power: L1 ", c.clientData.EVData.Measurements.PowerL1, "W, L2 ", c.clientData.EVData.Measurements.PowerL2, "W L3 ", c.clientData.EVData.Measurements.PowerL3, "W")

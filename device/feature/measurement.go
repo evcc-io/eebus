@@ -127,9 +127,16 @@ func (f *Measurement) replyListData(ctrl spine.Context, data model.MeasurementLi
 
 	f.datasetData = nil
 	for _, item := range data.MeasurementData {
-		timestamp, err := time.Parse(time.RFC3339, *item.Timestamp)
-		if err != nil {
-			timestamp = time.Time{}
+		if item.MeasurementId == nil || item.Value == nil {
+			continue
+		}
+
+		timestamp := time.Time{}
+		if item.Timestamp != nil {
+			stamp, err := time.Parse(time.RFC3339, *item.Timestamp)
+			if err == nil {
+				timestamp = stamp
+			}
 		}
 
 		newItem := MeasurementDatasetDataType{
@@ -138,6 +145,56 @@ func (f *Measurement) replyListData(ctrl spine.Context, data model.MeasurementLi
 			Value:         item.Value.GetValue(),
 		}
 		f.datasetData = append(f.datasetData, newItem)
+	}
+
+	if f.Delegate != nil {
+		f.Delegate.UpdateMeasurementData(f)
+	}
+
+	return nil
+}
+
+func (f *Measurement) notifyListData(ctrl spine.Context, data model.MeasurementListDataType, isPartialForCmd bool) error {
+	// example data:
+	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.3.0"},{"addressSource":[{"device":"d:_i:47859_Elli-Wallbox-2019A0OV8H"},{"entity":[1,1]},{"feature":11}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":3}]},{"msgCounter":811},{"cmdClassifier":"notify"}]},{"payload":[{"cmd":[[{"function":"measurementListData"},{"filter":[[{"cmdControl":[{"partial":[]}]}]]},{"measurementListData":[{"measurementData":[[{"measurementId":0},{"valueType":"value"},{"value":[{"number":608},{"scale":-2}]}],[{"measurementId":1},{"valueType":"value"},{"value":[{"number":587},{"scale":-2}]}],[{"measurementId":2},{"valueType":"value"},{"value":[{"number":604},{"scale":-2}]}]]}]}]]}]}]}}]}
+
+	for _, item := range data.MeasurementData {
+		if item.MeasurementId == nil || item.Value == nil {
+			continue
+		}
+
+		timestamp := time.Now()
+		if item.Timestamp != nil {
+			stamp, err := time.Parse(time.RFC3339, *item.Timestamp)
+			if err == nil {
+				timestamp = stamp
+			}
+		}
+
+		var updatedDataSetItem MeasurementDatasetDataType
+		var updatedDataSetIndex int
+		itemFound := false
+		for index, datasetItem := range f.datasetData {
+			if datasetItem.MeasurementId == uint(*item.MeasurementId) {
+				updatedDataSetItem = datasetItem
+				updatedDataSetIndex = index
+				itemFound = true
+				break
+			}
+		}
+
+		if !itemFound {
+			newItem := MeasurementDatasetDataType{
+				MeasurementId: uint(*item.MeasurementId),
+				Timestamp:     timestamp,
+				Value:         item.Value.GetValue(),
+			}
+			f.datasetData = append(f.datasetData, newItem)
+		} else {
+			updatedDataSetItem.Timestamp = timestamp
+			updatedDataSetItem.Value = item.Value.GetValue()
+			f.datasetData[updatedDataSetIndex] = updatedDataSetItem
+		}
 	}
 
 	if f.Delegate != nil {
@@ -206,7 +263,7 @@ func (f *Measurement) Handle(ctrl spine.Context, rf model.FeatureAddressType, op
 			return f.replyListData(ctrl, *data)
 
 		case model.CmdClassifierTypeNotify:
-			return f.replyListData(ctrl, *data)
+			return f.notifyListData(ctrl, *data, isPartialForCmd)
 
 		default:
 			return fmt.Errorf("measurement.handle: MeasurementListData CmdClassifierType not implemented: %s", op)

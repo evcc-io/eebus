@@ -200,6 +200,9 @@ func (f *IncentiveTable) replyConstraintsData(ctrl spine.Context, data model.Inc
 	// ]]}
 
 	for _, constraints := range data.IncentiveTableConstraints {
+		if constraints.Tariff == nil || constraints.Tariff.TariffId == nil || constraints.TariffConstraints == nil || constraints.TariffConstraints.MaxTiersPerTariff == nil || constraints.TariffConstraints.MaxBoundariesPerTier == nil || constraints.TariffConstraints.MaxIncentivesPerTier == nil || constraints.IncentiveSlotConstraints.SlotCountMax == nil {
+			continue
+		}
 		f.constraintsData = IncentiveConstraintsDataType{
 			TariffID:             uint(*constraints.Tariff.TariffId),
 			MaxTiersPerTariff:    uint(*constraints.TariffConstraints.MaxTiersPerTariff),
