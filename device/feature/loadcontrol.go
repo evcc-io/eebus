@@ -11,7 +11,6 @@ type LoadControlLimitDescriptionDataType struct {
 	LimitId       uint
 	LimitType     model.LoadControlLimitTypeEnumType
 	MeasurementId uint
-	Phase         uint
 	ScopeType     model.ScopeTypeEnumType
 }
 

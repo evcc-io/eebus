@@ -90,6 +90,10 @@ func (f *ElectricalConnection) replyParameterDescriptionListData(ctrl spine.Cont
 
 	f.parameterDescriptionData = nil
 	for _, item := range data.ElectricalConnectionParameterDescriptionData {
+		if item.ElectricalConnectionId == nil || item.ParameterId == nil || item.AcMeasuredPhases == nil {
+			continue
+		}
+
 		phasesValue := string(*item.AcMeasuredPhases)
 		if phasesValue == "a" || phasesValue == "b" || phasesValue == "c" || phasesValue == "abc" {
 			newItem := ElectricalConnectionParameterDescriptionDataType{
@@ -101,9 +105,9 @@ func (f *ElectricalConnection) replyParameterDescriptionListData(ctrl spine.Cont
 			}
 			if item.ScopeType != nil {
 				newItem.ScopeType = model.ScopeTypeEnumType(*item.ScopeType)
-				newItem.Phase = 0
-			} else {
-				newItem.Phase = phases[phasesValue]
+			}
+			if phaseValue, ok := phases[phasesValue]; ok {
+				newItem.Phase = phaseValue
 			}
 			f.parameterDescriptionData = append(f.parameterDescriptionData, newItem)
 		}

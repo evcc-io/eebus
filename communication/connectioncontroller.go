@@ -884,12 +884,14 @@ func (c *ConnectionController) WriteCurrentLimitData(overloadProtectionCurrentsP
 				currentValue := current
 
 				var limitId model.LoadControlLimitIdType = 0
+				limitIdFound := false
 
 				for _, item := range limitDescription {
 					if item.MeasurementId == measurementId {
 						if (scopeTypes == 0 && item.ScopeType == model.ScopeTypeEnumTypeOverloadProtection) ||
 							(scopeTypes == 1 && item.ScopeType == model.ScopeTypeEnumTypeSelfConsumption) {
 							limitId = model.LoadControlLimitIdType(item.LimitId)
+							limitIdFound = true
 						}
 					}
 				}
@@ -918,7 +920,7 @@ func (c *ConnectionController) WriteCurrentLimitData(overloadProtectionCurrentsP
 					}
 				}
 
-				if limitId > 0 {
+				if limitIdFound {
 					newItem := feature.LoadControlLimitDatasetType{
 						LimitId: uint(limitId),
 						Value:   currentValue,
