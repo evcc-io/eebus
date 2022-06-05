@@ -76,67 +76,17 @@ func (f *DeviceConfiguration) requestKeyValueListData(ctrl spine.Context, rf spi
 	return ctrl.Request(model.CmdClassifierTypeRead, *spine.FeatureAddressType(f), *spine.FeatureAddressType(rf), true, res)
 }
 
-func (f *DeviceConfiguration) replyKeyValueListData(ctrl spine.Context, data model.DeviceConfigurationKeyValueListDataType) error {
+func (f *DeviceConfiguration) replyKeyValueListData(ctrl spine.Context, data model.DeviceConfigurationKeyValueListDataType, isPartialForCmd bool) error {
 	// example data:
-	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.2.0"},{"addressSource":[{"device":"d:_i:19667_PorscheEVSE-00016544"},{"entity":[1,1]},{"feature":5}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":4}]},{"msgCounter":24307},{"msgCounterReference":34},{"cmdClassifier":"reply"}]},{"payload":[{"cmd":[[{"deviceConfigurationKeyValueListData":[{"deviceConfigurationKeyValueData":[[{"keyId":1},{"value":[{"boolean":false}]}],[{"keyId":2},{"value":[{"string":"iso15118-2ed2"}]}]]}]}]]}]}]}}]}
-
-	if f.descriptionData == nil {
-		return errors.New("deviceconfiguration.replyKeyValueListData: descriptionData is not set, needs to be requested first")
-	}
-
-	f.datasetData = nil
-	for _, item := range data.DeviceConfigurationKeyValueData {
-		var keyId uint = uint(*item.KeyId)
-		var valueTypeForKeyID model.DeviceConfigurationKeyValueTypeType
-		var nameForKeyID model.DeviceConfigurationKeyNameEnumType
-		found := false
-
-		for _, descriptionItem := range f.descriptionData {
-			if keyId == descriptionItem.KeyId {
-				valueTypeForKeyID = descriptionItem.KeyValueType
-				nameForKeyID = descriptionItem.KeyName
-				found = true
-				break
-			}
-		}
-
-		if !found {
-			continue
-		}
-
-		newItem := DeviceConfigurationDatasetDataType{
-			KeyName:      nameForKeyID,
-			KeyValueType: valueTypeForKeyID,
-		}
-
-		valid := true
-		switch valueTypeForKeyID {
-		case model.DeviceConfigurationKeyValueTypeTypeBoolean:
-			newItem.KeyValueBoolean = *item.Value.Boolean
-		case model.DeviceConfigurationKeyValueTypeTypeString:
-			newItem.KeyValueString = string(*item.Value.String)
-		default:
-			valid = false
-		}
-
-		if valid {
-			f.datasetData = append(f.datasetData, newItem)
-		}
-	}
-
-	if f.Delegate != nil {
-		f.Delegate.UpdateDeviceConfigurationData(f, f.datasetData)
-	}
-
-	return nil
-}
-
-func (f *DeviceConfiguration) notifyKeyValueListData(ctrl spine.Context, data model.DeviceConfigurationKeyValueListDataType, isPartialForCmd bool) error {
-	// example data:
+	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.2.0"},{"addressSource":[{"device":"d:_i:19667_PorscheEVSE-00016544"},{"entity":[1,1]},{"feature":5}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":4}]},{"msgCounter":24307},{"msgCounterReference":34},{"cmdClassifier":"reply"}]},{"payload":[{"cmd":[[{"deviceConfigurationKeyValueListData":[{"deviceConfigurationKeyValueData":[[{"keyId":1},{"value":[{"boolean":false}]}],[{"keyId":2},{"value":[{"string":"iso15118-2ed2"}]}]]}]}]]}]}]}}]}
 	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.3.0"},{"addressSource":[{"device":"d:_i:47859_Elli-Wallbox-2019A0OV8H"},{"entity":[1,1]},{"feature":24}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":4}]},{"msgCounter":767},{"cmdClassifier":"notify"}]},{"payload":[{"cmd":[[{"function":"deviceConfigurationKeyValueListData"},{"filter":[[{"cmdControl":[{"partial":[]}]}]]},{"deviceConfigurationKeyValueListData":[{"deviceConfigurationKeyValueData":[[{"keyId":1},{"value":[{"string":"iec61851"}]}]]}]}]]}]}]}}]}
 
 	if f.descriptionData == nil {
 		return errors.New("deviceconfiguration.replyKeyValueListData: descriptionData is not set, needs to be requested first")
+	}
+
+	if !isPartialForCmd {
+		f.datasetData = nil
 	}
 
 	for _, item := range data.DeviceConfigurationKeyValueData {
@@ -162,44 +112,34 @@ func (f *DeviceConfiguration) notifyKeyValueListData(ctrl spine.Context, data mo
 			continue
 		}
 
-		var updatedDataSetItem DeviceConfigurationDatasetDataType
-		var updatedDataSetIndex int
-		itemFound := false
-		for index, datasetItem := range f.datasetData {
-			if datasetItem.KeyName == nameForKeyID {
-				updatedDataSetItem = datasetItem
-				updatedDataSetIndex = index
-				itemFound = true
-				break
-			}
+		newItem := DeviceConfigurationDatasetDataType{
+			KeyName:      nameForKeyID,
+			KeyValueType: valueTypeForKeyID,
 		}
 
-		var dataSetItem DeviceConfigurationDatasetDataType
-
-		if !itemFound {
-			dataSetItem = DeviceConfigurationDatasetDataType{
-				KeyName:      nameForKeyID,
-				KeyValueType: valueTypeForKeyID,
+		replaceIndex := -1
+		for index, datasetItem := range f.datasetData {
+			if datasetItem.KeyName == nameForKeyID {
+				replaceIndex = index
+				break
 			}
-		} else {
-			dataSetItem = updatedDataSetItem
 		}
 
 		valid := true
 		switch valueTypeForKeyID {
 		case model.DeviceConfigurationKeyValueTypeTypeBoolean:
-			dataSetItem.KeyValueBoolean = *item.Value.Boolean
+			newItem.KeyValueBoolean = *item.Value.Boolean
 		case model.DeviceConfigurationKeyValueTypeTypeString:
-			dataSetItem.KeyValueString = string(*item.Value.String)
+			newItem.KeyValueString = string(*item.Value.String)
 		default:
 			valid = false
 		}
 
 		if valid {
-			if !itemFound {
-				f.datasetData = append(f.datasetData, dataSetItem)
+			if replaceIndex != -1 {
+				f.datasetData[replaceIndex] = newItem
 			} else {
-				f.datasetData[updatedDataSetIndex] = dataSetItem
+				f.datasetData = append(f.datasetData, newItem)
 			}
 		}
 	}
@@ -246,9 +186,9 @@ func (f *DeviceConfiguration) Handle(ctrl spine.Context, rf model.FeatureAddress
 		data := cmd.DeviceConfigurationKeyValueListData
 		switch op {
 		case model.CmdClassifierTypeReply:
-			return f.replyKeyValueListData(ctrl, *data)
+			return f.replyKeyValueListData(ctrl, *data, isPartialForCmd)
 		case model.CmdClassifierTypeNotify:
-			return f.notifyKeyValueListData(ctrl, *data, isPartialForCmd)
+			return f.replyKeyValueListData(ctrl, *data, isPartialForCmd)
 
 		default:
 			return fmt.Errorf("deviceconfiguration.Handle: DeviceConfigurationKeyValueListData CmdClassifierType not implemented: %s", op)

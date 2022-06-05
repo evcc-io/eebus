@@ -162,7 +162,7 @@ func (f *ElectricalConnection) requestPermittedValueSetData(ctrl spine.Context, 
 	return ctrl.Request(model.CmdClassifierTypeRead, *spine.FeatureAddressType(f), *spine.FeatureAddressType(rf), true, res)
 }
 
-func (f *ElectricalConnection) replyPermittedValueSetData(ctrl spine.Context, data model.ElectricalConnectionPermittedValueSetListDataType) error {
+func (f *ElectricalConnection) replyPermittedValueSetData(ctrl spine.Context, data model.ElectricalConnectionPermittedValueSetListDataType, isPartialForCmd bool) error {
 	// example data:
 	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.2.0"},{"addressSource":[{"device":"d:_i:19667_PorscheEVSE-00016544"},{"entity":[1,1]},{"feature":2}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":8}]},{"msgCounter":1793},{"msgCounterReference":35},{"cmdClassifier":"reply"}]},{"payload":[{"cmd":[[{"electricalConnectionPermittedValueSetListData":[{"electricalConnectionPermittedValueSetData":[[{"electricalConnectionId":0},{"parameterId":1},{"permittedValueSet":[[{"value":[[{"number":100},{"scale":-3}]]},{"range":[[{"min":[{"number":2},{"scale":0}]},{"max":[{"number":16},{"scale":0}]}]]}]]}],[{"electricalConnectionId":0},{"parameterId":8},{"permittedValueSet":[[{"value":[[{"number":100},{"scale":-3}]]},{"range":[[{"min":[{"number":490},{"scale":0}]},{"max":[{"number":3920},{"scale":0}]}]]}]]}]]}]}]]}]}]}}]}
 	// {"cmd":[[
@@ -197,71 +197,41 @@ func (f *ElectricalConnection) replyPermittedValueSetData(ctrl spine.Context, da
 	// 		]}
 	// 	]}
 	// ]]}
+	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.3.0"},{"addressSource":[{"device":"d:_i:47859_Elli-Wallbox-2019A0OV8H"},{"entity":[1,1]},{"feature":7}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":8}]},{"msgCounter":768},{"cmdClassifier":"notify"}]},{"payload":[
+	// {"cmd":[[
+	// 	{"function":"electricalConnectionPermittedValueSetListData"},
+	// 	{"filter":[[{"cmdControl":[{"partial":[]}]}]]},
+	// 	{"electricalConnectionPermittedValueSetListData":[
+	// 		{"electricalConnectionPermittedValueSetData":[
+	// 			[{"electricalConnectionId":0},{"parameterId":1},{"permittedValueSet":[[{"range":[[{"min":[{"number":6},{"scale":0}]},{"max":[{"number":6},{"scale":0}]}]]}]]}],
+	// 			[{"electricalConnectionId":0},{"parameterId":2},{"permittedValueSet":[[{"range":[[{"min":[{"number":6},{"scale":0}]},{"max":[{"number":6},{"scale":0}]}]]}]]}],
+	// 			[{"electricalConnectionId":0},{"parameterId":3},{"permittedValueSet":[[{"range":[[{"min":[{"number":6},{"scale":0}]},{"max":[{"number":6},{"scale":0}]}]]}]]}]
+	// ]}]}]]}]}]}}]}
 
-	f.permittedData = nil
-	for _, item := range data.ElectricalConnectionPermittedValueSetData {
-		newItem := ElectricalConnectionPermittedDataType{
-			ElectricalConnectionId: uint(*item.ElectricalConnectionId),
-			ParameterId:            uint(*item.ParameterId),
-		}
-		if len(item.PermittedValueSet) > 0 {
-			valueData := item.PermittedValueSet[0].Value
-			if len(valueData) > 0 {
-				valueItem := valueData[0]
-				newItem.Value = valueItem.GetValue()
-			}
-			rangeData := item.PermittedValueSet[0].Range
-			if len(rangeData) > 0 {
-				rangeValue := rangeData[0]
-				if rangeValue.Min != nil {
-					newItem.MinValue = rangeValue.Min.GetValue()
-				}
-				if rangeValue.Max != nil {
-					newItem.MaxValue = rangeValue.Max.GetValue()
-				}
-			}
-			f.permittedData = append(f.permittedData, newItem)
-		}
+	if !isPartialForCmd {
+		f.permittedData = nil
 	}
-
-	if f.Delegate != nil {
-		f.Delegate.UpdateElectricalConnectionData(f)
-	}
-
-	return nil
-}
-
-func (f *ElectricalConnection) notifyPermittedValueSetData(ctrl spine.Context, data model.ElectricalConnectionPermittedValueSetListDataType, isPartialForCmd bool) error {
-	// example data:
-	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.3.0"},{"addressSource":[{"device":"d:_i:47859_Elli-Wallbox-2019A0OV8H"},{"entity":[1,1]},{"feature":7}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":8}]},{"msgCounter":768},{"cmdClassifier":"notify"}]},{"payload":[{"cmd":[[{"function":"electricalConnectionPermittedValueSetListData"},{"filter":[[{"cmdControl":[{"partial":[]}]}]]},{"electricalConnectionPermittedValueSetListData":[{"electricalConnectionPermittedValueSetData":[[{"electricalConnectionId":0},{"parameterId":1},{"permittedValueSet":[[{"range":[[{"min":[{"number":6},{"scale":0}]},{"max":[{"number":6},{"scale":0}]}]]}]]}],[{"electricalConnectionId":0},{"parameterId":2},{"permittedValueSet":[[{"range":[[{"min":[{"number":6},{"scale":0}]},{"max":[{"number":6},{"scale":0}]}]]}]]}],[{"electricalConnectionId":0},{"parameterId":3},{"permittedValueSet":[[{"range":[[{"min":[{"number":6},{"scale":0}]},{"max":[{"number":6},{"scale":0}]}]]}]]}]]}]}]]}]}]}}]}
 
 	for _, item := range data.ElectricalConnectionPermittedValueSetData {
 		if item.ElectricalConnectionId == nil || item.ParameterId == nil {
 			continue
 		}
 
-		var updatedDataSetItem ElectricalConnectionPermittedDataType
-		var updatedDataSetIndex int
-		itemFound := false
-		for index, datasetItem := range f.permittedData {
-			if datasetItem.ElectricalConnectionId == uint(*item.ElectricalConnectionId) && datasetItem.ParameterId == uint(*item.ParameterId) {
-				updatedDataSetItem = datasetItem
-				updatedDataSetIndex = index
-				itemFound = true
-				break
+		dataSetItem := ElectricalConnectionPermittedDataType{
+			ElectricalConnectionId: uint(*item.ElectricalConnectionId),
+			ParameterId:            uint(*item.ParameterId),
+		}
+
+		replaceIndex := -1
+		if isPartialForCmd {
+			for index, datasetItem := range f.permittedData {
+				if datasetItem.ElectricalConnectionId == uint(*item.ElectricalConnectionId) && datasetItem.ParameterId == uint(*item.ParameterId) {
+					replaceIndex = index
+					break
+				}
 			}
 		}
 
-		var dataSetItem ElectricalConnectionPermittedDataType
-
-		if !itemFound {
-			dataSetItem = ElectricalConnectionPermittedDataType{
-				ElectricalConnectionId: uint(*item.ElectricalConnectionId),
-				ParameterId:            uint(*item.ParameterId),
-			}
-		} else {
-			dataSetItem = updatedDataSetItem
-		}
 		if len(item.PermittedValueSet) > 0 {
 			valueData := item.PermittedValueSet[0].Value
 			if len(valueData) > 0 {
@@ -278,11 +248,11 @@ func (f *ElectricalConnection) notifyPermittedValueSetData(ctrl spine.Context, d
 					dataSetItem.MaxValue = rangeValue.Max.GetValue()
 				}
 			}
-			if !itemFound {
-				f.permittedData = append(f.permittedData, dataSetItem)
-			} else {
-				f.permittedData[updatedDataSetIndex] = dataSetItem
-			}
+		}
+		if replaceIndex != -1 {
+			f.permittedData[replaceIndex] = dataSetItem
+		} else {
+			f.permittedData = append(f.permittedData, dataSetItem)
 		}
 	}
 
@@ -350,10 +320,10 @@ func (f *ElectricalConnection) Handle(ctrl spine.Context, rf model.FeatureAddres
 		data := cmd.ElectricalConnectionPermittedValueSetListData
 		switch op {
 		case model.CmdClassifierTypeReply:
-			return f.replyPermittedValueSetData(ctrl, *data)
+			return f.replyPermittedValueSetData(ctrl, *data, isPartialForCmd)
 
 		case model.CmdClassifierTypeNotify:
-			return f.notifyPermittedValueSetData(ctrl, *data, isPartialForCmd)
+			return f.replyPermittedValueSetData(ctrl, *data, isPartialForCmd)
 
 		default:
 			return fmt.Errorf("electricalconnection.Handle: ElectricalConnectionPermittedValueSetListData CmdClassifierType not implemented: %s", op)
