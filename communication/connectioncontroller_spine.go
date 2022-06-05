@@ -133,10 +133,6 @@ func (c *ConnectionController) processDatagram(datagram model.DatagramType) erro
 
 	err := c.processCmd(datagram, entity, feature)
 
-	if err != nil {
-		return err
-	}
-
 	// handle processing success acknowledgement message. Protocol 5.2.4 & 5.2.5
 	cmdClassifier := datagram.Header.CmdClassifier
 	ackRequest := datagram.Header.AckRequest != nil && *datagram.Header.AckRequest
@@ -144,10 +140,14 @@ func (c *ConnectionController) processDatagram(datagram model.DatagramType) erro
 		featureSource := datagram.Header.AddressDestination
 		featureDestination := datagram.Header.AddressSource
 		msgCounter := datagram.Header.MsgCounter
-		err = c.sendAcknowledgementMessage(err, featureSource, featureDestination, msgCounter)
-		if err != nil {
-			return err
+		ackErr := c.sendAcknowledgementMessage(err, featureSource, featureDestination, msgCounter)
+		if ackErr != nil {
+			return ackErr
 		}
+	}
+
+	if err != nil {
+		return err
 	}
 
 	// TODO we need to process resultData responses also!
