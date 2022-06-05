@@ -207,6 +207,16 @@ func (f *ElectricalConnection) replyPermittedValueSetData(ctrl spine.Context, da
 	// 			[{"electricalConnectionId":0},{"parameterId":2},{"permittedValueSet":[[{"range":[[{"min":[{"number":6},{"scale":0}]},{"max":[{"number":6},{"scale":0}]}]]}]]}],
 	// 			[{"electricalConnectionId":0},{"parameterId":3},{"permittedValueSet":[[{"range":[[{"min":[{"number":6},{"scale":0}]},{"max":[{"number":6},{"scale":0}]}]]}]]}]
 	// ]}]}]]}]}]}}]}
+	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.3.0"},{"addressSource":[{"device":"d:_i:47859_Elli-Wallbox-2019A0OV8H"},{"entity":[1,1]},{"feature":7}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":8}]},{"msgCounter":148},{"cmdClassifier":"notify"}]},{"payload":[
+	// {"cmd":[[
+	// 	{"function":"electricalConnectionPermittedValueSetListData"},
+	// 	{"filter":[[{"cmdControl":[{"partial":[]}]}]]},
+	// 	{"electricalConnectionPermittedValueSetListData":[
+	// 		{"electricalConnectionPermittedValueSetData":[
+	// 			[{"electricalConnectionId":0},{"parameterId":1},{"permittedValueSet":[[{"range":[[{"min":[{"number":6},{"scale":0}]},{"max":[{"number":16},{"scale":0}]}]]}]]}],
+	// 			[{"electricalConnectionId":0},{"parameterId":2},{"permittedValueSet":[[{"range":[[{"min":[{"number":6},{"scale":0}]},{"max":[{"number":16},{"scale":0}]}]]}]]}],
+	// 			[{"electricalConnectionId":0},{"parameterId":3},{"permittedValueSet":[[{"range":[[{"min":[{"number":6},{"scale":0}]},{"max":[{"number":16},{"scale":0}]}]]}]]}]
+	// ]}]}]]}]}]}}]}
 
 	if !isPartialForCmd {
 		f.permittedData = nil

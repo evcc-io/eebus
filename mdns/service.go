@@ -97,7 +97,7 @@ func (ss *Service) Connect(log util.Logger, accessMethod string, cert tls.Certif
 	for _, uri := range ss.URIs {
 		ws, err := WebsocketConnector(uri)
 		if err != nil {
-			log.Println("Failed to connect to %s: %s", uri, err)
+			log.Printf("Failed to connect to %s: %s\n", uri, err)
 			continue
 		}
 
