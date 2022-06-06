@@ -74,7 +74,8 @@ func (c *ConnectionController) addSubscription(data model.SubscriptionManagement
 	}
 
 	if !requestAllowed {
-		return errors.New("subscription request not conforming a request from a client to a server of the same type")
+		c.log.Println("subscription request not conforming a request from a client to a server of the same type")
+		// return errors.New("subscription request not conforming a request from a client to a server of the same type")
 	}
 
 	subscriptionEntry := model.SubscriptionManagementEntryDataType{
