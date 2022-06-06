@@ -162,7 +162,7 @@ func (f *ElectricalConnection) requestPermittedValueSetData(ctrl spine.Context, 
 	return ctrl.Request(model.CmdClassifierTypeRead, *spine.FeatureAddressType(f), *spine.FeatureAddressType(rf), true, res)
 }
 
-func (f *ElectricalConnection) replyPermittedValueSetData(ctrl spine.Context, data model.ElectricalConnectionPermittedValueSetListDataType, isPartialForCmd bool) error {
+func (f *ElectricalConnection) replyPermittedValueSetData(ctrl spine.Context, data model.ElectricalConnectionPermittedValueSetListDataType, isPartialForCmd bool, filter []model.FilterType) error {
 	// example data:
 	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.2.0"},{"addressSource":[{"device":"d:_i:19667_PorscheEVSE-00016544"},{"entity":[1,1]},{"feature":2}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":8}]},{"msgCounter":1793},{"msgCounterReference":35},{"cmdClassifier":"reply"}]},{"payload":[{"cmd":[[{"electricalConnectionPermittedValueSetListData":[{"electricalConnectionPermittedValueSetData":[[{"electricalConnectionId":0},{"parameterId":1},{"permittedValueSet":[[{"value":[[{"number":100},{"scale":-3}]]},{"range":[[{"min":[{"number":2},{"scale":0}]},{"max":[{"number":16},{"scale":0}]}]]}]]}],[{"electricalConnectionId":0},{"parameterId":8},{"permittedValueSet":[[{"value":[[{"number":100},{"scale":-3}]]},{"range":[[{"min":[{"number":490},{"scale":0}]},{"max":[{"number":3920},{"scale":0}]}]]}]]}]]}]}]]}]}]}}]}
 	// {"cmd":[[
@@ -217,9 +217,41 @@ func (f *ElectricalConnection) replyPermittedValueSetData(ctrl spine.Context, da
 	// 			[{"electricalConnectionId":0},{"parameterId":2},{"permittedValueSet":[[{"range":[[{"min":[{"number":6},{"scale":0}]},{"max":[{"number":16},{"scale":0}]}]]}]]}],
 	// 			[{"electricalConnectionId":0},{"parameterId":3},{"permittedValueSet":[[{"range":[[{"min":[{"number":6},{"scale":0}]},{"max":[{"number":16},{"scale":0}]}]]}]]}]
 	// ]}]}]]}]}]}}]}
+	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.3.0"},{"addressSource":[{"device":"d:_i:47859_Elli-Wallbox-2019A0OV8H"},{"entity":[1,1]},{"feature":7}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":8}]},{"msgCounter":266},{"cmdClassifier":"notify"}]},{"payload": [
+	// {"cmd":[[
+	// 	{"function":"electricalConnectionPermittedValueSetListData"},
+	// 	{"filter": [
+	// 		[{"cmdControl":[{"delete":[]}]},{"electricalConnectionPermittedValueSetListDataSelectors":[{"electricalConnectionId":0},{"parameterId":0}]}],
+	// 		[{"cmdControl":[{"partial":[]}]}]]
+	// 	},
+	// 	{"electricalConnectionPermittedValueSetListData":[
+	// 		{"electricalConnectionPermittedValueSetData":[[
+	// 			{"electricalConnectionId":0},
+	// 			{"parameterId":0},
+	// 			{"permittedValueSet":[[{"range":[[{"min":[{"number":1},{"scale":0}]}]]}]]}
+	// ]]}]}]]}]}]}}]}
 
 	if !isPartialForCmd {
 		f.permittedData = nil
+	}
+
+	for _, filterItem := range filter {
+		if filterItem.CmdControl != nil && filterItem.CmdControl.Delete != nil {
+			selector := filterItem.ElectricalConnectionPermittedValueSetListDataSelectors
+			if selector != nil && selector.ElectricalConnectionId != nil && selector.ParameterId != nil {
+
+				connectionID := uint(*selector.ElectricalConnectionId)
+				parameterID := uint(*selector.ParameterId)
+
+				newValueSetData := make([]ElectricalConnectionPermittedDataType, 0)
+				for _, item := range f.permittedData {
+					if connectionID != uint(item.ElectricalConnectionId) || parameterID != uint(item.ParameterId) {
+						newValueSetData = append(newValueSetData, item)
+					}
+				}
+				f.permittedData = newValueSetData
+			}
+		}
 	}
 
 	for _, item := range data.ElectricalConnectionPermittedValueSetData {
@@ -330,10 +362,10 @@ func (f *ElectricalConnection) Handle(ctrl spine.Context, rf model.FeatureAddres
 		data := cmd.ElectricalConnectionPermittedValueSetListData
 		switch op {
 		case model.CmdClassifierTypeReply:
-			return f.replyPermittedValueSetData(ctrl, *data, isPartialForCmd)
+			return f.replyPermittedValueSetData(ctrl, *data, isPartialForCmd, cmd.Filter)
 
 		case model.CmdClassifierTypeNotify:
-			return f.replyPermittedValueSetData(ctrl, *data, isPartialForCmd)
+			return f.replyPermittedValueSetData(ctrl, *data, isPartialForCmd, cmd.Filter)
 
 		default:
 			return fmt.Errorf("electricalconnection.Handle: ElectricalConnectionPermittedValueSetListData CmdClassifierType not implemented: %s", op)
