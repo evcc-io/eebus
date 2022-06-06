@@ -270,8 +270,11 @@ func (c *ConnectionController) processCmd(datagram model.DatagramType, localEnti
 	if functionCmd != nil && filterCmd != nil {
 		// TODO check if the function is the same as the provided cmd value
 		if len(filterCmd) > 0 {
-			if filterCmd[0].CmdControl.Partial != nil {
-				isPartial = true
+			for _, filter := range filterCmd {
+				if filter.CmdControl.Partial != nil {
+					isPartial = true
+					break
+				}
 			}
 		}
 	}
