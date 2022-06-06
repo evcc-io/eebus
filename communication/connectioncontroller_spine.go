@@ -218,6 +218,8 @@ func (c *ConnectionController) cmdDetails(cmd model.CmdType) string {
 		return "LoadControlLimitListData"
 	case cmd.NodeManagementBindingRequestCall != nil:
 		return "NodeManagementBindingRequestCall"
+	case cmd.NodeManagementDestinationListData != nil:
+		return "NodeManagementDestinationListData"
 	case cmd.NodeManagementDetailedDiscoveryData != nil:
 		return "NodeManagementDetailedDiscoveryData"
 	case cmd.NodeManagementSubscriptionData != nil:

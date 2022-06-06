@@ -12,6 +12,7 @@ import (
 type Device interface {
 	GetAddress() model.AddressDeviceType
 	GetEntities() []Entity
+	GetType() model.DeviceTypeType
 
 	Add(e Entity)
 	RemoveByAddress(addr []model.AddressEntityType)
@@ -69,6 +70,10 @@ func (d *DeviceImpl) GetAddress() model.AddressDeviceType {
 
 func (d *DeviceImpl) GetEntities() []Entity {
 	return d.Entities
+}
+
+func (d *DeviceImpl) GetType() model.DeviceTypeType {
+	return d.Type
 }
 
 func (d *DeviceImpl) Add(e Entity) {
