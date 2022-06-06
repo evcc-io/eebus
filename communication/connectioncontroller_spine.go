@@ -42,6 +42,9 @@ func (c *ConnectionController) sendSpineMessage(datagram model.DatagramType) err
 	destinationAddress := datagram.Header.AddressDestination
 	if c.remoteDevice != nil {
 		remoteEntity := c.remoteDevice.Entity(destinationAddress.Entity)
+		if remoteEntity == nil {
+			return errors.New("sendSpineMessage: invalid remote entity address")
+		}
 		remoteFeature := remoteEntity.Feature(uint(*destinationAddress.Feature))
 		c.log.Printf("send: %s %s:%s %s", *cmdClassifier, remoteEntity.GetType(), remoteFeature.GetType(), c.cmdDetails(cmd))
 	} else {

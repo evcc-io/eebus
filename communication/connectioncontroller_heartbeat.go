@@ -49,6 +49,8 @@ func (c *ConnectionController) sendHearbeat(stopC chan struct{}, d time.Duration
 			err := ctx.Notify(senderAddr, destinationAddr, res)
 			if err != nil {
 				c.log.Println("ERROR sending heartbeat: ", err)
+				// TODO: when a connection is closed, we shouldn't get here
+				return
 			}
 		case <-stopC:
 			return
