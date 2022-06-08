@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"log"
 	"os/signal"
-	"strings"
 	"time"
 
 	"os"
@@ -78,11 +77,7 @@ func discoverDNS(results <-chan *zeroconf.ServiceEntry, connector func(*zeroconf
 	for entry := range results {
 		log.Println("mDNS:", entry.HostName, entry.AddrIPv4, entry.Text)
 
-		for _, typ := range entry.Text {
-			if strings.HasPrefix(typ, "type=") && typ == "type=EVSE" {
-				connector(entry)
-			}
-		}
+		connector(entry)
 	}
 }
 
