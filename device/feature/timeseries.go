@@ -143,13 +143,19 @@ func (f *TimeSeries) replyDescriptionListData(ctrl spine.Context, data model.Tim
 		f.timeSeriesDescriptionData = nil
 	}
 	for _, item := range data.TimeSeriesDescriptionData {
-		if item.TimeSeriesId == nil || item.TimeSeriesType == nil || item.TimeSeriesWriteable == nil || item.UpdateRequired == nil || item.Unit == nil {
+		if item.TimeSeriesId == nil || item.TimeSeriesType == nil || item.Unit == nil {
 			continue
 		}
+
+		isWriteable := false
+		if item.TimeSeriesWriteable != nil {
+			isWriteable = *item.TimeSeriesWriteable
+		}
+
 		newItem := TimeSeriesDescriptionListDatasetType{
 			TimeSeriesId:     uint(*item.TimeSeriesId),
 			TimeSeriesType:   model.TimeSeriesTypeEnumType(*item.TimeSeriesType),
-			IsSeriesWritable: *item.TimeSeriesWriteable,
+			IsSeriesWritable: isWriteable,
 			Unit:             string(*item.Unit),
 		}
 		if item.UpdateRequired != nil {
