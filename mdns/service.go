@@ -10,7 +10,7 @@ import (
 	"github.com/evcc-io/eebus/ship"
 	"github.com/evcc-io/eebus/util"
 	"github.com/gorilla/websocket"
-	"github.com/grandcat/zeroconf"
+	"github.com/libp2p/zeroconf/v2"
 	"github.com/mitchellh/mapstructure"
 )
 
