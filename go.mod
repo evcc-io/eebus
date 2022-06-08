@@ -1,6 +1,6 @@
 module github.com/evcc-io/eebus
 
-go 1.16
+go 1.18
 
 require (
 	github.com/denisbrodbeck/machineid v1.0.1
@@ -9,7 +9,15 @@ require (
 	github.com/libp2p/zeroconf/v2 v2.1.1
 	github.com/mitchellh/mapstructure v1.4.1
 	github.com/rickb777/date v1.17.0
-	github.com/thoas/go-funk v0.9.0
+	github.com/samber/lo v1.21.0
+)
+
+require (
+	github.com/miekg/dns v1.1.43 // indirect
+	github.com/rickb777/plural v1.4.1 // indirect
+	golang.org/x/exp v0.0.0-20220303212507-bbda1eaf7a17 // indirect
+	golang.org/x/net v0.0.0-20211216030914-fe4d6282115f // indirect
+	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
 )
 
 replace github.com/libp2p/zeroconf/v2 => github.com/DerAndereAndi/zeroconf/v2 v2.0.0-20220607195515-4c9557651bc9
