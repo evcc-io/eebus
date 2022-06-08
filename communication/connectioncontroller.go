@@ -659,7 +659,7 @@ func (c *ConnectionController) UpdateTimeSeriesData(f *feature.TimeSeries, timeS
 		return
 	case model.TimeSeriesTypeEnumTypeSingleDemand:
 		if timeSeriesData.TimeSeriesSlots == nil {
-			c.log.Printf("The time series slots are empty %d: %s\n", timeSeriesData.TimeSeriesId, err)
+			c.log.Printf("The time series slots are empty %d\n", timeSeriesData.TimeSeriesId)
 			return
 		}
 		demand := timeSeriesData.TimeSeriesSlots[0].Value.GetValue()
