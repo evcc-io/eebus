@@ -50,29 +50,9 @@ func (c *ConnectionController) UpdateDevice(stateChange model.NetworkManagementS
 
 		// TODO these actions should be usecase support specific!
 		ctx := c.context(nil)
-		err = c.sequencesController.StartSequenceFlow(ctx, SequenceEnumTypeEVDeviceConfiguration)
+		err = c.sequencesController.StartSequenceFlow(ctx, SequenceEnumTypeEV)
 		if err != nil {
-			c.log.Println("error processing EVDeviceConfiguration sequence")
-		}
-		err = c.sequencesController.StartSequenceFlow(ctx, SequenceEnumTypeEVDeviceClassification)
-		if err != nil {
-			c.log.Println("error processing EVDeviceClassification sequence")
-		}
-		err = c.sequencesController.StartSequenceFlow(ctx, SequenceEnumTypeEVMeasurement)
-		if err != nil {
-			c.log.Println("error processing EVMeasurement sequence")
-		}
-		err = c.sequencesController.StartSequenceFlow(ctx, SequenceEnumTypeEVIdentification)
-		if err != nil {
-			c.log.Println("error processing EVIdentification sequence")
-		}
-		err = c.sequencesController.StartSequenceFlow(ctx, SequenceEnumTypeEVLoadControl)
-		if err != nil {
-			c.log.Println("error processing EVLoadControl sequence")
-		}
-		err = c.sequencesController.StartSequenceFlow(ctx, SequenceEnumTypeEVCoordinatedCharging)
-		if err != nil {
-			c.log.Println("error processing EVCoordinatedCharging sequence")
+			c.log.Println("error processing EV sequence")
 		}
 
 		le := c.localDevice.EntityByType(model.EntityTypeType(model.EntityTypeEnumTypeCEM))

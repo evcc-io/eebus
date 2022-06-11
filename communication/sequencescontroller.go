@@ -9,12 +9,7 @@ import (
 )
 
 const (
-	SequenceEnumTypeEVDeviceClassification = "EVDeviceClassification"
-	SequenceEnumTypeEVIdentification       = "EVIdentification"
-	SequenceEnumTypeEVDeviceConfiguration  = "EVDeviceConfiguration"
-	SequenceEnumTypeEVMeasurement          = "EVMeasurement"
-	SequenceEnumTypeEVLoadControl          = "EVLoadControl"
-	SequenceEnumTypeEVCoordinatedCharging  = "EVCoordinatedCharging"
+	SequenceEnumTypeEV = "EVSequence"
 )
 
 type SequenceElement struct {
@@ -45,11 +40,7 @@ func NewSequencesController(log util.Logger) *SequencesController {
 }
 
 func (s *SequencesController) Boot() {
-	s.sequenceFlows = append(s.sequenceFlows, s.setupEVIdentificationSequences())
 	s.sequenceFlows = append(s.sequenceFlows, s.setupEVConfigurationSequences())
-	s.sequenceFlows = append(s.sequenceFlows, s.setupEVMeasurementSequences())
-	s.sequenceFlows = append(s.sequenceFlows, s.setupEVLoadControlSequences())
-	s.sequenceFlows = append(s.sequenceFlows, s.setupEVCoordinatedChargingSequences())
 }
 
 func (s *SequencesController) newElement(featureType model.FeatureTypeEnumType, functionType model.FunctionEnumType, cmdClassifier model.CmdClassifierType) SequenceElement {
@@ -61,22 +52,10 @@ func (s *SequencesController) newElement(featureType model.FeatureTypeEnumType, 
 	return element
 }
 
-// sequenceEVIdentification
-func (s *SequencesController) setupEVIdentificationSequences() *SequenceFlow {
-	newSequenceFlow := SequenceFlow{}
-	newSequenceFlow.sequenceType = SequenceEnumTypeEVIdentification
-
-	{
-		element := s.newElement(model.FeatureTypeEnumTypeIdentification, model.FunctionEnumTypeIdentificationListData, model.CmdClassifierTypeRead)
-		newSequenceFlow.elements = append(newSequenceFlow.elements, element)
-	}
-	return &newSequenceFlow
-}
-
 // sequenceEVCommissioningAndConfiguration
 func (s *SequencesController) setupEVConfigurationSequences() *SequenceFlow {
 	newSequenceFlow := SequenceFlow{}
-	newSequenceFlow.sequenceType = SequenceEnumTypeEVDeviceConfiguration
+	newSequenceFlow.sequenceType = SequenceEnumTypeEV
 
 	{
 		element := s.newElement(model.FeatureTypeEnumTypeDeviceConfiguration, model.FunctionEnumTypeDeviceConfigurationKeyValueDescriptionListData, model.CmdClassifierTypeRead)
@@ -86,13 +65,17 @@ func (s *SequencesController) setupEVConfigurationSequences() *SequenceFlow {
 		element := s.newElement(model.FeatureTypeEnumTypeDeviceConfiguration, model.FunctionEnumTypeDeviceConfigurationKeyValueListData, model.CmdClassifierTypeRead)
 		newSequenceFlow.elements = append(newSequenceFlow.elements, element)
 	}
-	return &newSequenceFlow
-}
 
-// sequenceEVChargingElectricityMeasurement
-func (s *SequencesController) setupEVMeasurementSequences() *SequenceFlow {
-	newSequenceFlow := SequenceFlow{}
-	newSequenceFlow.sequenceType = SequenceEnumTypeEVMeasurement
+	// Identification only works with ISO, so wait until that is known
+	{
+		element := s.newElement(model.FeatureTypeEnumTypeIdentification, model.FunctionEnumTypeIdentificationListData, model.CmdClassifierTypeRead)
+		newSequenceFlow.elements = append(newSequenceFlow.elements, element)
+	}
+
+	// get measurements only after the configuration is clear
+	// this way we can make sure the limits are correct and don't provide intermediate values that could cause issues
+	// e.g. providing IEC61851 limits even when the EV can use ISO15118, cause sending an IEC pause (0A) will fix the connection to IEC61851
+	// or cause the EV to show a charging error
 
 	{
 		element := s.newElement(model.FeatureTypeEnumTypeMeasurement, model.FunctionEnumTypeMeasurementDescriptionListData, model.CmdClassifierTypeRead)
@@ -114,14 +97,8 @@ func (s *SequencesController) setupEVMeasurementSequences() *SequenceFlow {
 		element := s.newElement(model.FeatureTypeEnumTypeElectricalConnection, model.FunctionEnumTypeElectricalConnectionPermittedValueSetListData, model.CmdClassifierTypeRead)
 		newSequenceFlow.elements = append(newSequenceFlow.elements, element)
 	}
-	return &newSequenceFlow
-}
 
-// SequenceEnumTypeEVLoadControl
-func (s *SequencesController) setupEVLoadControlSequences() *SequenceFlow {
-	newSequenceFlow := SequenceFlow{}
-	newSequenceFlow.sequenceType = SequenceEnumTypeEVLoadControl
-
+	// LoadControl Limits are only useful once measurements and electrical connection data is available
 	{
 		element := s.newElement(model.FeatureTypeEnumTypeLoadControl, model.FunctionEnumTypeLoadControlLimitDescriptionListData, model.CmdClassifierTypeRead)
 		newSequenceFlow.elements = append(newSequenceFlow.elements, element)
@@ -130,13 +107,8 @@ func (s *SequencesController) setupEVLoadControlSequences() *SequenceFlow {
 		element := s.newElement(model.FeatureTypeEnumTypeLoadControl, model.FunctionEnumTypeLoadControlLimitListData, model.CmdClassifierTypeRead)
 		newSequenceFlow.elements = append(newSequenceFlow.elements, element)
 	}
-	return &newSequenceFlow
-}
 
-// SequenceEnumTypeEVCoordinatedCharging
-func (s *SequencesController) setupEVCoordinatedChargingSequences() *SequenceFlow {
-	newSequenceFlow := SequenceFlow{}
-	newSequenceFlow.sequenceType = SequenceEnumTypeEVCoordinatedCharging
+	// Coordinated Charging only works with ISO, so wait until that is known
 
 	// Scenario 1 + 4
 	{
