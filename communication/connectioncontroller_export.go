@@ -50,11 +50,11 @@ type EVSEClientDataType struct {
 }
 
 type EVMeasurementsType struct {
-	Timestamp                       time.Time
-	CurrentL1, CurrentL2, CurrentL3 float64
-	PowerL1, PowerL2, PowerL3       float64
-	ChargedEnergy                   float64
-	SoC                             float64
+	Timestamp     time.Time
+	Current       map[uint]float64
+	Power         map[uint]float64
+	ChargedEnergy float64
+	SoC           float64
 }
 
 type EVCurrentLimitType struct {
@@ -90,7 +90,7 @@ type EVDataType struct {
 	Manufacturer                   ManufacturerDetails
 	Identification                 string
 	ChargeState                    EVChargeStateEnumType
-	LimitsL1, LimitsL2, LimitsL3   EVCurrentLimitType
+	Limits                         map[uint]EVCurrentLimitType
 	LimitsPower                    EVPowerLimitType
 	Measurements                   EVMeasurementsType
 }

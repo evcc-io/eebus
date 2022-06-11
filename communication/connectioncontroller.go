@@ -38,12 +38,23 @@ type ConnectionController struct {
 }
 
 func NewConnectionController(log util.Logger, conn ship.Conn, local spine.Device) *ConnectionController {
+	clientData := EVSEClientDataType{
+		EVData: EVDataType{
+			ConnectedPhases: 1,
+			Limits:          make(map[uint]EVCurrentLimitType),
+			Measurements: EVMeasurementsType{
+				Current: make(map[uint]float64),
+				Power:   make(map[uint]float64),
+			},
+		},
+	}
+
 	c := &ConnectionController{
 		log:                  log,
 		conn:                 conn,
 		specificationVersion: device.SpecificationVersion,
 		localDevice:          local,
-		clientData:           &EVSEClientDataType{},
+		clientData:           &clientData,
 		sequencesController:  NewSequencesController(log),
 	}
 
@@ -261,6 +272,9 @@ func (c *ConnectionController) updateMeasurementData() {
 	var measurementChargeID uint
 	var measurementSoCID uint
 
+	// Default voltage is 230V
+	voltage := 230.0
+
 	for _, item := range measurementDescription {
 		switch item.ScopeType {
 		case model.ScopeTypeEnumTypeACCurrent:
@@ -309,105 +323,97 @@ func (c *ConnectionController) updateMeasurementData() {
 						powerLimitsUpdated = true
 					}
 				} else if epItem.Phase > 0 {
-					switch epItem.Phase {
-					case 1:
-						if c.clientData.EVData.LimitsL1.Min != epdItem.MinValue {
-							c.clientData.EVData.LimitsL1.Min = epdItem.MinValue
-							amperageLimitsUpdated = true
-						}
-						if c.clientData.EVData.LimitsL1.Max != epdItem.MaxValue {
-							c.clientData.EVData.LimitsL1.Max = epdItem.MaxValue
-							amperageLimitsUpdated = true
-						}
-						if c.clientData.EVData.LimitsL1.Default != epdItem.Value {
-							c.clientData.EVData.LimitsL1.Default = epdItem.Value
-							amperageLimitsUpdated = true
-						}
-					case 2:
-						if c.clientData.EVData.LimitsL2.Min != epdItem.MinValue {
-							c.clientData.EVData.LimitsL2.Min = epdItem.MinValue
-							amperageLimitsUpdated = true
-						}
-						if c.clientData.EVData.LimitsL2.Max != epdItem.MaxValue {
-							c.clientData.EVData.LimitsL2.Max = epdItem.MaxValue
-							amperageLimitsUpdated = true
-						}
-						if c.clientData.EVData.LimitsL2.Default != epdItem.Value {
-							c.clientData.EVData.LimitsL2.Default = epdItem.Value
-							amperageLimitsUpdated = true
-						}
-					case 3:
-						if c.clientData.EVData.LimitsL3.Min != epdItem.MinValue {
-							c.clientData.EVData.LimitsL3.Min = epdItem.MinValue
-							amperageLimitsUpdated = true
-						}
-						if c.clientData.EVData.LimitsL3.Max != epdItem.MaxValue {
-							c.clientData.EVData.LimitsL3.Max = epdItem.MaxValue
-							amperageLimitsUpdated = true
-						}
-						if c.clientData.EVData.LimitsL3.Default != epdItem.Value {
-							c.clientData.EVData.LimitsL3.Default = epdItem.Value
-							amperageLimitsUpdated = true
-						}
+					phaseLimit, ok := c.clientData.EVData.Limits[epItem.Phase]
+					if !ok {
+						phaseLimit = EVCurrentLimitType{}
+						c.clientData.EVData.Limits[epItem.Phase] = phaseLimit
 					}
+
+					if phaseLimit.Min != epdItem.MinValue {
+						phaseLimit.Min = epdItem.MinValue
+						amperageLimitsUpdated = true
+					}
+					if phaseLimit.Max != epdItem.MaxValue {
+						phaseLimit.Max = epdItem.MaxValue
+						amperageLimitsUpdated = true
+					}
+					if phaseLimit.Default != epdItem.Value {
+						phaseLimit.Default = epdItem.Value
+						amperageLimitsUpdated = true
+					}
+					c.clientData.EVData.Limits[epItem.Phase] = phaseLimit
 				}
 			}
 		}
+
 		if amperageLimitsUpdated {
 			// Min current data should be derived from min power data
 			// but as this is only properly provided via VAS the currrent
 			// min values can not be trusted.
-			// Min current for 3-phase should be at least 2.2A, for 1-phase 6.6A
+			// Min current for 3-phase should be at least 2.2A (ISO)
 
-			if c.clientData.EVData.ConnectedPhases == 1 {
-				minCurrent := 6.6
-				if c.clientData.EVData.LimitsL1.Min < minCurrent {
-					c.clientData.EVData.LimitsL1.Min = minCurrent
+			minTotalPower := 0.0
+			var phase uint
+			for phase = 1; phase <= c.clientData.EVData.ConnectedPhases; phase++ {
+				minTotalPower += c.clientData.EVData.Limits[phase].Min * voltage
+			}
+
+			minCurrent := 6.0
+			switch c.clientData.EVData.CommunicationStandard {
+			case EVCommunicationStandardEnumTypeISO151182ED1, EVCommunicationStandardEnumTypeISO151182ED2:
+				if c.clientData.EVData.ConnectedPhases == 3 {
+					minCurrent = 2.2
 				}
-			} else if c.clientData.EVData.ConnectedPhases == 3 {
-				minCurrent := 2.2
-				if c.clientData.EVData.LimitsL1.Min < minCurrent {
-					c.clientData.EVData.LimitsL1.Min = minCurrent
-				}
-				if c.clientData.EVData.LimitsL2.Min < minCurrent {
-					c.clientData.EVData.LimitsL2.Min = minCurrent
-				}
-				if c.clientData.EVData.LimitsL3.Min < minCurrent {
-					c.clientData.EVData.LimitsL3.Min = minCurrent
+			}
+
+			if minTotalPower < c.clientData.EVData.LimitsPower.Min {
+				// Adjust min current to match min power
+				minCurrent = c.clientData.EVData.LimitsPower.Min / voltage / float64(c.clientData.EVData.ConnectedPhases)
+			}
+
+			var thePhase uint
+			for thePhase = 1; thePhase <= c.clientData.EVData.ConnectedPhases; thePhase++ {
+				if phaseLimit, ok := c.clientData.EVData.Limits[thePhase]; ok {
+					if phaseLimit.Min < minCurrent {
+						phaseLimit.Min = minCurrent
+						c.clientData.EVData.Limits[thePhase] = phaseLimit
+					}
 				}
 			}
 			c.callDataUpdateHandler(EVDataElementUpdateAmperageLimits)
 		}
+
 		if !powerLimitsUpdated {
 			// Min power data is only properly provided via VAS in ISO15118-2!
 			// So use the known min limits and calculate a more likely min power
-			if c.clientData.EVData.ConnectedPhases == 1 {
-				minPower := c.clientData.EVData.LimitsL1.Min * 230
-				if c.clientData.EVData.LimitsPower.Min < minPower {
-					c.clientData.EVData.LimitsPower.Min = minPower
-				}
-				maxPower := c.clientData.EVData.LimitsL1.Max * 230
-				if c.clientData.EVData.LimitsPower.Max != maxPower {
-					c.clientData.EVData.LimitsPower.Max = maxPower
+			var thePhase uint
+			var minPower, maxPower float64
+			for thePhase = 1; thePhase <= c.clientData.EVData.ConnectedPhases; thePhase++ {
+				if _, ok := c.clientData.EVData.Limits[thePhase]; !ok {
+					continue
 				}
 
-			} else if c.clientData.EVData.ConnectedPhases == 3 {
-				minPower := c.clientData.EVData.LimitsL1.Min*230 + c.clientData.EVData.LimitsL2.Min*230 + c.clientData.EVData.LimitsL3.Min*230
-				if c.clientData.EVData.LimitsPower.Min < minPower {
-					c.clientData.EVData.LimitsPower.Min = minPower
-				}
-				maxPower := c.clientData.EVData.LimitsL1.Max*230 + c.clientData.EVData.LimitsL2.Max*230 + c.clientData.EVData.LimitsL3.Max*230
-				if c.clientData.EVData.LimitsPower.Max != maxPower {
-					c.clientData.EVData.LimitsPower.Max = maxPower
-				}
+				minPower += c.clientData.EVData.Limits[thePhase].Min * voltage
+				maxPower += c.clientData.EVData.Limits[thePhase].Max * voltage
 			}
+			if c.clientData.EVData.LimitsPower.Min < minPower {
+				c.clientData.EVData.LimitsPower.Min = minPower
+			}
+			if c.clientData.EVData.LimitsPower.Max != maxPower {
+				c.clientData.EVData.LimitsPower.Max = maxPower
+			}
+
 			c.callDataUpdateHandler(EVDataElementUpdatePowerLimits)
 		}
 	}
+
 	c.log.Println("limits: ")
-	c.log.Println("  L1 current: min ", c.clientData.EVData.LimitsL1.Min, "A, max ", c.clientData.EVData.LimitsL1.Max, "A, pause ", c.clientData.EVData.LimitsL1.Default, "A")
-	c.log.Println("  L2 current: min ", c.clientData.EVData.LimitsL2.Min, "A, max ", c.clientData.EVData.LimitsL2.Max, "A, pause ", c.clientData.EVData.LimitsL2.Default, "A")
-	c.log.Println("  L3 current: min ", c.clientData.EVData.LimitsL3.Min, "A, max ", c.clientData.EVData.LimitsL3.Max, "A, pause ", c.clientData.EVData.LimitsL3.Default, "A")
+	var thePhase uint
+	for thePhase = 1; thePhase <= c.clientData.EVData.ConnectedPhases; thePhase++ {
+		if phaseLimits, ok := c.clientData.EVData.Limits[thePhase]; ok {
+			c.log.Printf("  L%d current: min %.1fA, max %.1fA, pause %.1fA\n", thePhase, phaseLimits.Min, phaseLimits.Max, phaseLimits.Default)
+		}
+	}
 	c.log.Println("       Power: min ", c.clientData.EVData.LimitsPower.Min, "W, max ", c.clientData.EVData.LimitsPower.Max, "W")
 
 	for _, item := range measurementData {
@@ -418,87 +424,72 @@ func (c *ConnectionController) updateMeasurementData() {
 			c.clientData.EVData.SoCDataAvailable = true
 			c.clientData.EVData.Measurements.SoC = item.Value
 		}
+
+		phase := measurementIdsToPhase[item.MeasurementId]
+
 		_, found := FindValueInSlice(measurementCurrentIds, item.MeasurementId)
 		if found {
 			c.clientData.EVData.Measurements.Timestamp = item.Timestamp
-			switch measurementIdsToPhase[item.MeasurementId] {
-			case 1:
-				c.clientData.EVData.Measurements.CurrentL1 = item.Value
-			case 2:
-				c.clientData.EVData.Measurements.CurrentL2 = item.Value
-			case 3:
-				c.clientData.EVData.Measurements.CurrentL3 = item.Value
-			default:
-			}
+			c.clientData.EVData.Measurements.Current[phase] = item.Value
 		}
+
 		_, found = FindValueInSlice(measurementPowerIds, item.MeasurementId)
 		if found {
 			c.clientData.EVData.Measurements.Timestamp = item.Timestamp
-			switch measurementIdsToPhase[item.MeasurementId] {
-			case 1:
+
+			if phaseCurrent, ok := c.clientData.EVData.Measurements.Current[phase]; ok {
 				// in case we didn't receive power measurements, use current measurements
-				if item.Value == 0 && c.clientData.EVData.Measurements.CurrentL1 != 0 {
-					c.log.Println("L1 power fallback")
-					item.Value = c.clientData.EVData.Measurements.CurrentL1 * 230
+				if item.Value == 0 && phaseCurrent != 0 {
+					c.log.Printf("L%d power fallback\n", phase)
+					item.Value = phaseCurrent * voltage
 				}
-				c.clientData.EVData.Measurements.PowerL1 = item.Value
-			case 2:
-				// in case we didn't receive power measurements, use current measurements
-				if item.Value == 0 && c.clientData.EVData.Measurements.CurrentL2 != 0 {
-					c.log.Println("L2 power fallback")
-					item.Value = c.clientData.EVData.Measurements.CurrentL2 * 230
-				}
-				c.clientData.EVData.Measurements.PowerL2 = item.Value
-			case 3:
-				// in case we didn't receive power measurements, use current measurements
-				if item.Value == 0 && c.clientData.EVData.Measurements.CurrentL3 != 0 {
-					c.log.Println("L3 power fallback")
-					item.Value = c.clientData.EVData.Measurements.CurrentL3 * 230
-				}
-				c.clientData.EVData.Measurements.PowerL3 = item.Value
-			default:
 			}
+			c.clientData.EVData.Measurements.Power[phase] = item.Value
 		} else {
 			c.clientData.EVData.Measurements.Timestamp = item.Timestamp
 			item.Value = 0
-			switch measurementIdsToPhase[item.MeasurementId] {
-			case 1:
+
+			if phaseCurrent, ok := c.clientData.EVData.Measurements.Current[phase]; ok {
 				// in case we didn't receive power measurements, use current measurements
-				if c.clientData.EVData.Measurements.CurrentL1 != 0 {
-					item.Value = c.clientData.EVData.Measurements.CurrentL1 * 230
+				if phaseCurrent != 0 {
+					c.log.Printf("L%d power fallback\n", phase)
+					item.Value = phaseCurrent * voltage
 				}
-				c.clientData.EVData.Measurements.PowerL1 = item.Value
-			case 2:
-				// in case we didn't receive power measurements, use current measurements
-				if c.clientData.EVData.Measurements.CurrentL2 != 0 {
-					item.Value = c.clientData.EVData.Measurements.CurrentL2 * 230
-				}
-				c.clientData.EVData.Measurements.PowerL2 = item.Value
-			case 3:
-				// in case we didn't receive power measurements, use current measurements
-				if c.clientData.EVData.Measurements.CurrentL3 != 0 {
-					item.Value = c.clientData.EVData.Measurements.CurrentL3 * 230
-				}
-				c.clientData.EVData.Measurements.PowerL3 = item.Value
-			default:
 			}
+			c.clientData.EVData.Measurements.Power[phase] = item.Value
 		}
 	}
 
 	if len(measurementPowerIds) == 0 {
 		// we did not receive any Power measurements, so calculate them
-		c.clientData.EVData.Measurements.PowerL1 = c.clientData.EVData.Measurements.CurrentL1 * 230
-		c.clientData.EVData.Measurements.PowerL2 = c.clientData.EVData.Measurements.CurrentL2 * 230
-		c.clientData.EVData.Measurements.PowerL3 = c.clientData.EVData.Measurements.CurrentL3 * 230
+		var phase uint
+		for phase = 1; phase <= c.clientData.EVData.ConnectedPhases; phase++ {
+			if phaseCurrent, ok := c.clientData.EVData.Measurements.Current[phase]; ok {
+				c.clientData.EVData.Measurements.Power[phase] = phaseCurrent * voltage
+			}
+		}
 	}
 
 	c.log.Println("phases: ", c.clientData.EVData.ConnectedPhases, ", charged energy: ", c.clientData.EVData.Measurements.ChargedEnergy, "Wh")
-	c.log.Println("current current: L1 ", c.clientData.EVData.Measurements.CurrentL1, "A, L2 ", c.clientData.EVData.Measurements.CurrentL2, "A L3 ", c.clientData.EVData.Measurements.CurrentL3, "A")
-	c.log.Println("current power: L1 ", c.clientData.EVData.Measurements.PowerL1, "W, L2 ", c.clientData.EVData.Measurements.PowerL2, "W L3 ", c.clientData.EVData.Measurements.PowerL3, "W")
 
-	// TODO REMOVE THIS, this is for testing only!!!
-	// currentsPerPhase := []float64{0, 0, 0}
-	// c.WriteCurrentLimitData(currentsPerPhase)
+	var phase uint
+	var totalPower float64
+	currentsLog := "current currents: "
+	powerLog := "current power: "
+
+	for phase = 1; phase <= c.clientData.EVData.ConnectedPhases; phase++ {
+		if phaseCurrent, ok := c.clientData.EVData.Measurements.Current[phase]; ok {
+			currentsLog += fmt.Sprintf("L%d %.1fA ", phase, phaseCurrent)
+		}
+		if phasePower, ok := c.clientData.EVData.Measurements.Power[phase]; ok {
+			totalPower += phasePower
+			powerLog += fmt.Sprintf("L%d %.1fW ", phase, phasePower)
+		}
+	}
+	powerLog += fmt.Sprintf("total %.1fW", totalPower)
+
+	c.log.Println(currentsLog)
+	c.log.Println(powerLog)
 }
 
 func (c *ConnectionController) UpdateElectricalConnectionData(f *feature.ElectricalConnection) {
@@ -643,7 +634,7 @@ func (c *ConnectionController) UpdateTimeSeriesData(f *feature.TimeSeries, timeS
 	case model.TimeSeriesTypeEnumTypePlan:
 		output := "EV informed about its charging plan:\n"
 		if timeSeriesData.TimePeriod == nil {
-			c.log.Printf("The time series plan is empty %d: %s\n", timeSeriesData.TimeSeriesId, err)
+			c.log.Printf("The time series plan is empty %d\n", timeSeriesData.TimeSeriesId)
 			return
 		}
 		if timeSeriesData.TimePeriod.StartTime != nil {
@@ -896,37 +887,28 @@ func (c *ConnectionController) WriteCurrentLimitData(overloadProtectionCurrentsP
 					}
 				}
 
-				switch index {
-				case 0:
-					if currentValue < evData.LimitsL1.Min {
-						currentValue = evData.LimitsL1.Default
-					}
-					if currentValue > evData.LimitsL1.Max {
-						currentValue = evData.LimitsL1.Max
-					}
-				case 1:
-					if currentValue < evData.LimitsL2.Min {
-						currentValue = evData.LimitsL2.Default
-					}
-					if currentValue > evData.LimitsL2.Max {
-						currentValue = evData.LimitsL2.Max
-					}
-				case 2:
-					if currentValue < evData.LimitsL3.Min {
-						currentValue = evData.LimitsL3.Default
-					}
-					if currentValue > evData.LimitsL3.Max {
-						currentValue = evData.LimitsL3.Max
-					}
+				if !limitIdFound {
+					continue
 				}
 
-				if limitIdFound {
-					newItem := feature.LoadControlLimitDatasetType{
-						LimitId: uint(limitId),
-						Value:   currentValue,
-					}
-					limitItems = append(limitItems, newItem)
+				phase := uint(index) + 1
+				phaseLimits, ok := evData.Limits[phase]
+				if !ok {
+					continue
 				}
+
+				if currentValue < phaseLimits.Min {
+					currentValue = phaseLimits.Default
+				}
+				if currentValue > phaseLimits.Max {
+					currentValue = phaseLimits.Max
+				}
+
+				newItem := feature.LoadControlLimitDatasetType{
+					LimitId: uint(limitId),
+					Value:   currentValue,
+				}
+				limitItems = append(limitItems, newItem)
 			}
 		}
 	}
