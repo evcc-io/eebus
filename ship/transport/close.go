@@ -22,9 +22,6 @@ func (c *Transport) AcceptClose() error {
 	}
 	c.conn.Close()
 	c.handleConnectionClose()
-	if c.CloseHandler != nil {
-		c.CloseHandler()
-	}
 
 	return err
 }
@@ -59,9 +56,6 @@ func (c *Transport) Close() error {
 	}
 	c.conn.Close()
 	c.handleConnectionClose()
-	if c.CloseHandler != nil {
-		c.CloseHandler()
-	}
 
 	return err
 }
