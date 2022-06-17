@@ -29,6 +29,7 @@ type ConnectionController struct {
 	sequencesController  *SequencesController
 	stopMux              sync.Mutex
 	stopHeartbeatC       chan struct{}
+	stopKeepSpineAliveC  chan struct{}
 	subscriptionEntries  []model.SubscriptionManagementEntryDataType
 	specificationVersion model.SpecificationVersionType
 	// EV specific data
@@ -118,6 +119,7 @@ func (c *ConnectionController) Boot() error {
 	c.sequencesController.Boot()
 
 	go c.Run()
+	go c.keepSpineAlive()
 
 	err := c.requestNodeManagementDetailedDiscoveryData()
 	if err != nil {
@@ -128,6 +130,7 @@ func (c *ConnectionController) Boot() error {
 }
 
 func (c *ConnectionController) CloseConnection(err error) {
+	c.stopKeepSpineAlive()
 	c.stopHeartbeat()
 	_ = c.conn.Close()
 }
@@ -164,9 +167,56 @@ func (c *ConnectionController) Run() {
 		c.log.Println("error processing incoming message: ", err)
 	}
 
+	c.stopKeepSpineAlive()
 	c.stopHeartbeat()
 	_ = c.conn.Close()
 }
+
+// Workaround for Elli Charger closing the connection 10 minutes after the last message
+// when no EV is connected and no more messages are exchanged in that timeframe.
+
+func (c *ConnectionController) IsKeepAliveClosed() bool {
+	select {
+	case <-c.stopKeepSpineAliveC:
+		return true
+	default:
+	}
+
+	return false
+}
+
+func (c *ConnectionController) stopKeepSpineAlive() {
+	if c.stopKeepSpineAliveC != nil && !c.IsKeepAliveClosed() {
+		close(c.stopKeepSpineAliveC)
+	}
+}
+
+func (c *ConnectionController) keepSpineAlive() {
+	c.stopKeepSpineAliveC = make(chan struct{})
+	ticker := time.NewTicker(8 * time.Minute)
+
+	for {
+		select {
+		case <-ticker.C:
+			brand := c.clientData.EVSEData.Manufacturer.BrandName
+			if c.remoteDevice == nil || brand == "" {
+				continue
+			}
+			// is this an Elli device?
+			if brand != "Elli" {
+				return
+			}
+			if err := c.requestNodeManagementUseCaseData(); err != nil {
+				c.log.Println("Sending UseCaseData read request failed: ", err)
+				return
+			}
+		case <-c.stopKeepSpineAliveC:
+			return
+		}
+	}
+}
+
+// end workaround
 
 // Feature specific
 
