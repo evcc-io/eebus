@@ -79,15 +79,7 @@ func (c *ConnectionController) UpdateDevice(stateChange model.NetworkManagementS
 // TODO move this into NodeManagement feature implementation
 func (c *ConnectionController) requestNodeManagementDetailedDiscoveryData() error {
 	cmdClassifier := model.CmdClassifierTypeRead
-
-	deviceInfoE := c.localDevice.EntityByType(model.EntityTypeType(model.EntityTypeEnumTypeDeviceInformation))
-	nodeMgmtF := deviceInfoE.FeatureByProps(model.FeatureTypeEnumTypeNodeManagement, model.RoleTypeSpecial)
-
-	var feature0 model.AddressFeatureType = 0
-	featureDestination := model.FeatureAddressType{
-		Entity:  []model.AddressEntityType{0},
-		Feature: &feature0,
-	}
+	nodeMgmtF, featureDestination := c.remoteNodeManagementFeature()
 
 	datagram := model.DatagramType{
 		Header: model.HeaderType{
@@ -109,16 +101,7 @@ func (c *ConnectionController) requestNodeManagementDetailedDiscoveryData() erro
 
 func (c *ConnectionController) requestNodeManagementUseCaseData() error {
 	cmdClassifier := model.CmdClassifierTypeRead
-
-	deviceInfoE := c.localDevice.EntityByType(model.EntityTypeType(model.EntityTypeEnumTypeDeviceInformation))
-	nodeMgmtF := deviceInfoE.FeatureByProps(model.FeatureTypeEnumTypeNodeManagement, model.RoleTypeSpecial)
-
-	var feature0 model.AddressFeatureType = 0
-	featureDestination := model.FeatureAddressType{
-		Device:  c.remoteDevice.Information().Description.DeviceAddress.Device,
-		Entity:  []model.AddressEntityType{0},
-		Feature: &feature0,
-	}
+	nodeMgmtF, featureDestination := c.remoteNodeManagementFeature()
 
 	datagram := model.DatagramType{
 		Header: model.HeaderType{
@@ -136,6 +119,23 @@ func (c *ConnectionController) requestNodeManagementUseCaseData() error {
 	}
 
 	return c.sendSpineMessage(datagram)
+}
+
+func (c *ConnectionController) remoteNodeManagementFeature() (spine.Feature, model.FeatureAddressType) {
+	deviceInfoE := c.localDevice.EntityByType(model.EntityTypeType(model.EntityTypeEnumTypeDeviceInformation))
+	nodeMgmtF := deviceInfoE.FeatureByProps(model.FeatureTypeEnumTypeNodeManagement, model.RoleTypeSpecial)
+
+	var feature0 model.AddressFeatureType = 0
+	featureDestination := model.FeatureAddressType{
+		Entity:  []model.AddressEntityType{0},
+		Feature: &feature0,
+	}
+
+	if c.remoteDevice != nil {
+		featureDestination.Device = c.remoteDevice.Information().Description.DeviceAddress.Device
+	}
+
+	return nodeMgmtF, featureDestination
 }
 
 func (c *ConnectionController) callNodeManagementBindingRequest(lf, rf spine.Feature, featureType model.FeatureTypeType) (*model.MsgCounterType, error) {

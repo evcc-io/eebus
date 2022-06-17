@@ -12,7 +12,7 @@ func (f *NodeManagement) readDestinationListData(ctrl spine.Context, data model.
 
 	deviceAddress := localDevice.GetAddress()
 	deviceType := localDevice.GetType()
-	featureSet := model.NetworkManagementFeatureSetTypeSmart
+	featureSet := model.NetworkManagementFeatureSetTypeSimple
 
 	res := model.CmdType{
 		NodeManagementDestinationListData: &model.NodeManagementDestinationListDataType{
@@ -31,7 +31,6 @@ func (f *NodeManagement) readDestinationListData(ctrl spine.Context, data model.
 	}
 
 	return ctrl.Reply(model.CmdClassifierTypeReply, res)
-
 }
 
 func (f *NodeManagement) handleNodeManagementDestinationListData(ctrl spine.Context, op model.CmdClassifierType, data *model.NodeManagementDestinationListDataType, isPartialForCmd bool) error {
