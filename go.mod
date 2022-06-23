@@ -6,7 +6,7 @@ require (
 	github.com/denisbrodbeck/machineid v1.0.1
 	github.com/fatih/structs v1.1.0
 	github.com/gorilla/websocket v1.4.2
-	github.com/libp2p/zeroconf/v2 v2.1.1
+	github.com/libp2p/zeroconf/v2 v2.0.0-20220623102032-af1f1d3ada85
 	github.com/mitchellh/mapstructure v1.4.1
 	github.com/rickb777/date v1.17.0
 	github.com/samber/lo v1.21.0
@@ -19,5 +19,3 @@ require (
 	golang.org/x/net v0.0.0-20211216030914-fe4d6282115f // indirect
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
 )
-
-replace github.com/libp2p/zeroconf/v2 => github.com/DerAndereAndi/zeroconf/v2 v2.0.0-20220607195515-4c9557651bc9
