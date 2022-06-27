@@ -36,6 +36,8 @@ type ConnectionController struct {
 	clientData *EVSEClientDataType
 	// EVCC specific
 	dataUpdateHandler func(EVDataElementUpdateType, *EVSEClientDataType)
+
+	lastLimitItems []feature.LoadControlLimitDatasetType
 }
 
 func NewConnectionController(log util.Logger, conn ship.Conn, local spine.Device) *ConnectionController {
@@ -971,12 +973,19 @@ func (c *ConnectionController) WriteCurrentLimitData(overloadProtectionCurrentsP
 		return limitItems[i].LimitId < limitItems[j].LimitId
 	})
 
+	// check if the limits are any different from the previous, if so, send them
+	if reflect.DeepEqual(limitItems, c.lastLimitItems) {
+		return nil
+	}
+
 	ctx := c.context(nil)
 
 	if err := l.WriteLoadControlLimitListData(ctx, rf, limitItems); err != nil {
 		c.log.Println("error sending loadcontrol limits ", err)
 		return err
 	}
+
+	c.lastLimitItems = limitItems
 
 	return nil
 }
