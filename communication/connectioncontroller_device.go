@@ -41,6 +41,8 @@ func (c *ConnectionController) UpdateDevice(stateChange model.NetworkManagementS
 	if stateChange == model.NetworkManagementStateChangeTypeAdded && isEVConnected {
 		c.log.Println("detected ev connection")
 
+		c.lastLimitItems = nil
+
 		c.clientData.EVData.ChargeState = EVChargeStateEnumTypeActive
 
 		err := c.requestNodeManagementUseCaseData()
@@ -70,6 +72,7 @@ func (c *ConnectionController) UpdateDevice(stateChange model.NetworkManagementS
 		c.callDataUpdateHandler(EVDataElementUpdateEVConnectionState)
 	} else if !isEVConnected && stateChange == model.NetworkManagementStateChangeTypeRemoved {
 		c.log.Println("detected ev disconnection")
+		c.lastLimitItems = nil
 		c.clientData.EVData.ChargeState = EVChargeStateEnumTypeUnplugged
 		c.remoteDevice.ResetUseCaseActors()
 		c.callDataUpdateHandler(EVDataElementUpdateEVConnectionState)
