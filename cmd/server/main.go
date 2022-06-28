@@ -55,7 +55,11 @@ func main() {
 
 	cert := certificate(details)
 
-	id := server.UniqueID{Prefix: details.BrandName}.String()
+	id, err := ship.UniqueID(details.BrandName, "eebus")
+	if err != nil {
+		panic(err)
+	}
+
 	log := log.New(&util.LogWriter{Writer: os.Stdout, TimeFormat: "2006/01/02 15:04:05 "}, "[server] ", 0)
 
 	srv := &server.Server{
