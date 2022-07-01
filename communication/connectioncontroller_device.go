@@ -75,6 +75,14 @@ func (c *ConnectionController) UpdateDevice(stateChange model.NetworkManagementS
 		c.lastLimitItems = nil
 		c.clientData.EVData.ChargeState = EVChargeStateEnumTypeUnplugged
 		c.remoteDevice.ResetUseCaseActors()
+
+		// reset all the EV relevant features data
+		for _, entity := range c.localDevice.GetEntities() {
+			for _, feature := range entity.GetFeatures() {
+				feature.EVDisconnect()
+			}
+		}
+
 		c.callDataUpdateHandler(EVDataElementUpdateEVConnectionState)
 	}
 }

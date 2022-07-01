@@ -49,6 +49,11 @@ func NewLoadControlClient() spine.Feature {
 	return f
 }
 
+func (f *LoadControl) EVDisconnectEvent() {
+	f.limitDescriptionData = nil
+	f.limitData = nil
+}
+
 func (f *LoadControl) GetLoadControlLimitDescriptionData() []LoadControlLimitDescriptionDataType {
 	return f.limitDescriptionData
 }

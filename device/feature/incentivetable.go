@@ -39,7 +39,7 @@ type IncentiveTableData interface {
 type IncentiveTable struct {
 	*spine.FeatureImpl
 	Delegate        IncentiveDelegate
-	constraintsData IncentiveConstraintsDataType
+	constraintsData *IncentiveConstraintsDataType
 }
 
 func NewIncentiveTableClient() spine.Feature {
@@ -53,7 +53,11 @@ func NewIncentiveTableClient() spine.Feature {
 	return f
 }
 
-func (f *IncentiveTable) GetIncentiveTableConstraintsDataType() IncentiveConstraintsDataType {
+func (f *IncentiveTable) EVDisconnectEvent() {
+	f.constraintsData = nil
+}
+
+func (f *IncentiveTable) GetIncentiveTableConstraintsDataType() *IncentiveConstraintsDataType {
 	return f.constraintsData
 }
 
@@ -203,7 +207,7 @@ func (f *IncentiveTable) replyConstraintsData(ctrl spine.Context, data model.Inc
 		if constraints.Tariff == nil || constraints.Tariff.TariffId == nil || constraints.TariffConstraints == nil || constraints.TariffConstraints.MaxTiersPerTariff == nil || constraints.TariffConstraints.MaxBoundariesPerTier == nil || constraints.TariffConstraints.MaxIncentivesPerTier == nil || constraints.IncentiveSlotConstraints.SlotCountMax == nil {
 			continue
 		}
-		f.constraintsData = IncentiveConstraintsDataType{
+		f.constraintsData = &IncentiveConstraintsDataType{
 			TariffID:             uint(*constraints.Tariff.TariffId),
 			MaxTiersPerTariff:    uint(*constraints.TariffConstraints.MaxTiersPerTariff),
 			MaxBoundariesPerTier: uint(*constraints.TariffConstraints.MaxBoundariesPerTier),

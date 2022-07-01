@@ -55,6 +55,12 @@ func NewMeasurementClient() spine.Feature {
 	return f
 }
 
+func (f *Measurement) EVDisconnectEvent() {
+	f.datasetDefinitions = nil
+	f.constraintsDefinitions = nil
+	f.datasetData = nil
+}
+
 func (f *Measurement) GetMeasurementDescription() []MeasurementDatasetDefinitionsType {
 	return f.datasetDefinitions
 }

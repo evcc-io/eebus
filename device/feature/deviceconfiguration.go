@@ -43,6 +43,11 @@ func NewDeviceConfigurationClient() spine.Feature {
 	return f
 }
 
+func (f *DeviceConfiguration) EVDisconnectEvent() {
+	f.descriptionData = nil
+	f.datasetData = nil
+}
+
 func (f *DeviceConfiguration) requestKeyValueDescriptionListData(ctrl spine.Context, rf spine.Feature) (*model.MsgCounterType, error) {
 	res := []model.CmdType{{
 		DeviceConfigurationKeyValueDescriptionListData: &model.DeviceConfigurationKeyValueDescriptionListDataType{},

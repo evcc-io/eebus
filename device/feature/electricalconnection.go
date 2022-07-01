@@ -57,6 +57,12 @@ func NewElectricalConnectionClient() spine.Feature {
 	return f
 }
 
+func (f *ElectricalConnection) EVDisconnectEvent() {
+	f.parameterDescriptionData = nil
+	f.descriptionData = nil
+	f.permittedData = nil
+}
+
 func (f *ElectricalConnection) GetElectricalConnectionDescription() []ElectricalConnectionParameterDescriptionDataType {
 	return f.parameterDescriptionData
 }
