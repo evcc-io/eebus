@@ -91,7 +91,10 @@ func main() {
 
 	cert := certificate(details)
 
-	id := server.UniqueID{Prefix: details.BrandName}.String()
+	id, err := ship.UniqueID(details.BrandName, "eebus")
+	if err != nil {
+		panic(err)
+	}
 
 	srv := &server.Server{
 		Log:         log.Default(),
