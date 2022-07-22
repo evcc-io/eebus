@@ -50,11 +50,11 @@ type EVSEClientDataType struct {
 }
 
 type EVMeasurementsType struct {
-	Timestamp                       time.Time
-	CurrentL1, CurrentL2, CurrentL3 float64
-	PowerL1, PowerL2, PowerL3       float64
-	ChargedEnergy                   float64
-	SoC                             float64
+	Timestamp     time.Time
+	Current       map[uint]float64
+	Power         map[uint]float64
+	ChargedEnergy float64
+	SoC           float64
 }
 
 type EVCurrentLimitType struct {
@@ -85,10 +85,12 @@ type EVDataType struct {
 	SoCDataAvailable               bool
 	ConnectedPhases                uint
 	ChargingStrategy               EVChargingStrategyEnumType
+	ChargingDemand                 float64
+	ChargingTargetDuration         time.Duration
 	Manufacturer                   ManufacturerDetails
 	Identification                 string
 	ChargeState                    EVChargeStateEnumType
-	LimitsL1, LimitsL2, LimitsL3   EVCurrentLimitType
+	Limits                         map[uint]EVCurrentLimitType
 	LimitsPower                    EVPowerLimitType
 	Measurements                   EVMeasurementsType
 }
@@ -107,7 +109,20 @@ const (
 	EVDataElementUpdateConnectedPhases            EVDataElementUpdateType = "connectedphases"
 	EVDataElementUpdatePowerLimits                EVDataElementUpdateType = "powerlimits"
 	EVDataElementUpdateAmperageLimits             EVDataElementUpdateType = "amperagelimits"
+	EVDataElementUpdateChargingStrategy           EVDataElementUpdateType = "chargingstrategy"
+	EVDataElementUpdateChargingPlanRequired       EVDataElementUpdateType = "chargingplanrequired"
 )
+
+type EVChargingSlot struct {
+	Duration time.Duration
+	MaxValue float64 // Watts
+	Pricing  float64
+}
+
+type EVChargingPlan struct {
+	Duration time.Duration
+	Slots    []EVChargingSlot
+}
 
 func (c *ConnectionController) GetData() (*EVSEClientDataType, error) {
 	if c == nil {

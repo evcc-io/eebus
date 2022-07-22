@@ -55,6 +55,12 @@ func NewMeasurementClient() spine.Feature {
 	return f
 }
 
+func (f *Measurement) EVDisconnectEvent() {
+	f.datasetDefinitions = nil
+	f.constraintsDefinitions = nil
+	f.datasetData = nil
+}
+
 func (f *Measurement) GetMeasurementDescription() []MeasurementDatasetDefinitionsType {
 	return f.datasetDefinitions
 }
@@ -121,15 +127,26 @@ func (f *Measurement) requestListData(ctrl spine.Context, rf spine.Feature) (*mo
 	return ctrl.Request(model.CmdClassifierTypeRead, *spine.FeatureAddressType(f), *spine.FeatureAddressType(rf), true, res)
 }
 
-func (f *Measurement) replyListData(ctrl spine.Context, data model.MeasurementListDataType) error {
+func (f *Measurement) replyListData(ctrl spine.Context, data model.MeasurementListDataType, isPartialForCmd bool) error {
 	// example data:
-	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.2.0"},{"addressSource":[{"device":"d:_i:19667_PorscheEVSE-00016544"},{"entity":[1,1]},{"feature":3}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":3}]},{"msgCounter":15971},{"msgCounterReference":33},{"cmdClassifier":"reply"}]},{"payload":[{"cmd":[[{"measurementListData":[{"measurementData":[[{"measurementId":1},{"valueType":"value"},{"timestamp":"2021-04-23T12:39:19.037Z"},{"value":[{"number":0},{"scale":0}]},{"valueSource":"measuredValue"}],[{"measurementId":4},{"valueType":"value"},{"timestamp":"2021-04-23T12:39:19.037Z"},{"value":[{"number":0},{"scale":0}]},{"valueSource":"measuredValue"}],[{"measurementId":2},{"valueType":"value"},{"timestamp":"2021-04-23T12:39:19.037Z"},{"value":[{"number":0},{"scale":0}]},{"valueSource":"measuredValue"}],[{"measurementId":5},{"valueType":"value"},{"timestamp":"2021-04-23T12:39:19.037Z"},{"value":[{"number":0},{"scale":0}]},{"valueSource":"measuredValue"}],[{"measurementId":3},{"valueType":"value"},{"timestamp":"2021-04-23T12:39:19.037Z"},{"value":[{"number":0},{"scale":0}]},{"valueSource":"measuredValue"}],[{"measurementId":6},{"valueType":"value"},{"timestamp":"2021-04-23T12:39:19.037Z"},{"value":[{"number":0},{"scale":0}]},{"valueSource":"measuredValue"}],[{"measurementId":7},{"valueType":"value"},{"timestamp":"2021-04-23T12:39:19.037Z"},{"value":[{"number":0},{"scale":0}]},{"valueSource":"measuredValue"}]]}]}]]}]}]}}]}
+	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.2.0"},{"addressSource":[{"device":"d:_i:19667_PorscheEVSE-00016544"},{"entity":[1,1]},{"feature":3}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":3}]},{"msgCounter":15971},{"msgCounterReference":33},{"cmdClassifier":"reply"}]},{"payload":[{"cmd":[[{"measurementListData":[{"measurementData":[[{"measurementId":1},{"valueType":"value"},{"timestamp":"2021-04-23T12:39:19.037Z"},{"value":[{"number":0},{"scale":0}]},{"valueSource":"measuredValue"}],[{"measurementId":4},{"valueType":"value"},{"timestamp":"2021-04-23T12:39:19.037Z"},{"value":[{"number":0},{"scale":0}]},{"valueSource":"measuredValue"}],[{"measurementId":2},{"valueType":"value"},{"timestamp":"2021-04-23T12:39:19.037Z"},{"value":[{"number":0},{"scale":0}]},{"valueSource":"measuredValue"}],[{"measurementId":5},{"valueType":"value"},{"timestamp":"2021-04-23T12:39:19.037Z"},{"value":[{"number":0},{"scale":0}]},{"valueSource":"measuredValue"}],[{"measurementId":3},{"valueType":"value"},{"timestamp":"2021-04-23T12:39:19.037Z"},{"value":[{"number":0},{"scale":0}]},{"valueSource":"measuredValue"}],[{"measurementId":6},{"valueType":"value"},{"timestamp":"2021-04-23T12:39:19.037Z"},{"value":[{"number":0},{"scale":0}]},{"valueSource":"measuredValue"}],[{"measurementId":7},{"valueType":"value"},{"timestamp":"2021-04-23T12:39:19.037Z"},{"value":[{"number":0},{"scale":0}]},{"valueSource":"measuredValue"}]]}]}]]}]}]}}]}
+	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.3.0"},{"addressSource":[{"device":"d:_i:47859_Elli-Wallbox-2019A0OV8H"},{"entity":[1,1]},{"feature":11}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":3}]},{"msgCounter":811},{"cmdClassifier":"notify"}]},{"payload":[{"cmd":[[{"function":"measurementListData"},{"filter":[[{"cmdControl":[{"partial":[]}]}]]},{"measurementListData":[{"measurementData":[[{"measurementId":0},{"valueType":"value"},{"value":[{"number":608},{"scale":-2}]}],[{"measurementId":1},{"valueType":"value"},{"value":[{"number":587},{"scale":-2}]}],[{"measurementId":2},{"valueType":"value"},{"value":[{"number":604},{"scale":-2}]}]]}]}]]}]}]}}]}
 
-	f.datasetData = nil
+	if !isPartialForCmd {
+		f.datasetData = nil
+	}
+
 	for _, item := range data.MeasurementData {
-		timestamp, err := time.Parse(time.RFC3339, *item.Timestamp)
-		if err != nil {
-			timestamp = time.Time{}
+		if item.MeasurementId == nil || item.Value == nil {
+			continue
+		}
+
+		timestamp := time.Now()
+		if item.Timestamp != nil {
+			stamp, err := time.Parse(time.RFC3339, *item.Timestamp)
+			if err == nil {
+				timestamp = stamp
+			}
 		}
 
 		newItem := MeasurementDatasetDataType{
@@ -137,7 +154,20 @@ func (f *Measurement) replyListData(ctrl spine.Context, data model.MeasurementLi
 			Timestamp:     timestamp,
 			Value:         item.Value.GetValue(),
 		}
-		f.datasetData = append(f.datasetData, newItem)
+
+		replaceIndex := -1
+		for index, datasetItem := range f.datasetData {
+			if datasetItem.MeasurementId == uint(*item.MeasurementId) {
+				replaceIndex = index
+				break
+			}
+		}
+
+		if replaceIndex != -1 {
+			f.datasetData[replaceIndex] = newItem
+		} else {
+			f.datasetData = append(f.datasetData, newItem)
+		}
 	}
 
 	if f.Delegate != nil {
@@ -203,10 +233,10 @@ func (f *Measurement) Handle(ctrl spine.Context, rf model.FeatureAddressType, op
 		data := cmd.MeasurementListData
 		switch op {
 		case model.CmdClassifierTypeReply:
-			return f.replyListData(ctrl, *data)
+			return f.replyListData(ctrl, *data, isPartialForCmd)
 
 		case model.CmdClassifierTypeNotify:
-			return f.replyListData(ctrl, *data)
+			return f.replyListData(ctrl, *data, isPartialForCmd)
 
 		default:
 			return fmt.Errorf("measurement.handle: MeasurementListData CmdClassifierType not implemented: %s", op)

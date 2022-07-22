@@ -21,7 +21,7 @@ type Connector struct {
 	SKI          string
 
 	// mux    sync.Mutex
-	// closed bool
+	closedHandlerInvoked bool
 }
 
 // init creates the connection
@@ -118,7 +118,7 @@ func (c *Connector) Connect(conn *websocket.Conn) (Conn, error) {
 	// close connection if handshake or hello fails
 	if err != nil {
 		_ = t.Close()
-		c.CloseHandler(c.SKI)
+		c.TransportClosed()
 	}
 
 	shipConn := &connection{t: t}
@@ -128,7 +128,9 @@ func (c *Connector) Connect(conn *websocket.Conn) (Conn, error) {
 
 // TransportClosed handles a closed transport conncection
 func (c *Connector) TransportClosed() {
-	if c.CloseHandler != nil {
+	if c.CloseHandler != nil && !c.closedHandlerInvoked {
+		// make sure the close handler is only invoked once for this connection
+		c.closedHandlerInvoked = true
 		c.CloseHandler(c.SKI)
 	}
 }

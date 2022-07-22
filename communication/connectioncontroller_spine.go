@@ -42,6 +42,9 @@ func (c *ConnectionController) sendSpineMessage(datagram model.DatagramType) err
 	destinationAddress := datagram.Header.AddressDestination
 	if c.remoteDevice != nil {
 		remoteEntity := c.remoteDevice.Entity(destinationAddress.Entity)
+		if remoteEntity == nil {
+			return errors.New("sendSpineMessage: invalid remote entity address")
+		}
 		remoteFeature := remoteEntity.Feature(uint(*destinationAddress.Feature))
 		c.log.Printf("send: %s %s:%s %s", *cmdClassifier, remoteEntity.GetType(), remoteFeature.GetType(), c.cmdDetails(cmd))
 	} else {
@@ -133,10 +136,6 @@ func (c *ConnectionController) processDatagram(datagram model.DatagramType) erro
 
 	err := c.processCmd(datagram, entity, feature)
 
-	if err != nil {
-		return err
-	}
-
 	// handle processing success acknowledgement message. Protocol 5.2.4 & 5.2.5
 	cmdClassifier := datagram.Header.CmdClassifier
 	ackRequest := datagram.Header.AckRequest != nil && *datagram.Header.AckRequest
@@ -144,10 +143,14 @@ func (c *ConnectionController) processDatagram(datagram model.DatagramType) erro
 		featureSource := datagram.Header.AddressDestination
 		featureDestination := datagram.Header.AddressSource
 		msgCounter := datagram.Header.MsgCounter
-		err = c.sendAcknowledgementMessage(err, featureSource, featureDestination, msgCounter)
-		if err != nil {
-			return err
+		ackErr := c.sendAcknowledgementMessage(err, featureSource, featureDestination, msgCounter)
+		if ackErr != nil {
+			return ackErr
 		}
+	}
+
+	if err != nil {
+		return err
 	}
 
 	// TODO we need to process resultData responses also!
@@ -218,6 +221,8 @@ func (c *ConnectionController) cmdDetails(cmd model.CmdType) string {
 		return "LoadControlLimitListData"
 	case cmd.NodeManagementBindingRequestCall != nil:
 		return "NodeManagementBindingRequestCall"
+	case cmd.NodeManagementDestinationListData != nil:
+		return "NodeManagementDestinationListData"
 	case cmd.NodeManagementDetailedDiscoveryData != nil:
 		return "NodeManagementDetailedDiscoveryData"
 	case cmd.NodeManagementSubscriptionData != nil:
@@ -268,8 +273,11 @@ func (c *ConnectionController) processCmd(datagram model.DatagramType, localEnti
 	if functionCmd != nil && filterCmd != nil {
 		// TODO check if the function is the same as the provided cmd value
 		if len(filterCmd) > 0 {
-			if filterCmd[0].CmdControl.Partial != nil {
-				isPartial = true
+			for _, filter := range filterCmd {
+				if filter.CmdControl.Partial != nil {
+					isPartial = true
+					break
+				}
 			}
 		}
 	}

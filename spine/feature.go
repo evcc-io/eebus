@@ -31,6 +31,8 @@ type Feature interface {
 	Information() *model.NodeManagementDetailedDiscoveryFeatureInformationType
 	Dump(w io.Writer)
 
+	EVDisconnect()
+
 	HandleRequest(ctrl Context, fct model.FunctionEnumType, op model.CmdClassifierType, rf Feature) (*model.MsgCounterType, error)
 	Handle(ctrl Context, rf model.FeatureAddressType, op model.CmdClassifierType, cmd model.CmdType, isPartialForCmd bool) error
 	HandleResultData(ctrl Context, op model.CmdClassifierType) error
@@ -125,6 +127,8 @@ func (f *FeatureImpl) Dump(w io.Writer) {
 		fmt.Fprintf(w, "      {%s} %s\n", ops, fun)
 	}
 }
+
+func (f *FeatureImpl) EVDisconnect() {}
 
 func (f *FeatureImpl) HandleRequest(ctrl Context, fct model.FunctionEnumType, op model.CmdClassifierType, rf Feature) (*model.MsgCounterType, error) {
 	return nil, errors.New("HandleRequest() not implemented")

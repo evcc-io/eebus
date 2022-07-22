@@ -38,6 +38,9 @@ func NewNodeManagement() spine.Feature {
 
 func (f *NodeManagement) Handle(ctrl spine.Context, rf model.FeatureAddressType, op model.CmdClassifierType, cmd model.CmdType, isPartialForCmd bool) error {
 	switch {
+	case cmd.NodeManagementDestinationListData != nil:
+		return f.handleNodeManagementDestinationListData(ctrl, op, cmd.NodeManagementDestinationListData, isPartialForCmd)
+
 	case cmd.NodeManagementDetailedDiscoveryData != nil:
 		return f.handleDetailedDiscoveryData(ctrl, op, cmd.NodeManagementDetailedDiscoveryData, isPartialForCmd)
 

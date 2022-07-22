@@ -30,6 +30,7 @@ type FilterType struct {
 	CmdControl *CmdControlType `json:"cmdControl,omitempty"`
 
 	// DataSelectorsChoiceGroup
+	ElectricalConnectionPermittedValueSetListDataSelectors    *ElectricalConnectionPermittedValueSetListDataSelectorsType `json:"electricalConnectionPermittedValueSetListDataSelectors,omitempty"`
 	ElectricalConnectionDescriptionListDataSelectors          *ElectricalConnectionDescriptionListDataSelectorsType          `json:"electricalConnectionDescriptionListDataSelectors,omitempty"`
 	ElectricalConnectionParameterDescriptionListDataSelectors *ElectricalConnectionParameterDescriptionListDataSelectorsType `json:"electricalConnectionParameterDescriptionListDataSelectors,omitempty"`
 	MeasurementDescriptionListDataSelectors                   *MeasurementDescriptionListDataSelectorsType                   `json:"measurementDescriptionListDataSelectors,omitempty"`
@@ -116,6 +117,7 @@ type CmdType struct {
 	LoadControlLimitDescriptionListData              *LoadControlLimitDescriptionListDataType              `json:"loadControlLimitDescriptionListData,omitempty"`
 	LoadControlLimitListData                         *LoadControlLimitListDataType                         `json:"loadControlLimitListData,omitempty"`
 	NodeManagementBindingRequestCall                 *NodeManagementBindingRequestCallType                 `json:"nodeManagementBindingRequestCall,omitempty"`
+	NodeManagementDestinationListData                *NodeManagementDestinationListDataType                `json:"nodeManagementDestinationListData,omitempty"`
 	NodeManagementDetailedDiscoveryData              *NodeManagementDetailedDiscoveryDataType              `json:"nodeManagementDetailedDiscoveryData,omitempty"`
 	NodeManagementSubscriptionData                   *NodeManagementSubscriptionDataType                   `json:"nodeManagementSubscriptionData,omitempty"`
 	NodeManagementSubscriptionRequestCall            *NodeManagementSubscriptionRequestCallType            `json:"nodeManagementSubscriptionRequestCall,omitempty"`

@@ -5110,27 +5110,6 @@ func (m *PowerSequencePriceCalculationRequestCallElements) UnmarshalJSON(data []
 	return util.Unmarshal(data, &m)
 }
 
-// CmiResultData message container
-type CmiResultData struct {
-	ResultData ResultData `json:"resultData"`
-}
-
-// ResultData element
-type ResultData struct {
-	ErrorNumber *ErrorNumberType `json:"errorNumber,omitempty"`
-	Description *DescriptionType `json:"description,omitempty"`
-}
-
-// MarshalJSON is the SHIP serialization marshaller
-func (m ResultData) MarshalJSON() ([]byte, error) {
-	return util.Marshal(m)
-}
-
-// UnmarshalJSON is the SHIP serialization unmarshaller
-func (m *ResultData) UnmarshalJSON(data []byte) error {
-	return util.Unmarshal(data, &m)
-}
-
 // CmiSensingData message container
 type CmiSensingData struct {
 	SensingData SensingData `json:"sensingData"`

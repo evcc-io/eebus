@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/evcc-io/eebus/spine/model"
-	"github.com/thoas/go-funk"
+	"github.com/samber/lo"
 )
 
 type Entity interface {
@@ -168,9 +168,9 @@ func UnmarshalEntity(
 }
 
 func EntityAddressString(e Entity) string {
-	return strings.Join(funk.Map(e.GetAddress(), func(id model.AddressEntityType) string {
+	return strings.Join(lo.Map(e.GetAddress(), func(id model.AddressEntityType, _ int) string {
 		return strconv.FormatUint(uint64(id), 10)
-	}).([]string), ",")
+	}), ",")
 }
 
 func EntityAddressType(e Entity) *model.EntityAddressType {

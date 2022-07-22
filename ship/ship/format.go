@@ -1,10 +1,12 @@
 package ship
 
-import "github.com/thoas/go-funk"
+import (
+	"github.com/samber/lo"
+)
 
 const ProtocolHandshakeFormatJSON MessageProtocolFormatType = "JSON-UTF8"
 
 // IsSupported validates if format is supported
 func (m MessageProtocolFormatsType) IsSupported(format MessageProtocolFormatType) bool {
-	return funk.Contains(m.Format, format)
+	return lo.Contains(m.Format, format)
 }

@@ -1,3 +1,3 @@
 package device
 
-const SpecificationVersion = "1.2.0"
+const SpecificationVersion = "1.1.1"

@@ -104,6 +104,20 @@ func (f *DeviceDiagnosis) replyStateData(ctrl spine.Context, rf model.FeatureAdd
 	return nil
 }
 
+func (f *DeviceDiagnosis) handleResultData(ctrl spine.Context, data model.ResultDataType) error {
+	if *data.ErrorNumber != 0 {
+		// close the connection as something is broken and right now hope this does not cause an indefinite loop
+		err := fmt.Errorf("devicediagnosis.handleResultData: ErrorNumber %d", *data.ErrorNumber)
+		if data.Description != nil {
+			err = fmt.Errorf("devicediagnosis.handleResultData: %s", *data.Description)
+		}
+		ctrl.CloseConnectionBecauseOfError(err)
+
+		return err
+	}
+	return nil
+}
+
 func (f *DeviceDiagnosis) Handle(ctrl spine.Context, rf model.FeatureAddressType, op model.CmdClassifierType, cmd model.CmdType, isPartialForCmd bool) error {
 	switch {
 	case cmd.DeviceDiagnosisHeartbeatData != nil:
@@ -133,7 +147,8 @@ func (f *DeviceDiagnosis) Handle(ctrl spine.Context, rf model.FeatureAddressType
 		}
 
 	case cmd.ResultData != nil:
-		return f.HandleResultData(ctrl, op)
+		data := cmd.ResultData
+		return f.handleResultData(ctrl, *data)
 
 	default:
 		return fmt.Errorf("devicediagnosis.Handle: CmdType not implemented. %s", populatedFields(cmd))

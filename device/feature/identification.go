@@ -34,6 +34,10 @@ func NewIdentificationClient() spine.Feature {
 	return f
 }
 
+func (f *Identification) EVDisconnectEvent() {
+	f.datasetData = nil
+}
+
 func (f *Identification) requestListData(ctrl spine.Context, rf spine.Feature) (*model.MsgCounterType, error) {
 	res := []model.CmdType{{
 		IdentificationListData: &model.IdentificationListDataType{},
@@ -48,6 +52,9 @@ func (f *Identification) replyListData(ctrl spine.Context, data model.Identifica
 
 	f.datasetData = nil
 	for _, item := range data.IdentificationData {
+		if item.IdentificationId != nil || item.IdentificationType != nil || item.IdentificationValue != nil {
+			continue
+		}
 		newItem := IdentificationDatasetDataType{
 			IdentificationId:    uint(*item.IdentificationId),
 			IdentificationType:  model.IdentificationTypeEnumType(*item.IdentificationType),

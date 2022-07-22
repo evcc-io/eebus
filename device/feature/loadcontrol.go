@@ -11,7 +11,6 @@ type LoadControlLimitDescriptionDataType struct {
 	LimitId       uint
 	LimitType     model.LoadControlLimitTypeEnumType
 	MeasurementId uint
-	Phase         uint
 	ScopeType     model.ScopeTypeEnumType
 }
 
@@ -48,6 +47,11 @@ func NewLoadControlClient() spine.Feature {
 	}
 
 	return f
+}
+
+func (f *LoadControl) EVDisconnectEvent() {
+	f.limitDescriptionData = nil
+	f.limitData = nil
 }
 
 func (f *LoadControl) GetLoadControlLimitDescriptionData() []LoadControlLimitDescriptionDataType {
@@ -144,11 +148,16 @@ func (f *LoadControl) replyLimitListData(ctrl spine.Context, data model.LoadCont
 
 	f.limitData = nil
 	for _, item := range data.LoadControlLimitData {
+		if item.Value == nil || item.LimitId == nil || item.IsLimitActive == nil {
+			continue
+		}
 		newItem := LoadControlLimitDatasetType{
-			LimitId:           uint(*item.LimitId),
-			IsLimitChangeable: *item.IsLimitChangeable,
-			IsLimitActive:     *item.IsLimitActive,
-			Value:             item.Value.GetValue(),
+			LimitId:       uint(*item.LimitId),
+			IsLimitActive: *item.IsLimitActive,
+			Value:         item.Value.GetValue(),
+		}
+		if item.IsLimitChangeable != nil {
+			newItem.IsLimitChangeable = *item.IsLimitChangeable
 		}
 		f.limitData = append(f.limitData, newItem)
 	}

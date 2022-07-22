@@ -13,6 +13,8 @@ type mockContext struct {
 	dev spine.Device
 }
 
+func (c *mockContext) CloseConnectionBecauseOfError(err error) {}
+
 func (c *mockContext) AddressSource() *model.FeatureAddressType {
 	address := model.FeatureAddressType{}
 	return &address
