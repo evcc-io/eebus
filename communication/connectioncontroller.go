@@ -358,9 +358,9 @@ func (c *ConnectionController) updateMeasurementData() {
 	}
 
 	// TODO this needs to be improved (a lot)
+	powerLimitsUpdated := false
+	amperageLimitsUpdated := false
 	for _, epdItem := range electricalPermittedData {
-		powerLimitsUpdated := false
-		amperageLimitsUpdated := false
 		for _, epItem := range electricalParameterDescription {
 			if epItem.ParameterId == epdItem.ParameterId {
 				if epItem.ScopeType == model.ScopeTypeEnumTypeACPowerTotal {
@@ -395,66 +395,66 @@ func (c *ConnectionController) updateMeasurementData() {
 				}
 			}
 		}
+	}
 
-		if amperageLimitsUpdated {
-			// Min current data should be derived from min power data
-			// but as this is only properly provided via VAS the currrent
-			// min values can not be trusted.
-			// Min current for 3-phase should be at least 2.2A (ISO)
+	if amperageLimitsUpdated {
+		// Min current data should be derived from min power data
+		// but as this is only properly provided via VAS the currrent
+		// min values can not be trusted.
+		// Min current for 3-phase should be at least 2.2A (ISO)
 
-			minTotalPower := 0.0
-			var phase uint
-			for phase = 1; phase <= c.clientData.EVData.ConnectedPhases; phase++ {
-				minTotalPower += c.clientData.EVData.Limits[phase].Min * voltage
-			}
-
-			minCurrent := 6.0
-			switch c.clientData.EVData.CommunicationStandard {
-			case EVCommunicationStandardEnumTypeISO151182ED1, EVCommunicationStandardEnumTypeISO151182ED2:
-				if c.clientData.EVData.ConnectedPhases == 3 {
-					minCurrent = 2.2
-				}
-			}
-
-			if minTotalPower < c.clientData.EVData.LimitsPower.Min {
-				// Adjust min current to match min power
-				minCurrent = c.clientData.EVData.LimitsPower.Min / voltage / float64(c.clientData.EVData.ConnectedPhases)
-			}
-
-			var thePhase uint
-			for thePhase = 1; thePhase <= c.clientData.EVData.ConnectedPhases; thePhase++ {
-				if phaseLimit, ok := c.clientData.EVData.Limits[thePhase]; ok {
-					if phaseLimit.Min < minCurrent {
-						phaseLimit.Min = minCurrent
-						c.clientData.EVData.Limits[thePhase] = phaseLimit
-					}
-				}
-			}
-			c.callDataUpdateHandler(EVDataElementUpdateAmperageLimits)
+		minTotalPower := 0.0
+		var phase uint
+		for phase = 1; phase <= c.clientData.EVData.ConnectedPhases; phase++ {
+			minTotalPower += c.clientData.EVData.Limits[phase].Min * voltage
 		}
 
-		if !powerLimitsUpdated || (c.clientData.EVData.LimitsPower.Min == 0.0 && c.clientData.EVData.LimitsPower.Max > 0.0) {
-			// Min power data is only properly provided via VAS in ISO15118-2!
-			// So use the known min limits and calculate a more likely min power
-			var thePhase uint
-			var minPower, maxPower float64
-			for thePhase = 1; thePhase <= c.clientData.EVData.ConnectedPhases; thePhase++ {
-				if _, ok := c.clientData.EVData.Limits[thePhase]; !ok {
-					continue
-				}
-
-				minPower += c.clientData.EVData.Limits[thePhase].Min * voltage
-				maxPower += c.clientData.EVData.Limits[thePhase].Max * voltage
+		minCurrent := 6.0
+		switch c.clientData.EVData.CommunicationStandard {
+		case EVCommunicationStandardEnumTypeISO151182ED1, EVCommunicationStandardEnumTypeISO151182ED2:
+			if c.clientData.EVData.ConnectedPhases == 3 {
+				minCurrent = 2.2
 			}
-			if c.clientData.EVData.LimitsPower.Min < minPower {
-				c.clientData.EVData.LimitsPower.Min = minPower
-			}
-			if c.clientData.EVData.LimitsPower.Max != maxPower {
-				c.clientData.EVData.LimitsPower.Max = maxPower
-			}
-
-			c.callDataUpdateHandler(EVDataElementUpdatePowerLimits)
 		}
+
+		if minTotalPower < c.clientData.EVData.LimitsPower.Min {
+			// Adjust min current to match min power
+			minCurrent = c.clientData.EVData.LimitsPower.Min / voltage / float64(c.clientData.EVData.ConnectedPhases)
+		}
+
+		var thePhase uint
+		for thePhase = 1; thePhase <= c.clientData.EVData.ConnectedPhases; thePhase++ {
+			if phaseLimit, ok := c.clientData.EVData.Limits[thePhase]; ok {
+				if phaseLimit.Min < minCurrent {
+					phaseLimit.Min = minCurrent
+					c.clientData.EVData.Limits[thePhase] = phaseLimit
+				}
+			}
+		}
+		c.callDataUpdateHandler(EVDataElementUpdateAmperageLimits)
+	}
+
+	if !powerLimitsUpdated || (c.clientData.EVData.LimitsPower.Min == 0.0 && c.clientData.EVData.LimitsPower.Max > 0.0) {
+		// Min power data is only properly provided via VAS in ISO15118-2!
+		// So use the known min limits and calculate a more likely min power
+		var thePhase uint
+		var minPower, maxPower float64
+		for thePhase = 1; thePhase <= c.clientData.EVData.ConnectedPhases; thePhase++ {
+			if _, ok := c.clientData.EVData.Limits[thePhase]; !ok {
+				continue
+			}
+
+			minPower += c.clientData.EVData.Limits[thePhase].Min * voltage
+			maxPower += c.clientData.EVData.Limits[thePhase].Max * voltage
+		}
+		if c.clientData.EVData.LimitsPower.Min < minPower {
+			c.clientData.EVData.LimitsPower.Min = minPower
+		}
+		if c.clientData.EVData.LimitsPower.Max != maxPower {
+			c.clientData.EVData.LimitsPower.Max = maxPower
+		}
+
+		c.callDataUpdateHandler(EVDataElementUpdatePowerLimits)
 	}
 
 	c.log.Println("limits: ")
