@@ -433,7 +433,7 @@ func (c *ConnectionController) updateMeasurementData() {
 			c.callDataUpdateHandler(EVDataElementUpdateAmperageLimits)
 		}
 
-		if !powerLimitsUpdated {
+		if !powerLimitsUpdated || (c.clientData.EVData.LimitsPower.Min == 0.0 && c.clientData.EVData.LimitsPower.Max > 0.0) {
 			// Min power data is only properly provided via VAS in ISO15118-2!
 			// So use the known min limits and calculate a more likely min power
 			var thePhase uint
