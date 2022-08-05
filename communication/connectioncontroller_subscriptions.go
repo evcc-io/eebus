@@ -74,8 +74,13 @@ func (c *ConnectionController) addSubscription(data model.SubscriptionManagement
 	}
 
 	if !requestAllowed {
-		c.log.Println("subscription request not conforming a request from a client to a server of the same type")
-		// return errors.New("subscription request not conforming a request from a client to a server of the same type")
+		msg := "subscription request not conforming a request from a client to a server of the same type"
+		c.log.Println(msg)
+
+		// if this is an Elli device allow invalid requests, otherwise don't allow it
+		if c.clientData.EVSEData.Manufacturer.BrandName != "Elli" {
+			return errors.New(msg)
+		}
 	}
 
 	subscriptionEntry := model.SubscriptionManagementEntryDataType{
