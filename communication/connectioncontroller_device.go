@@ -2,6 +2,7 @@ package communication
 
 import (
 	"fmt"
+	"reflect"
 
 	"github.com/evcc-io/eebus/spine"
 	"github.com/evcc-io/eebus/spine/model"
@@ -185,4 +186,14 @@ func (c *ConnectionController) featureAddressForTypeAndRole(device spine.Device,
 
 	address := spine.FeatureAddressType(feature)
 	return address, nil
+}
+
+func (c *ConnectionController) featureTypeForAddress(entity spine.Entity, address *model.FeatureAddressType) (model.FeatureTypeEnumType, error) {
+	for _, f := range entity.GetFeatures() {
+		if reflect.DeepEqual(f.GetAddress(), address) {
+			return f.GetType(), nil
+		}
+	}
+
+	return "", fmt.Errorf("couldn't find feature with address %v", address)
 }
