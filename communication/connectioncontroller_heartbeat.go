@@ -42,9 +42,11 @@ func (c *ConnectionController) sendHearbeat(stopC chan struct{}, d time.Duration
 
 				senderAddr = item.ServerAddress
 				destinationAddr = item.ClientAddress
+				timestamp := time.Now().UTC().Format("2006-01-02T15:04:05.9Z")
 
 				res := []model.CmdType{{
 					DeviceDiagnosisHeartbeatData: &model.DeviceDiagnosisHeartbeatDataType{
+						Timestamp:        &timestamp,
 						HeartbeatCounter: c.heartBeatCounter(),
 						HeartbeatTimeout: &heartBeatTimeout,
 					},
