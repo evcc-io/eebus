@@ -6,7 +6,7 @@ require (
 	github.com/denisbrodbeck/machineid v1.0.1
 	github.com/fatih/structs v1.1.0
 	github.com/gorilla/websocket v1.4.2
-	github.com/libp2p/zeroconf/v2 v2.0.0-20220623102032-af1f1d3ada85
+	github.com/libp2p/zeroconf/v2 v2.0.0-20220807195455-586e7c571d10
 	github.com/mitchellh/mapstructure v1.4.1
 	github.com/rickb777/date v1.17.0
 	github.com/samber/lo v1.21.0
