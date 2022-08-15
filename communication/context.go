@@ -13,6 +13,10 @@ type contextImpl struct {
 	datagram model.DatagramType
 }
 
+func (c *contextImpl) CloseConnectionBecauseOfError(err error) {
+	c.CloseConnection(err)
+}
+
 func (c *contextImpl) AddressSource() *model.FeatureAddressType {
 	return c.datagram.Header.AddressSource
 }

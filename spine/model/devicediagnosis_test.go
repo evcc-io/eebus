@@ -19,6 +19,7 @@ func TestDeviceDiagnosisHeartbeatData(t *testing.T) {
 
 	var heartBeatCounter uint64 = 2245
 	var heartBeatTimeout string = "PT4S"
+	var timestamp string = "2006-05-04T18:13:51.0Z"
 
 	datagram := CmiDatagramType{
 		Datagram: DatagramType{
@@ -40,6 +41,7 @@ func TestDeviceDiagnosisHeartbeatData(t *testing.T) {
 			Payload: PayloadType{
 				Cmd: []CmdType{{
 					DeviceDiagnosisHeartbeatData: &DeviceDiagnosisHeartbeatDataType{
+						Timestamp:        &timestamp,
 						HeartbeatCounter: &heartBeatCounter,
 						HeartbeatTimeout: &heartBeatTimeout,
 					},
@@ -52,7 +54,7 @@ func TestDeviceDiagnosisHeartbeatData(t *testing.T) {
 		t.Errorf("TestDeviceDiagnosisHeartbeatData() error = %v", err)
 	}
 
-	expectedJSON := `{"datagram":[{"header":[{"specificationVersion":"1.2.0"},{"addressSource":[{"device":"d:_i:3210_HEMS"},{"entity":[1]},{"feature":5}]},{"addressDestination":[{"device":"d:_i:3210_EVSE"},{"entity":[1]},{"feature":5}]},{"msgCounter":5971},{"cmdClassifier":"notify"}]},{"payload":[{"cmd":[[{"deviceDiagnosisHeartbeatData":[{"heartbeatCounter":2245},{"heartbeatTimeout":"PT4S"}]}]]}]}]}`
+	expectedJSON := `{"datagram":[{"header":[{"specificationVersion":"1.2.0"},{"addressSource":[{"device":"d:_i:3210_HEMS"},{"entity":[1]},{"feature":5}]},{"addressDestination":[{"device":"d:_i:3210_EVSE"},{"entity":[1]},{"feature":5}]},{"msgCounter":5971},{"cmdClassifier":"notify"}]},{"payload":[{"cmd":[[{"deviceDiagnosisHeartbeatData":[{"timestamp":"2006-05-04T18:13:51.0Z"},{"heartbeatCounter":2245},{"heartbeatTimeout":"PT4S"}]}]]}]}]}`
 	expectedDatagram := CmiDatagramType{}
 	err = json.Unmarshal(json.RawMessage(expectedJSON), &expectedDatagram)
 	if err != nil {

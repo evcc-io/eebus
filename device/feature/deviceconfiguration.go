@@ -43,6 +43,11 @@ func NewDeviceConfigurationClient() spine.Feature {
 	return f
 }
 
+func (f *DeviceConfiguration) EVDisconnectEvent() {
+	f.descriptionData = nil
+	f.datasetData = nil
+}
+
 func (f *DeviceConfiguration) requestKeyValueDescriptionListData(ctrl spine.Context, rf spine.Feature) (*model.MsgCounterType, error) {
 	res := []model.CmdType{{
 		DeviceConfigurationKeyValueDescriptionListData: &model.DeviceConfigurationKeyValueDescriptionListDataType{},
@@ -76,19 +81,24 @@ func (f *DeviceConfiguration) requestKeyValueListData(ctrl spine.Context, rf spi
 	return ctrl.Request(model.CmdClassifierTypeRead, *spine.FeatureAddressType(f), *spine.FeatureAddressType(rf), true, res)
 }
 
-func (f *DeviceConfiguration) replyKeyValueListData(ctrl spine.Context, data model.DeviceConfigurationKeyValueListDataType, isNotify bool) error {
+func (f *DeviceConfiguration) replyKeyValueListData(ctrl spine.Context, data model.DeviceConfigurationKeyValueListDataType, isPartialForCmd bool) error {
 	// example data:
-	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.2.0"},{"addressSource":[{"device":"d:_i:19667_PorscheEVSE-00016544"},{"entity":[1,1]},{"feature":5}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":4}]},{"msgCounter":24307},{"msgCounterReference":34},{"cmdClassifier":"reply"}]},{"payload":[{"cmd":[[{"deviceConfigurationKeyValueListData":[{"deviceConfigurationKeyValueData":[[{"keyId":1},{"value":[{"boolean":false}]}],[{"keyId":2},{"value":[{"string":"iso15118-2ed2"}]}]]}]}]]}]}]}}]}
+	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.2.0"},{"addressSource":[{"device":"d:_i:19667_PorscheEVSE-00016544"},{"entity":[1,1]},{"feature":5}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":4}]},{"msgCounter":24307},{"msgCounterReference":34},{"cmdClassifier":"reply"}]},{"payload":[{"cmd":[[{"deviceConfigurationKeyValueListData":[{"deviceConfigurationKeyValueData":[[{"keyId":1},{"value":[{"boolean":false}]}],[{"keyId":2},{"value":[{"string":"iso15118-2ed2"}]}]]}]}]]}]}]}}]}
+	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.3.0"},{"addressSource":[{"device":"d:_i:47859_Elli-Wallbox-2019A0OV8H"},{"entity":[1,1]},{"feature":24}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":4}]},{"msgCounter":767},{"cmdClassifier":"notify"}]},{"payload":[{"cmd":[[{"function":"deviceConfigurationKeyValueListData"},{"filter":[[{"cmdControl":[{"partial":[]}]}]]},{"deviceConfigurationKeyValueListData":[{"deviceConfigurationKeyValueData":[[{"keyId":1},{"value":[{"string":"iec61851"}]}]]}]}]]}]}]}}]}
 
 	if f.descriptionData == nil {
-		if isNotify {
-			return nil
-		}
 		return errors.New("deviceconfiguration.replyKeyValueListData: descriptionData is not set, needs to be requested first")
 	}
 
-	f.datasetData = nil
+	if !isPartialForCmd {
+		f.datasetData = nil
+	}
+
 	for _, item := range data.DeviceConfigurationKeyValueData {
+		if item.KeyId == nil || item.Value == nil {
+			continue
+		}
+
 		var keyId uint = uint(*item.KeyId)
 		var valueTypeForKeyID model.DeviceConfigurationKeyValueTypeType
 		var nameForKeyID model.DeviceConfigurationKeyNameEnumType
@@ -112,6 +122,14 @@ func (f *DeviceConfiguration) replyKeyValueListData(ctrl spine.Context, data mod
 			KeyValueType: valueTypeForKeyID,
 		}
 
+		replaceIndex := -1
+		for index, datasetItem := range f.datasetData {
+			if datasetItem.KeyName == nameForKeyID {
+				replaceIndex = index
+				break
+			}
+		}
+
 		valid := true
 		switch valueTypeForKeyID {
 		case model.DeviceConfigurationKeyValueTypeTypeBoolean:
@@ -123,7 +141,11 @@ func (f *DeviceConfiguration) replyKeyValueListData(ctrl spine.Context, data mod
 		}
 
 		if valid {
-			f.datasetData = append(f.datasetData, newItem)
+			if replaceIndex != -1 {
+				f.datasetData[replaceIndex] = newItem
+			} else {
+				f.datasetData = append(f.datasetData, newItem)
+			}
 		}
 	}
 
@@ -169,9 +191,9 @@ func (f *DeviceConfiguration) Handle(ctrl spine.Context, rf model.FeatureAddress
 		data := cmd.DeviceConfigurationKeyValueListData
 		switch op {
 		case model.CmdClassifierTypeReply:
-			return f.replyKeyValueListData(ctrl, *data, true)
+			return f.replyKeyValueListData(ctrl, *data, isPartialForCmd)
 		case model.CmdClassifierTypeNotify:
-			return f.replyKeyValueListData(ctrl, *data, false)
+			return f.replyKeyValueListData(ctrl, *data, isPartialForCmd)
 
 		default:
 			return fmt.Errorf("deviceconfiguration.Handle: DeviceConfigurationKeyValueListData CmdClassifierType not implemented: %s", op)

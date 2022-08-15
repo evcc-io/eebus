@@ -10,7 +10,7 @@ import (
 	"github.com/evcc-io/eebus/ship"
 	"github.com/evcc-io/eebus/util"
 	"github.com/gorilla/websocket"
-	"github.com/grandcat/zeroconf"
+	"github.com/libp2p/zeroconf/v2"
 	"github.com/mitchellh/mapstructure"
 )
 
@@ -97,7 +97,7 @@ func (ss *Service) Connect(log util.Logger, accessMethod string, cert tls.Certif
 	for _, uri := range ss.URIs {
 		ws, err := WebsocketConnector(uri)
 		if err != nil {
-			log.Println("Failed to connect to %s: %s", uri, err)
+			log.Printf("Failed to connect to %s: %s\n", uri, err)
 			continue
 		}
 

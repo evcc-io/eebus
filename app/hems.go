@@ -1,6 +1,8 @@
 package app
 
 import (
+	"fmt"
+
 	"github.com/evcc-io/eebus/communication"
 	"github.com/evcc-io/eebus/device/entity"
 	"github.com/evcc-io/eebus/spine"
@@ -11,7 +13,7 @@ func HEMS(details communication.ManufacturerDetails) spine.Device {
 	localDeviceName := model.DeviceClassificationStringType(details.DeviceName)
 	localDeviceCode := model.DeviceClassificationStringType(details.DeviceCode)
 	localBrandName := model.DeviceClassificationStringType(details.BrandName)
-	localDeviceAddress := model.AddressDeviceType(details.DeviceAddress)
+	localDeviceAddress := model.AddressDeviceType(fmt.Sprintf("d:_i:%s", details.DeviceAddress))
 
 	manufacturerData := model.DeviceClassificationManufacturerDataType{
 		DeviceName: &localDeviceName,

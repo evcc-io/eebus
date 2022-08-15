@@ -57,6 +57,12 @@ func NewElectricalConnectionClient() spine.Feature {
 	return f
 }
 
+func (f *ElectricalConnection) EVDisconnectEvent() {
+	f.parameterDescriptionData = nil
+	f.descriptionData = nil
+	f.permittedData = nil
+}
+
 func (f *ElectricalConnection) GetElectricalConnectionDescription() []ElectricalConnectionParameterDescriptionDataType {
 	return f.parameterDescriptionData
 }
@@ -79,7 +85,8 @@ func (f *ElectricalConnection) requestParameterDescriptionListData(ctrl spine.Co
 
 func (f *ElectricalConnection) replyParameterDescriptionListData(ctrl spine.Context, data model.ElectricalConnectionParameterDescriptionListDataType) error {
 	// example data:
-	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.2.0"},{"addressSource":[{"device":"d:_i:19667_PorscheEVSE-00016544"},{"entity":[1,1]},{"feature":2}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":8}]},{"msgCounter":15976},{"msgCounterReference":34},{"cmdClassifier":"reply"}]},{"payload":[{"cmd":[[{"electricalConnectionParameterDescriptionListData":[{"electricalConnectionParameterDescriptionData":[[{"electricalConnectionId":0},{"parameterId":1},{"measurementId":1},{"voltageType":"ac"},{"acMeasuredPhases":"a"},{"acMeasuredInReferenceTo":"neutral"},{"acMeasurementType":"real"},{"acMeasurementVariant":"rms"}],[{"electricalConnectionId":0},{"parameterId":2},{"measurementId":4},{"voltageType":"ac"},{"acMeasuredPhases":"a"},{"acMeasuredInReferenceTo":"neutral"},{"acMeasurementType":"real"},{"acMeasurementVariant":"rms"}],[{"electricalConnectionId":0},{"parameterId":3},{"measurementId":2},{"voltageType":"ac"},{"acMeasuredPhases":"b"},{"acMeasuredInReferenceTo":"neutral"},{"acMeasurementType":"real"},{"acMeasurementVariant":"rms"}],[{"electricalConnectionId":0},{"parameterId":4},{"measurementId":5},{"voltageType":"ac"},{"acMeasuredPhases":"b"},{"acMeasuredInReferenceTo":"neutral"},{"acMeasurementType":"real"},{"acMeasurementVariant":"rms"}],[{"electricalConnectionId":0},{"parameterId":5},{"measurementId":3},{"voltageType":"ac"},{"acMeasuredPhases":"c"},{"acMeasuredInReferenceTo":"neutral"},{"acMeasurementType":"real"},{"acMeasurementVariant":"rms"}],[{"electricalConnectionId":0},{"parameterId":6},{"measurementId":6},{"voltageType":"ac"},{"acMeasuredPhases":"c"},{"acMeasuredInReferenceTo":"neutral"},{"acMeasurementType":"real"},{"acMeasurementVariant":"rms"}],[{"electricalConnectionId":0},{"parameterId":7},{"measurementId":7},{"voltageType":"ac"},{"acMeasuredPhases":"abc"},{"acMeasuredInReferenceTo":"neutral"},{"acMeasurementType":"real"},{"acMeasurementVariant":"rms"}],[{"electricalConnectionId":0},{"parameterId":8},{"acMeasuredPhases":"abc"},{"scopeType":"acPowerTotal"}]]}]}]]}]}]}}]}
+	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.2.0"},{"addressSource":[{"device":"d:_i:19667_PorscheEVSE-00016544"},{"entity":[1,1]},{"feature":2}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":8}]},{"msgCounter":15976},{"msgCounterReference":34},{"cmdClassifier":"reply"}]},{"payload":[{"cmd":[[{"electricalConnectionParameterDescriptionListData":[{"electricalConnectionParameterDescriptionData":[[{"electricalConnectionId":0},{"parameterId":1},{"measurementId":1},{"voltageType":"ac"},{"acMeasuredPhases":"a"},{"acMeasuredInReferenceTo":"neutral"},{"acMeasurementType":"real"},{"acMeasurementVariant":"rms"}],[{"electricalConnectionId":0},{"parameterId":2},{"measurementId":4},{"voltageType":"ac"},{"acMeasuredPhases":"a"},{"acMeasuredInReferenceTo":"neutral"},{"acMeasurementType":"real"},{"acMeasurementVariant":"rms"}],[{"electricalConnectionId":0},{"parameterId":3},{"measurementId":2},{"voltageType":"ac"},{"acMeasuredPhases":"b"},{"acMeasuredInReferenceTo":"neutral"},{"acMeasurementType":"real"},{"acMeasurementVariant":"rms"}],[{"electricalConnectionId":0},{"parameterId":4},{"measurementId":5},{"voltageType":"ac"},{"acMeasuredPhases":"b"},{"acMeasuredInReferenceTo":"neutral"},{"acMeasurementType":"real"},{"acMeasurementVariant":"rms"}],[{"electricalConnectionId":0},{"parameterId":5},{"measurementId":3},{"voltageType":"ac"},{"acMeasuredPhases":"c"},{"acMeasuredInReferenceTo":"neutral"},{"acMeasurementType":"real"},{"acMeasurementVariant":"rms"}],[{"electricalConnectionId":0},{"parameterId":6},{"measurementId":6},{"voltageType":"ac"},{"acMeasuredPhases":"c"},{"acMeasuredInReferenceTo":"neutral"},{"acMeasurementType":"real"},{"acMeasurementVariant":"rms"}],[{"electricalConnectionId":0},{"parameterId":7},{"measurementId":7},{"voltageType":"ac"},{"acMeasuredPhases":"abc"},{"acMeasuredInReferenceTo":"neutral"},{"acMeasurementType":"real"},{"acMeasurementVariant":"rms"}],[{"electricalConnectionId":0},{"parameterId":8},{"acMeasuredPhases":"abc"},{"scopeType":"acPowerTotal"}]]}]}]]}]}]}}]}
+	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.3.0"},{"addressSource":[{"device":"d:_i:47859_Elli-Wallbox-2019A0OV8H"},{"entity":[1,1]},{"feature":7}]},{"addressDestination":[{"device":"d:_i:EVCC_HEMS"},{"entity":[1]},{"feature":8}]},{"msgCounter":105},{"msgCounterReference":46},{"cmdClassifier":"reply"}]},{"payload":[{"cmd":[[{"electricalConnectionParameterDescriptionListData":[{"electricalConnectionParameterDescriptionData":[[{"electricalConnectionId":0},{"parameterId":0},{"acMeasuredPhases":"abc"},{"scopeType":"acPowerTotal"}],[{"electricalConnectionId":0},{"parameterId":1},{"measurementId":0},{"acMeasuredPhases":"a"},{"acMeasurementVariant":"rms"}],[{"electricalConnectionId":0},{"parameterId":2},{"measurementId":1},{"acMeasuredPhases":"b"},{"acMeasurementVariant":"rms"}],[{"electricalConnectionId":0},{"parameterId":3},{"measurementId":2},{"acMeasuredPhases":"c"},{"acMeasurementVariant":"rms"}],[{"electricalConnectionId":0},{"parameterId":4},{"measurementId":3},{"acMeasuredPhases":"a"}],[{"electricalConnectionId":0},{"parameterId":5},{"measurementId":4},{"acMeasuredPhases":"b"}],[{"electricalConnectionId":0},{"parameterId":6},{"measurementId":5},{"acMeasuredPhases":"c"}],[{"electricalConnectionId":0},{"parameterId":7},{"measurementId":6},{"voltageType":"ac"},{"acMeasuredPhases":"abc"},{"acMeasurementType":"real"}]]}]}]]}]}]}}]}
 
 	// TODO make this work with any kind of data, not only currents on single phases
 	var phases = map[string]uint{
@@ -90,6 +97,10 @@ func (f *ElectricalConnection) replyParameterDescriptionListData(ctrl spine.Cont
 
 	f.parameterDescriptionData = nil
 	for _, item := range data.ElectricalConnectionParameterDescriptionData {
+		if item.ElectricalConnectionId == nil || item.ParameterId == nil || item.AcMeasuredPhases == nil {
+			continue
+		}
+
 		phasesValue := string(*item.AcMeasuredPhases)
 		if phasesValue == "a" || phasesValue == "b" || phasesValue == "c" || phasesValue == "abc" {
 			newItem := ElectricalConnectionParameterDescriptionDataType{
@@ -101,9 +112,9 @@ func (f *ElectricalConnection) replyParameterDescriptionListData(ctrl spine.Cont
 			}
 			if item.ScopeType != nil {
 				newItem.ScopeType = model.ScopeTypeEnumType(*item.ScopeType)
-				newItem.Phase = 0
-			} else {
-				newItem.Phase = phases[phasesValue]
+			}
+			if phaseValue, ok := phases[phasesValue]; ok {
+				newItem.Phase = phaseValue
 			}
 			f.parameterDescriptionData = append(f.parameterDescriptionData, newItem)
 		}
@@ -123,12 +134,23 @@ func (f *ElectricalConnection) requestDescriptionListData(ctrl spine.Context, rf
 func (f *ElectricalConnection) replyDescriptionListData(ctrl spine.Context, data model.ElectricalConnectionDescriptionListDataType) error {
 	// example data:
 	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.2.0"},{"addressSource":[{"device":"d:_i:19667_PorscheEVSE-00016544"},{"entity":[1,1]},{"feature":2}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":8}]},{"msgCounter":15981},{"msgCounterReference":35},{"cmdClassifier":"reply"}]},{"payload":[{"cmd":[[{"electricalConnectionDescriptionListData":[{"electricalConnectionDescriptionData":[[{"electricalConnectionId":0},{"powerSupplyType":"ac"},{"acConnectedPhases":3},{"positiveEnergyDirection":"consume"}]]}]}]]}]}]}}]}
+	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.3.0"},{"addressSource":[{"device":"d:_i:47859_Elli-Wallbox-2019A0OV8H"},{"entity":[1,1]},{"feature":7}]},{"addressDestination":[{"device":"d:_i:EVCC_HEMS"},{"entity":[1]},{"feature":8}]},{"msgCounter":114},{"msgCounterReference":54},{"cmdClassifier":"reply"}]},{"payload":[{"cmd":[[{"electricalConnectionDescriptionListData":[{"electricalConnectionDescriptionData":[[{"electricalConnectionId":0},{"powerSupplyType":"ac"},{"positiveEnergyDirection":"consume"}]]}]}]]}]}]}}]}
 
 	f.descriptionData = nil
 	for _, item := range data.ElectricalConnectionDescriptionData {
+		if item.ElectricalConnectionId == nil {
+			continue
+		}
+
 		newItem := ElectricalConnectionDatasetDataType{
 			ElectricalConnectionId: uint(*item.ElectricalConnectionId),
-			ConnectedPhases:        *item.AcConnectedPhases,
+		}
+
+		if item.AcConnectedPhases != nil {
+			newItem.ConnectedPhases = *item.AcConnectedPhases
+		} else {
+			// Assume this
+			newItem.ConnectedPhases = 3
 		}
 		f.descriptionData = append(f.descriptionData, newItem)
 	}
@@ -148,7 +170,7 @@ func (f *ElectricalConnection) requestPermittedValueSetData(ctrl spine.Context, 
 	return ctrl.Request(model.CmdClassifierTypeRead, *spine.FeatureAddressType(f), *spine.FeatureAddressType(rf), true, res)
 }
 
-func (f *ElectricalConnection) replyPermittedValueSetData(ctrl spine.Context, data model.ElectricalConnectionPermittedValueSetListDataType) error {
+func (f *ElectricalConnection) replyPermittedValueSetData(ctrl spine.Context, data model.ElectricalConnectionPermittedValueSetListDataType, isPartialForCmd bool, filter []model.FilterType) error {
 	// example data:
 	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.2.0"},{"addressSource":[{"device":"d:_i:19667_PorscheEVSE-00016544"},{"entity":[1,1]},{"feature":2}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":8}]},{"msgCounter":1793},{"msgCounterReference":35},{"cmdClassifier":"reply"}]},{"payload":[{"cmd":[[{"electricalConnectionPermittedValueSetListData":[{"electricalConnectionPermittedValueSetData":[[{"electricalConnectionId":0},{"parameterId":1},{"permittedValueSet":[[{"value":[[{"number":100},{"scale":-3}]]},{"range":[[{"min":[{"number":2},{"scale":0}]},{"max":[{"number":16},{"scale":0}]}]]}]]}],[{"electricalConnectionId":0},{"parameterId":8},{"permittedValueSet":[[{"value":[[{"number":100},{"scale":-3}]]},{"range":[[{"min":[{"number":490},{"scale":0}]},{"max":[{"number":3920},{"scale":0}]}]]}]]}]]}]}]]}]}]}}]}
 	// {"cmd":[[
@@ -183,26 +205,104 @@ func (f *ElectricalConnection) replyPermittedValueSetData(ctrl spine.Context, da
 	// 		]}
 	// 	]}
 	// ]]}
+	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.3.0"},{"addressSource":[{"device":"d:_i:47859_Elli-Wallbox-2019A0OV8H"},{"entity":[1,1]},{"feature":7}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":8}]},{"msgCounter":768},{"cmdClassifier":"notify"}]},{"payload":[
+	// {"cmd":[[
+	// 	{"function":"electricalConnectionPermittedValueSetListData"},
+	// 	{"filter":[[{"cmdControl":[{"partial":[]}]}]]},
+	// 	{"electricalConnectionPermittedValueSetListData":[
+	// 		{"electricalConnectionPermittedValueSetData":[
+	// 			[{"electricalConnectionId":0},{"parameterId":1},{"permittedValueSet":[[{"range":[[{"min":[{"number":6},{"scale":0}]},{"max":[{"number":6},{"scale":0}]}]]}]]}],
+	// 			[{"electricalConnectionId":0},{"parameterId":2},{"permittedValueSet":[[{"range":[[{"min":[{"number":6},{"scale":0}]},{"max":[{"number":6},{"scale":0}]}]]}]]}],
+	// 			[{"electricalConnectionId":0},{"parameterId":3},{"permittedValueSet":[[{"range":[[{"min":[{"number":6},{"scale":0}]},{"max":[{"number":6},{"scale":0}]}]]}]]}]
+	// ]}]}]]}]}]}}]}
+	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.3.0"},{"addressSource":[{"device":"d:_i:47859_Elli-Wallbox-2019A0OV8H"},{"entity":[1,1]},{"feature":7}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":8}]},{"msgCounter":148},{"cmdClassifier":"notify"}]},{"payload":[
+	// {"cmd":[[
+	// 	{"function":"electricalConnectionPermittedValueSetListData"},
+	// 	{"filter":[[{"cmdControl":[{"partial":[]}]}]]},
+	// 	{"electricalConnectionPermittedValueSetListData":[
+	// 		{"electricalConnectionPermittedValueSetData":[
+	// 			[{"electricalConnectionId":0},{"parameterId":1},{"permittedValueSet":[[{"range":[[{"min":[{"number":6},{"scale":0}]},{"max":[{"number":16},{"scale":0}]}]]}]]}],
+	// 			[{"electricalConnectionId":0},{"parameterId":2},{"permittedValueSet":[[{"range":[[{"min":[{"number":6},{"scale":0}]},{"max":[{"number":16},{"scale":0}]}]]}]]}],
+	// 			[{"electricalConnectionId":0},{"parameterId":3},{"permittedValueSet":[[{"range":[[{"min":[{"number":6},{"scale":0}]},{"max":[{"number":16},{"scale":0}]}]]}]]}]
+	// ]}]}]]}]}]}}]}
+	// {"data":[{"header":[{"protocolId":"ee1.0"}]},{"payload":{"datagram":[{"header":[{"specificationVersion":"1.3.0"},{"addressSource":[{"device":"d:_i:47859_Elli-Wallbox-2019A0OV8H"},{"entity":[1,1]},{"feature":7}]},{"addressDestination":[{"device":"EVCC_HEMS"},{"entity":[1]},{"feature":8}]},{"msgCounter":266},{"cmdClassifier":"notify"}]},{"payload": [
+	// {"cmd":[[
+	// 	{"function":"electricalConnectionPermittedValueSetListData"},
+	// 	{"filter": [
+	// 		[{"cmdControl":[{"delete":[]}]},{"electricalConnectionPermittedValueSetListDataSelectors":[{"electricalConnectionId":0},{"parameterId":0}]}],
+	// 		[{"cmdControl":[{"partial":[]}]}]]
+	// 	},
+	// 	{"electricalConnectionPermittedValueSetListData":[
+	// 		{"electricalConnectionPermittedValueSetData":[[
+	// 			{"electricalConnectionId":0},
+	// 			{"parameterId":0},
+	// 			{"permittedValueSet":[[{"range":[[{"min":[{"number":1},{"scale":0}]}]]}]]}
+	// ]]}]}]]}]}]}}]}
 
-	f.permittedData = nil
+	if !isPartialForCmd {
+		f.permittedData = nil
+	}
+
+	for _, filterItem := range filter {
+		if filterItem.CmdControl != nil && filterItem.CmdControl.Delete != nil {
+			selector := filterItem.ElectricalConnectionPermittedValueSetListDataSelectors
+			if selector != nil && selector.ElectricalConnectionId != nil && selector.ParameterId != nil {
+
+				connectionID := uint(*selector.ElectricalConnectionId)
+				parameterID := uint(*selector.ParameterId)
+
+				newValueSetData := make([]ElectricalConnectionPermittedDataType, 0)
+				for _, item := range f.permittedData {
+					if connectionID != uint(item.ElectricalConnectionId) || parameterID != uint(item.ParameterId) {
+						newValueSetData = append(newValueSetData, item)
+					}
+				}
+				f.permittedData = newValueSetData
+			}
+		}
+	}
+
 	for _, item := range data.ElectricalConnectionPermittedValueSetData {
-		newItem := ElectricalConnectionPermittedDataType{
+		if item.ElectricalConnectionId == nil || item.ParameterId == nil {
+			continue
+		}
+
+		dataSetItem := ElectricalConnectionPermittedDataType{
 			ElectricalConnectionId: uint(*item.ElectricalConnectionId),
 			ParameterId:            uint(*item.ParameterId),
 		}
+
+		replaceIndex := -1
+		if isPartialForCmd {
+			for index, datasetItem := range f.permittedData {
+				if datasetItem.ElectricalConnectionId == uint(*item.ElectricalConnectionId) && datasetItem.ParameterId == uint(*item.ParameterId) {
+					replaceIndex = index
+					break
+				}
+			}
+		}
+
 		if len(item.PermittedValueSet) > 0 {
 			valueData := item.PermittedValueSet[0].Value
 			if len(valueData) > 0 {
 				valueItem := valueData[0]
-				newItem.Value = valueItem.GetValue()
+				dataSetItem.Value = valueItem.GetValue()
 			}
 			rangeData := item.PermittedValueSet[0].Range
 			if len(rangeData) > 0 {
 				rangeValue := rangeData[0]
-				newItem.MinValue = rangeValue.Min.GetValue()
-				newItem.MaxValue = rangeValue.Max.GetValue()
+				if rangeValue.Min != nil {
+					dataSetItem.MinValue = rangeValue.Min.GetValue()
+				}
+				if rangeValue.Max != nil {
+					dataSetItem.MaxValue = rangeValue.Max.GetValue()
+				}
 			}
-			f.permittedData = append(f.permittedData, newItem)
+		}
+		if replaceIndex != -1 {
+			f.permittedData[replaceIndex] = dataSetItem
+		} else {
+			f.permittedData = append(f.permittedData, dataSetItem)
 		}
 	}
 
@@ -270,10 +370,10 @@ func (f *ElectricalConnection) Handle(ctrl spine.Context, rf model.FeatureAddres
 		data := cmd.ElectricalConnectionPermittedValueSetListData
 		switch op {
 		case model.CmdClassifierTypeReply:
-			return f.replyPermittedValueSetData(ctrl, *data)
+			return f.replyPermittedValueSetData(ctrl, *data, isPartialForCmd, cmd.Filter)
 
 		case model.CmdClassifierTypeNotify:
-			return f.replyPermittedValueSetData(ctrl, *data)
+			return f.replyPermittedValueSetData(ctrl, *data, isPartialForCmd, cmd.Filter)
 
 		default:
 			return fmt.Errorf("electricalconnection.Handle: ElectricalConnectionPermittedValueSetListData CmdClassifierType not implemented: %s", op)

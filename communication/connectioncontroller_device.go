@@ -2,6 +2,7 @@ package communication
 
 import (
 	"fmt"
+	"reflect"
 
 	"github.com/evcc-io/eebus/spine"
 	"github.com/evcc-io/eebus/spine/model"
@@ -50,29 +51,9 @@ func (c *ConnectionController) UpdateDevice(stateChange model.NetworkManagementS
 
 		// TODO these actions should be usecase support specific!
 		ctx := c.context(nil)
-		err = c.sequencesController.StartSequenceFlow(ctx, SequenceEnumTypeEVDeviceConfiguration)
+		err = c.sequencesController.StartSequenceFlow(ctx, SequenceEnumTypeEV)
 		if err != nil {
-			c.log.Println("error processing EVDeviceConfiguration sequence")
-		}
-		err = c.sequencesController.StartSequenceFlow(ctx, SequenceEnumTypeEVDeviceClassification)
-		if err != nil {
-			c.log.Println("error processing EVDeviceClassification sequence")
-		}
-		err = c.sequencesController.StartSequenceFlow(ctx, SequenceEnumTypeEVMeasurement)
-		if err != nil {
-			c.log.Println("error processing EVMeasurement sequence")
-		}
-		err = c.sequencesController.StartSequenceFlow(ctx, SequenceEnumTypeEVIdentification)
-		if err != nil {
-			c.log.Println("error processing EVIdentification sequence")
-		}
-		err = c.sequencesController.StartSequenceFlow(ctx, SequenceEnumTypeEVLoadControl)
-		if err != nil {
-			c.log.Println("error processing EVLoadControl sequence")
-		}
-		err = c.sequencesController.StartSequenceFlow(ctx, SequenceEnumTypeEVCoordinatedCharging)
-		if err != nil {
-			c.log.Println("error processing EVCoordinatedCharging sequence")
+			c.log.Println("error processing EV sequence")
 		}
 
 		le := c.localDevice.EntityByType(model.EntityTypeType(model.EntityTypeEnumTypeCEM))
@@ -92,6 +73,14 @@ func (c *ConnectionController) UpdateDevice(stateChange model.NetworkManagementS
 		c.log.Println("detected ev disconnection")
 		c.clientData.EVData.ChargeState = EVChargeStateEnumTypeUnplugged
 		c.remoteDevice.ResetUseCaseActors()
+
+		// reset all the EV relevant features data
+		for _, entity := range c.localDevice.GetEntities() {
+			for _, feature := range entity.GetFeatures() {
+				feature.EVDisconnect()
+			}
+		}
+
 		c.callDataUpdateHandler(EVDataElementUpdateEVConnectionState)
 	}
 }
@@ -99,15 +88,7 @@ func (c *ConnectionController) UpdateDevice(stateChange model.NetworkManagementS
 // TODO move this into NodeManagement feature implementation
 func (c *ConnectionController) requestNodeManagementDetailedDiscoveryData() error {
 	cmdClassifier := model.CmdClassifierTypeRead
-
-	deviceInfoE := c.localDevice.EntityByType(model.EntityTypeType(model.EntityTypeEnumTypeDeviceInformation))
-	nodeMgmtF := deviceInfoE.FeatureByProps(model.FeatureTypeEnumTypeNodeManagement, model.RoleTypeSpecial)
-
-	var feature0 model.AddressFeatureType = 0
-	featureDestination := model.FeatureAddressType{
-		Entity:  []model.AddressEntityType{0},
-		Feature: &feature0,
-	}
+	nodeMgmtF, featureDestination := c.remoteNodeManagementFeature()
 
 	datagram := model.DatagramType{
 		Header: model.HeaderType{
@@ -129,16 +110,7 @@ func (c *ConnectionController) requestNodeManagementDetailedDiscoveryData() erro
 
 func (c *ConnectionController) requestNodeManagementUseCaseData() error {
 	cmdClassifier := model.CmdClassifierTypeRead
-
-	deviceInfoE := c.localDevice.EntityByType(model.EntityTypeType(model.EntityTypeEnumTypeDeviceInformation))
-	nodeMgmtF := deviceInfoE.FeatureByProps(model.FeatureTypeEnumTypeNodeManagement, model.RoleTypeSpecial)
-
-	var feature0 model.AddressFeatureType = 0
-	featureDestination := model.FeatureAddressType{
-		Device:  c.remoteDevice.Information().Description.DeviceAddress.Device,
-		Entity:  []model.AddressEntityType{0},
-		Feature: &feature0,
-	}
+	nodeMgmtF, featureDestination := c.remoteNodeManagementFeature()
 
 	datagram := model.DatagramType{
 		Header: model.HeaderType{
@@ -156,6 +128,23 @@ func (c *ConnectionController) requestNodeManagementUseCaseData() error {
 	}
 
 	return c.sendSpineMessage(datagram)
+}
+
+func (c *ConnectionController) remoteNodeManagementFeature() (spine.Feature, model.FeatureAddressType) {
+	deviceInfoE := c.localDevice.EntityByType(model.EntityTypeType(model.EntityTypeEnumTypeDeviceInformation))
+	nodeMgmtF := deviceInfoE.FeatureByProps(model.FeatureTypeEnumTypeNodeManagement, model.RoleTypeSpecial)
+
+	var feature0 model.AddressFeatureType = 0
+	featureDestination := model.FeatureAddressType{
+		Entity:  []model.AddressEntityType{0},
+		Feature: &feature0,
+	}
+
+	if c.remoteDevice != nil {
+		featureDestination.Device = c.remoteDevice.Information().Description.DeviceAddress.Device
+	}
+
+	return nodeMgmtF, featureDestination
 }
 
 func (c *ConnectionController) callNodeManagementBindingRequest(lf, rf spine.Feature, featureType model.FeatureTypeType) (*model.MsgCounterType, error) {
@@ -197,4 +186,14 @@ func (c *ConnectionController) featureAddressForTypeAndRole(device spine.Device,
 
 	address := spine.FeatureAddressType(feature)
 	return address, nil
+}
+
+func (c *ConnectionController) featureTypeForAddress(entity spine.Entity, address *model.FeatureAddressType) (model.FeatureTypeEnumType, error) {
+	for _, f := range entity.GetFeatures() {
+		if reflect.DeepEqual(f.GetAddress(), address) {
+			return f.GetType(), nil
+		}
+	}
+
+	return "", fmt.Errorf("couldn't find feature with address %v", address)
 }

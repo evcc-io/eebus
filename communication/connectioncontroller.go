@@ -3,8 +3,11 @@ package communication
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"reflect"
+	"sort"
 	"sync"
+	"time"
 
 	"github.com/evcc-io/eebus/device"
 	"github.com/evcc-io/eebus/device/feature"
@@ -12,6 +15,7 @@ import (
 	"github.com/evcc-io/eebus/spine"
 	"github.com/evcc-io/eebus/spine/model"
 	"github.com/evcc-io/eebus/util"
+	"github.com/rickb777/date/period"
 )
 
 type ConnectionController struct {
@@ -25,6 +29,7 @@ type ConnectionController struct {
 	sequencesController  *SequencesController
 	stopMux              sync.Mutex
 	stopHeartbeatC       chan struct{}
+	stopKeepSpineAliveC  chan struct{}
 	subscriptionEntries  []model.SubscriptionManagementEntryDataType
 	specificationVersion model.SpecificationVersionType
 	// EV specific data
@@ -34,12 +39,23 @@ type ConnectionController struct {
 }
 
 func NewConnectionController(log util.Logger, conn ship.Conn, local spine.Device) *ConnectionController {
+	clientData := EVSEClientDataType{
+		EVData: EVDataType{
+			ConnectedPhases: 1,
+			Limits:          make(map[uint]EVCurrentLimitType),
+			Measurements: EVMeasurementsType{
+				Current: make(map[uint]float64),
+				Power:   make(map[uint]float64),
+			},
+		},
+	}
+
 	c := &ConnectionController{
 		log:                  log,
 		conn:                 conn,
 		specificationVersion: device.SpecificationVersion,
 		localDevice:          local,
-		clientData:           &EVSEClientDataType{},
+		clientData:           &clientData,
 		sequencesController:  NewSequencesController(log),
 	}
 
@@ -103,6 +119,7 @@ func (c *ConnectionController) Boot() error {
 	c.sequencesController.Boot()
 
 	go c.Run()
+	go c.keepSpineAlive()
 
 	err := c.requestNodeManagementDetailedDiscoveryData()
 	if err != nil {
@@ -110,6 +127,12 @@ func (c *ConnectionController) Boot() error {
 	}
 
 	return err
+}
+
+func (c *ConnectionController) CloseConnection(err error) {
+	c.stopKeepSpineAlive()
+	c.stopHeartbeat()
+	_ = c.conn.Close()
 }
 
 func (c *ConnectionController) Run() {
@@ -144,9 +167,56 @@ func (c *ConnectionController) Run() {
 		c.log.Println("error processing incoming message: ", err)
 	}
 
+	c.stopKeepSpineAlive()
 	c.stopHeartbeat()
 	_ = c.conn.Close()
 }
+
+// Workaround for Elli Charger closing the connection 10 minutes after the last message
+// when no EV is connected and no more messages are exchanged in that timeframe.
+
+func (c *ConnectionController) IsKeepAliveClosed() bool {
+	select {
+	case <-c.stopKeepSpineAliveC:
+		return true
+	default:
+	}
+
+	return false
+}
+
+func (c *ConnectionController) stopKeepSpineAlive() {
+	if c.stopKeepSpineAliveC != nil && !c.IsKeepAliveClosed() {
+		close(c.stopKeepSpineAliveC)
+	}
+}
+
+func (c *ConnectionController) keepSpineAlive() {
+	c.stopKeepSpineAliveC = make(chan struct{})
+	ticker := time.NewTicker(8 * time.Minute)
+
+	for {
+		select {
+		case <-ticker.C:
+			brand := c.clientData.EVSEData.Manufacturer.BrandName
+			if c.remoteDevice == nil || brand == "" {
+				continue
+			}
+			// is this an Elli device?
+			if brand != "Elli" {
+				return
+			}
+			if err := c.requestNodeManagementUseCaseData(); err != nil {
+				c.log.Println("Sending UseCaseData read request failed: ", err)
+				return
+			}
+		case <-c.stopKeepSpineAliveC:
+			return
+		}
+	}
+}
+
+// end workaround
 
 // Feature specific
 
@@ -252,6 +322,9 @@ func (c *ConnectionController) updateMeasurementData() {
 	var measurementChargeID uint
 	var measurementSoCID uint
 
+	// Default voltage is 230V
+	voltage := 230.0
+
 	for _, item := range measurementDescription {
 		switch item.ScopeType {
 		case model.ScopeTypeEnumTypeACCurrent:
@@ -285,9 +358,9 @@ func (c *ConnectionController) updateMeasurementData() {
 	}
 
 	// TODO this needs to be improved (a lot)
+	powerLimitsUpdated := false
+	amperageLimitsUpdated := false
 	for _, epdItem := range electricalPermittedData {
-		powerLimitsUpdated := false
-		amperageLimitsUpdated := false
 		for _, epItem := range electricalParameterDescription {
 			if epItem.ParameterId == epdItem.ParameterId {
 				if epItem.ScopeType == model.ScopeTypeEnumTypeACPowerTotal {
@@ -300,96 +373,97 @@ func (c *ConnectionController) updateMeasurementData() {
 						powerLimitsUpdated = true
 					}
 				} else if epItem.Phase > 0 {
-					switch epItem.Phase {
-					case 1:
-						if c.clientData.EVData.LimitsL1.Min != epdItem.MinValue {
-							c.clientData.EVData.LimitsL1.Min = epdItem.MinValue
-							amperageLimitsUpdated = true
-						}
-						if c.clientData.EVData.LimitsL1.Max != epdItem.MaxValue {
-							c.clientData.EVData.LimitsL1.Max = epdItem.MaxValue
-							amperageLimitsUpdated = true
-						}
-						if c.clientData.EVData.LimitsL1.Default != epdItem.Value {
-							c.clientData.EVData.LimitsL1.Default = epdItem.Value
-							amperageLimitsUpdated = true
-						}
-					case 2:
-						if c.clientData.EVData.LimitsL2.Min != epdItem.MinValue {
-							c.clientData.EVData.LimitsL2.Min = epdItem.MinValue
-							amperageLimitsUpdated = true
-						}
-						if c.clientData.EVData.LimitsL2.Max != epdItem.MaxValue {
-							c.clientData.EVData.LimitsL2.Max = epdItem.MaxValue
-							amperageLimitsUpdated = true
-						}
-						if c.clientData.EVData.LimitsL2.Default != epdItem.Value {
-							c.clientData.EVData.LimitsL2.Default = epdItem.Value
-							amperageLimitsUpdated = true
-						}
-					case 3:
-						if c.clientData.EVData.LimitsL3.Min != epdItem.MinValue {
-							c.clientData.EVData.LimitsL3.Min = epdItem.MinValue
-							amperageLimitsUpdated = true
-						}
-						if c.clientData.EVData.LimitsL3.Max != epdItem.MaxValue {
-							c.clientData.EVData.LimitsL3.Max = epdItem.MaxValue
-							amperageLimitsUpdated = true
-						}
-						if c.clientData.EVData.LimitsL3.Default != epdItem.Value {
-							c.clientData.EVData.LimitsL3.Default = epdItem.Value
-							amperageLimitsUpdated = true
-						}
+					phaseLimit, ok := c.clientData.EVData.Limits[epItem.Phase]
+					if !ok {
+						phaseLimit = EVCurrentLimitType{}
+						c.clientData.EVData.Limits[epItem.Phase] = phaseLimit
 					}
-				}
-			}
-		}
-		if amperageLimitsUpdated {
-			// Min current data should be derived from min power data
-			// but as this is only properly provided via VAS the currrent
-			// min values can not be trusted.
-			// Min current for 3-phase should be at least 2.2A, for 1-phase 6.6A
 
-			if c.clientData.EVData.ConnectedPhases == 1 {
-				minCurrent := 6.6
-				if c.clientData.EVData.LimitsL1.Min < minCurrent {
-					c.clientData.EVData.LimitsL1.Min = minCurrent
-				}
-			} else if c.clientData.EVData.ConnectedPhases == 3 {
-				minCurrent := 2.2
-				if c.clientData.EVData.LimitsL1.Min < minCurrent {
-					c.clientData.EVData.LimitsL1.Min = minCurrent
-				}
-				if c.clientData.EVData.LimitsL2.Min < minCurrent {
-					c.clientData.EVData.LimitsL2.Min = minCurrent
-				}
-				if c.clientData.EVData.LimitsL3.Min < minCurrent {
-					c.clientData.EVData.LimitsL3.Min = minCurrent
+					if phaseLimit.Min != epdItem.MinValue {
+						phaseLimit.Min = epdItem.MinValue
+						amperageLimitsUpdated = true
+					}
+					if phaseLimit.Max != epdItem.MaxValue {
+						phaseLimit.Max = epdItem.MaxValue
+						amperageLimitsUpdated = true
+					}
+					if phaseLimit.Default != epdItem.Value {
+						phaseLimit.Default = epdItem.Value
+						amperageLimitsUpdated = true
+					}
+					c.clientData.EVData.Limits[epItem.Phase] = phaseLimit
 				}
 			}
-			c.callDataUpdateHandler(EVDataElementUpdateAmperageLimits)
-		}
-		if powerLimitsUpdated {
-			// Min power data is only properly provided via VAS in ISO15118-2!
-			// So use the known min limits and calculate a more likely min power
-			if c.clientData.EVData.ConnectedPhases == 1 {
-				minPower := c.clientData.EVData.LimitsL1.Min * 230
-				if c.clientData.EVData.LimitsPower.Min < minPower {
-					c.clientData.EVData.LimitsPower.Min = minPower
-				}
-			} else if c.clientData.EVData.ConnectedPhases == 3 {
-				minPower := c.clientData.EVData.LimitsL1.Min*230 + c.clientData.EVData.LimitsL2.Min*230 + c.clientData.EVData.LimitsL3.Min*230
-				if c.clientData.EVData.LimitsPower.Min < minPower {
-					c.clientData.EVData.LimitsPower.Min = minPower
-				}
-			}
-			c.callDataUpdateHandler(EVDataElementUpdatePowerLimits)
 		}
 	}
+
+	if amperageLimitsUpdated {
+		// Min current data should be derived from min power data
+		// but as this is only properly provided via VAS the currrent
+		// min values can not be trusted.
+		// Min current for 3-phase should be at least 2.2A (ISO)
+
+		minTotalPower := 0.0
+		var phase uint
+		for phase = 1; phase <= c.clientData.EVData.ConnectedPhases; phase++ {
+			minTotalPower += c.clientData.EVData.Limits[phase].Min * voltage
+		}
+
+		minCurrent := 6.0
+		switch c.clientData.EVData.CommunicationStandard {
+		case EVCommunicationStandardEnumTypeISO151182ED1, EVCommunicationStandardEnumTypeISO151182ED2:
+			if c.clientData.EVData.ConnectedPhases == 3 {
+				minCurrent = 2.2
+			}
+		}
+
+		if minTotalPower < c.clientData.EVData.LimitsPower.Min {
+			// Adjust min current to match min power
+			minCurrent = c.clientData.EVData.LimitsPower.Min / voltage / float64(c.clientData.EVData.ConnectedPhases)
+		}
+
+		var thePhase uint
+		for thePhase = 1; thePhase <= c.clientData.EVData.ConnectedPhases; thePhase++ {
+			if phaseLimit, ok := c.clientData.EVData.Limits[thePhase]; ok {
+				if phaseLimit.Min < minCurrent {
+					phaseLimit.Min = minCurrent
+					c.clientData.EVData.Limits[thePhase] = phaseLimit
+				}
+			}
+		}
+		c.callDataUpdateHandler(EVDataElementUpdateAmperageLimits)
+	}
+
+	if !powerLimitsUpdated || c.clientData.EVData.LimitsPower.Min <= 100.0 || c.clientData.EVData.LimitsPower.Max <= 100.0 {
+		// Min power data is only properly provided via VAS in ISO15118-2!
+		// So use the known min limits and calculate a more likely min power
+		var thePhase uint
+		var minPower, maxPower float64
+		for thePhase = 1; thePhase <= c.clientData.EVData.ConnectedPhases; thePhase++ {
+			if _, ok := c.clientData.EVData.Limits[thePhase]; !ok {
+				continue
+			}
+
+			minPower += c.clientData.EVData.Limits[thePhase].Min * voltage
+			maxPower += c.clientData.EVData.Limits[thePhase].Max * voltage
+		}
+		if c.clientData.EVData.LimitsPower.Min < minPower {
+			c.clientData.EVData.LimitsPower.Min = minPower
+		}
+		if c.clientData.EVData.LimitsPower.Max != maxPower {
+			c.clientData.EVData.LimitsPower.Max = maxPower
+		}
+
+		c.callDataUpdateHandler(EVDataElementUpdatePowerLimits)
+	}
+
 	c.log.Println("limits: ")
-	c.log.Println("  L1 current: min ", c.clientData.EVData.LimitsL1.Min, "A, max ", c.clientData.EVData.LimitsL1.Max, "A, pause ", c.clientData.EVData.LimitsL1.Default, "A")
-	c.log.Println("  L2 current: min ", c.clientData.EVData.LimitsL2.Min, "A, max ", c.clientData.EVData.LimitsL2.Max, "A, pause ", c.clientData.EVData.LimitsL2.Default, "A")
-	c.log.Println("  L3 current: min ", c.clientData.EVData.LimitsL3.Min, "A, max ", c.clientData.EVData.LimitsL3.Max, "A, pause ", c.clientData.EVData.LimitsL3.Default, "A")
+	var thePhase uint
+	for thePhase = 1; thePhase <= c.clientData.EVData.ConnectedPhases; thePhase++ {
+		if phaseLimits, ok := c.clientData.EVData.Limits[thePhase]; ok {
+			c.log.Printf("  L%d current: min %.1fA, max %.1fA, pause %.1fA\n", thePhase, phaseLimits.Min, phaseLimits.Max, phaseLimits.Default)
+		}
+	}
 	c.log.Println("       Power: min ", c.clientData.EVData.LimitsPower.Min, "W, max ", c.clientData.EVData.LimitsPower.Max, "W")
 
 	for _, item := range measurementData {
@@ -400,40 +474,72 @@ func (c *ConnectionController) updateMeasurementData() {
 			c.clientData.EVData.SoCDataAvailable = true
 			c.clientData.EVData.Measurements.SoC = item.Value
 		}
+
+		phase := measurementIdsToPhase[item.MeasurementId]
+
 		_, found := FindValueInSlice(measurementCurrentIds, item.MeasurementId)
 		if found {
 			c.clientData.EVData.Measurements.Timestamp = item.Timestamp
-			switch measurementIdsToPhase[item.MeasurementId] {
-			case 1:
-				c.clientData.EVData.Measurements.CurrentL1 = item.Value
-			case 2:
-				c.clientData.EVData.Measurements.CurrentL2 = item.Value
-			case 3:
-				c.clientData.EVData.Measurements.CurrentL3 = item.Value
-			default:
-			}
+			c.clientData.EVData.Measurements.Current[phase] = item.Value
 		}
+
 		_, found = FindValueInSlice(measurementPowerIds, item.MeasurementId)
 		if found {
 			c.clientData.EVData.Measurements.Timestamp = item.Timestamp
-			switch measurementIdsToPhase[item.MeasurementId] {
-			case 1:
-				c.clientData.EVData.Measurements.PowerL1 = item.Value
-			case 2:
-				c.clientData.EVData.Measurements.PowerL2 = item.Value
-			case 3:
-				c.clientData.EVData.Measurements.PowerL3 = item.Value
-			default:
+
+			if phaseCurrent, ok := c.clientData.EVData.Measurements.Current[phase]; ok {
+				// in case we didn't receive power measurements, use current measurements
+				if item.Value == 0 && phaseCurrent != 0 {
+					c.log.Printf("L%d power fallback\n", phase)
+					item.Value = phaseCurrent * voltage
+				}
+			}
+			c.clientData.EVData.Measurements.Power[phase] = item.Value
+		} else {
+			c.clientData.EVData.Measurements.Timestamp = item.Timestamp
+			item.Value = 0
+
+			if phaseCurrent, ok := c.clientData.EVData.Measurements.Current[phase]; ok {
+				// in case we didn't receive power measurements, use current measurements
+				if phaseCurrent != 0 {
+					c.log.Printf("L%d power fallback\n", phase)
+					item.Value = phaseCurrent * voltage
+				}
+			}
+			c.clientData.EVData.Measurements.Power[phase] = item.Value
+		}
+	}
+
+	if len(measurementPowerIds) == 0 {
+		// we did not receive any Power measurements, so calculate them
+		var phase uint
+		for phase = 1; phase <= c.clientData.EVData.ConnectedPhases; phase++ {
+			if phaseCurrent, ok := c.clientData.EVData.Measurements.Current[phase]; ok {
+				c.clientData.EVData.Measurements.Power[phase] = phaseCurrent * voltage
 			}
 		}
 	}
-	c.log.Println("phases: ", c.clientData.EVData.ConnectedPhases, ", charged energy: ", c.clientData.EVData.Measurements.ChargedEnergy, "Wh")
-	c.log.Println("current current: L1 ", c.clientData.EVData.Measurements.CurrentL1, "A, L2 ", c.clientData.EVData.Measurements.CurrentL2, "A L3 ", c.clientData.EVData.Measurements.CurrentL3, "A")
-	c.log.Println("current power: L1 ", c.clientData.EVData.Measurements.PowerL1, "W, L2 ", c.clientData.EVData.Measurements.PowerL2, "W L3 ", c.clientData.EVData.Measurements.PowerL3, "W")
 
-	// TODO REMOVE THIS, this is for testing only!!!
-	// currentsPerPhase := []float64{0, 0, 0}
-	// c.WriteCurrentLimitData(currentsPerPhase)
+	c.log.Println("phases: ", c.clientData.EVData.ConnectedPhases, ", charged energy: ", c.clientData.EVData.Measurements.ChargedEnergy, "Wh")
+
+	var phase uint
+	var totalPower float64
+	currentsLog := "current currents: "
+	powerLog := "current power: "
+
+	for phase = 1; phase <= c.clientData.EVData.ConnectedPhases; phase++ {
+		if phaseCurrent, ok := c.clientData.EVData.Measurements.Current[phase]; ok {
+			currentsLog += fmt.Sprintf("L%d %.1fA ", phase, phaseCurrent)
+		}
+		if phasePower, ok := c.clientData.EVData.Measurements.Power[phase]; ok {
+			totalPower += phasePower
+			powerLog += fmt.Sprintf("L%d %.1fW ", phase, phasePower)
+		}
+	}
+	powerLog += fmt.Sprintf("total %.1fW", totalPower)
+
+	c.log.Println(currentsLog)
+	c.log.Println(powerLog)
 }
 
 func (c *ConnectionController) UpdateElectricalConnectionData(f *feature.ElectricalConnection) {
@@ -536,43 +642,215 @@ func (c *ConnectionController) UpdateLoadControlLimitData(f *feature.LoadControl
 	}
 }
 
-func (c *ConnectionController) UpdateTimeSeriesData(f *feature.TimeSeries) {
+func (c *ConnectionController) UpdateTimeSeriesDescriptionData(f *feature.TimeSeries) {
 	timeSeriesDescriptionData := f.GetTimeSeriesDescriptionData()
-	timeSeriesData := f.GetTimeSeriesData()
+
+	for _, item := range timeSeriesDescriptionData {
+		// TODO: add processing
+		switch item.TimeSeriesType {
+		case model.TimeSeriesTypeEnumTypeConstraints:
+			if item.UpdateRequired {
+				// we need to send a response with a plan (within 20s or something like that)
+				c.callDataUpdateHandler(EVDataElementUpdateChargingPlanRequired)
+			}
+			return
+		case model.TimeSeriesTypeEnumTypePlan:
+			return
+		case model.TimeSeriesTypeEnumTypeSingleDemand:
+			return
+		}
+	}
+}
+
+func (c *ConnectionController) UpdateTimeSeriesData(f *feature.TimeSeries, timeSeriesData feature.TimeSeriesDatasetType) {
+	timeSeriesDescriptionData := f.GetTimeSeriesDescriptionData()
 
 	c.clientData.EVData.ChargingStrategy = EVChargingStrategyEnumTypeUnknown
 
-	if timeSeriesDescriptionData == nil || timeSeriesData == nil {
+	if timeSeriesDescriptionData == nil {
 		return
 	}
 
-	for _, item := range timeSeriesDescriptionData {
-		for _, dataItem := range timeSeriesData {
-			if dataItem.TimeSeriesId == item.TimeSeriesId {
-				// TODO: add processing
-				switch item.TimeSeriesType {
-				case model.TimeSeriesTypeEnumTypeConstraints:
-					return
-				case model.TimeSeriesTypeEnumTypePlan:
-					return
-				case model.TimeSeriesTypeEnumTypeSingleDemand:
-					demand := dataItem.TimeSeriesSlots[0].Value.GetValue()
-					if demand > 0 {
-						// if demand is > 0 and duration is not existing, the EV is not charging via a timer
-						// but either via direct charging enabled or charging to minimum SoC using a profile
-						if dataItem.TimeSeriesSlots[0].Duration == nil {
-							c.clientData.EVData.ChargingStrategy = EVChargingStrategyEnumTypeDirectCharging
-						} else {
-							c.clientData.EVData.ChargingStrategy = EVChargingStrategyEnumTypeTimedCharging
-						}
-					} else {
-						c.clientData.EVData.ChargingStrategy = EVChargingStrategyEnumTypeNoDemand
-					}
+	timeSeriesType, err := f.GetTimeSeriesTypeForId(timeSeriesData.TimeSeriesId)
+	if err != nil {
+		c.log.Printf("Error getting Time Series Type for ID %d: %s\n", timeSeriesData.TimeSeriesId, err)
+		return
+	}
+
+	// TODO: add processing
+	switch timeSeriesType {
+	case model.TimeSeriesTypeEnumTypeConstraints:
+		return
+	case model.TimeSeriesTypeEnumTypePlan:
+		output := "EV informed about its charging plan:\n"
+		if timeSeriesData.TimePeriod == nil {
+			c.log.Printf("The time series plan is empty %d\n", timeSeriesData.TimeSeriesId)
+			return
+		}
+		if timeSeriesData.TimePeriod.StartTime != nil {
+			output += fmt.Sprintf("\tStartTime: %s\n", *timeSeriesData.TimePeriod.StartTime)
+		}
+		if timeSeriesData.TimePeriod.EndTime != nil {
+			output += fmt.Sprintf("\tEndTime: %s\n", *timeSeriesData.TimePeriod.EndTime)
+		}
+		for _, slot := range timeSeriesData.TimeSeriesSlots {
+			output += fmt.Sprintf("\t%.1f: %s\n", slot.MaxValue.GetValue(), *slot.Duration)
+		}
+		c.log.Println(output)
+		return
+	case model.TimeSeriesTypeEnumTypeSingleDemand:
+		if timeSeriesData.TimeSeriesSlots == nil {
+			c.log.Printf("The time series slots are empty %d\n", timeSeriesData.TimeSeriesId)
+			return
+		}
+		demand := timeSeriesData.TimeSeriesSlots[0].Value.GetValue()
+		c.clientData.EVData.ChargingDemand = demand / 1000 // return kWh
+		c.clientData.EVData.ChargingTargetDuration = time.Duration(24) * time.Hour
+
+		if demand > 0 {
+			// if demand is > 0 and duration is not existing, the EV is not charging via a timer
+			// but either via direct charging enabled or charging to minimum SoC using a profile
+			if timeSeriesData.TimeSeriesSlots[0].Duration == nil {
+				c.clientData.EVData.ChargingStrategy = EVChargingStrategyEnumTypeDirectCharging
+				c.log.Printf("EV is charging via direct charging. Demand: %.1f kWh\n", (demand / 1000))
+			} else {
+				p, err := period.Parse(*timeSeriesData.TimeSeriesSlots[0].Duration)
+				if err != nil {
+					c.log.Printf("Error parsing duration: %s\n", err)
 					return
 				}
+				c.clientData.EVData.ChargingTargetDuration, _ = p.Duration()
+				c.clientData.EVData.ChargingStrategy = EVChargingStrategyEnumTypeTimedCharging
+				c.log.Printf("EV is charging via timed charging. Demand: %.1f kWh, Duration: %s\n", (demand / 1000), c.clientData.EVData.ChargingTargetDuration.String())
 			}
+		} else {
+			c.clientData.EVData.ChargingStrategy = EVChargingStrategyEnumTypeNoDemand
+			c.log.Println("EV not reporting a demand")
+		}
+		c.callDataUpdateHandler(EVDataElementUpdateChargingStrategy)
+		return
+	}
+}
+
+func (c *ConnectionController) UpdateIncentiveConstraintsData(f *feature.IncentiveTable) {
+	// we received tariff, tiers, boundaries, incentives and slotcount limits
+
+	// now we need to reply with the incentiveTableDescription
+
+	if c.remoteDevice == nil {
+		// errors.New("charger is not connected")
+		return
+	}
+
+	evEntity := c.remoteDevice.EntityByType(model.EntityTypeType(model.EntityTypeEnumTypeEV))
+	if evEntity == nil {
+		// errors.New("no ev connected")
+		return
+	}
+
+	rf := evEntity.FeatureByProps(model.FeatureTypeEnumTypeLoadControl, model.RoleTypeServer)
+
+	ctx := c.context(nil)
+
+	lf := c.localDevice.EntityByType(model.EntityTypeType(model.EntityTypeEnumTypeCEM)).FeatureByProps(model.FeatureTypeEnumTypeIncentiveTable, model.RoleTypeClient)
+	if l, ok := lf.(*feature.IncentiveTable); ok {
+		_ = l.WriteDescriptionData(ctx, rf)
+	}
+}
+
+func (c *ConnectionController) WriteChargingPlan(chargingPlan EVChargingPlan) error {
+	if c.remoteDevice == nil {
+		return errors.New("charger is not connected")
+	}
+
+	evEntity := c.remoteDevice.EntityByType(model.EntityTypeType(model.EntityTypeEnumTypeEV))
+	if evEntity == nil {
+		return errors.New("no ev connected")
+	}
+
+	ctx := c.context(nil)
+
+	// at first we need to send the power limits plan
+	lf := c.localDevice.EntityByType(model.EntityTypeType(model.EntityTypeEnumTypeCEM)).FeatureByProps(model.FeatureTypeEnumTypeTimeSeries, model.RoleTypeClient)
+	l, ok := lf.(*feature.TimeSeries)
+
+	if !ok {
+		return errors.New("timeseries feature is not available on local device")
+	}
+
+	rf := evEntity.FeatureByProps(model.FeatureTypeEnumTypeTimeSeries, model.RoleTypeServer)
+
+	timeSeriesSlots := []feature.TimeSeriesChargingSlot{}
+	for _, slot := range chargingPlan.Slots {
+		timeSeriesSlots = append(timeSeriesSlots, feature.TimeSeriesChargingSlot{
+			MaxValue: slot.MaxValue,
+			Duration: slot.Duration,
+		})
+	}
+
+	timeSeriesChargingPlan := feature.TimeSeriesChargingPlan{
+		Duration: chargingPlan.Duration,
+		Slots:    timeSeriesSlots,
+	}
+
+	output := "Sending time Series slots:\n"
+	for index, slot := range timeSeriesSlots {
+		if index > 0 && index%4 == 0 {
+			output += "\n"
+		}
+		output += fmt.Sprintf("\t%.1f: %s", slot.MaxValue, slot.Duration.String())
+		if (index + 1) == len(timeSeriesSlots) {
+			output += "\n"
 		}
 	}
+	c.log.Println(output)
+
+	if err := l.WriteTimeSeriesPlanData(ctx, rf, timeSeriesChargingPlan); err != nil {
+		c.log.Println("error sending loadcontrol limits ", err)
+		return err
+	}
+
+	// now we need to send the incentive plan
+	lf2 := c.localDevice.EntityByType(model.EntityTypeType(model.EntityTypeEnumTypeCEM)).FeatureByProps(model.FeatureTypeEnumTypeIncentiveTable, model.RoleTypeClient)
+	l2, ok := lf2.(*feature.IncentiveTable)
+
+	if !ok {
+		return errors.New("incentivetable feature is not available on local device")
+	}
+
+	rf2 := evEntity.FeatureByProps(model.FeatureTypeEnumTypeIncentiveTable, model.RoleTypeServer)
+
+	incentiveSlots := []feature.IncentiveChargingSlot{}
+	for _, slot := range chargingPlan.Slots {
+		incentiveSlots = append(incentiveSlots, feature.IncentiveChargingSlot{
+			Pricing:  slot.Pricing,
+			Duration: slot.Duration,
+		})
+	}
+
+	incentiveChargingPlan := feature.IncentiveChargingPlan{
+		Duration: chargingPlan.Duration,
+		Slots:    incentiveSlots,
+	}
+
+	output = "Sending incentive slots:\n"
+	for index, slot := range incentiveSlots {
+		if index > 0 && index%4 == 0 {
+			output += "\n"
+		}
+		output += fmt.Sprintf("\t%.3f: %s", slot.Pricing, slot.Duration.String())
+		if (index + 1) == len(incentiveSlots) {
+			output += "\n"
+		}
+	}
+	c.log.Println(output)
+
+	if err := l2.WriteIncentiveTablePlanData(ctx, rf2, incentiveChargingPlan); err != nil {
+		c.log.Println("error sending loadcontrol limits ", err)
+		return err
+	}
+
+	return nil
 }
 
 // TODO error handling and returning
@@ -647,47 +925,40 @@ func (c *ConnectionController) WriteCurrentLimitData(overloadProtectionCurrentsP
 				currentValue := current
 
 				var limitId model.LoadControlLimitIdType = 0
+				limitIdFound := false
 
 				for _, item := range limitDescription {
 					if item.MeasurementId == measurementId {
 						if (scopeTypes == 0 && item.ScopeType == model.ScopeTypeEnumTypeOverloadProtection) ||
 							(scopeTypes == 1 && item.ScopeType == model.ScopeTypeEnumTypeSelfConsumption) {
 							limitId = model.LoadControlLimitIdType(item.LimitId)
+							limitIdFound = true
 						}
 					}
 				}
 
-				switch index {
-				case 0:
-					if currentValue < evData.LimitsL1.Min {
-						currentValue = evData.LimitsL1.Default
-					}
-					if currentValue > evData.LimitsL1.Max {
-						currentValue = evData.LimitsL1.Max
-					}
-				case 1:
-					if currentValue < evData.LimitsL2.Min {
-						currentValue = evData.LimitsL2.Default
-					}
-					if currentValue > evData.LimitsL2.Max {
-						currentValue = evData.LimitsL2.Max
-					}
-				case 2:
-					if currentValue < evData.LimitsL3.Min {
-						currentValue = evData.LimitsL3.Default
-					}
-					if currentValue > evData.LimitsL3.Max {
-						currentValue = evData.LimitsL3.Max
-					}
+				if !limitIdFound {
+					continue
 				}
 
-				if limitId > 0 {
-					newItem := feature.LoadControlLimitDatasetType{
-						LimitId: uint(limitId),
-						Value:   currentValue,
-					}
-					limitItems = append(limitItems, newItem)
+				phase := uint(index) + 1
+				phaseLimits, ok := evData.Limits[phase]
+				if !ok {
+					continue
 				}
+
+				if currentValue < phaseLimits.Min {
+					currentValue = phaseLimits.Default
+				}
+				if currentValue > phaseLimits.Max {
+					currentValue = phaseLimits.Max
+				}
+
+				newItem := feature.LoadControlLimitDatasetType{
+					LimitId: uint(limitId),
+					Value:   currentValue,
+				}
+				limitItems = append(limitItems, newItem)
 			}
 		}
 	}
@@ -695,6 +966,10 @@ func (c *ConnectionController) WriteCurrentLimitData(overloadProtectionCurrentsP
 	if limitItems == nil {
 		return errors.New("no limits available")
 	}
+
+	sort.Slice(limitItems, func(i, j int) bool {
+		return limitItems[i].LimitId < limitItems[j].LimitId
+	})
 
 	ctx := c.context(nil)
 

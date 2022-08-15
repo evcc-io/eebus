@@ -52,20 +52,31 @@ func (c *ConnectionController) addSubscription(data model.SubscriptionManagement
 		remoteAddress, remoteErr = c.featureAddressForTypeAndRole(
 			c.remoteDevice,
 			"remote",
-			model.EntityTypeEnumTypeEVSE,
+			model.EntityTypeEnumType(c.remoteDevice.Entity(data.ClientAddress.Entity).GetType()),
 			model.FeatureTypeEnumType(*data.ServerFeatureType),
 			model.RoleTypeClient,
 		)
 
-		if localErr == nil && remoteErr == nil {
-			if reflect.DeepEqual(data.ServerAddress, localAddress) && reflect.DeepEqual(data.ClientAddress, remoteAddress) {
+		// quick hack for ID. Charger which sends a subscription from featureType "Generic" to featureType "DeviceDiagnosis"
+		altRemoteAddress, altRemoteErr := c.featureAddressForTypeAndRole(
+			c.remoteDevice,
+			"remote",
+			model.EntityTypeEnumType(c.remoteDevice.Entity(data.ClientAddress.Entity).GetType()),
+			model.FeatureTypeEnumTypeGeneric,
+			model.RoleTypeClient,
+		)
+
+		if localErr == nil && (remoteErr == nil || altRemoteErr == nil) {
+			if reflect.DeepEqual(data.ServerAddress, localAddress) && (reflect.DeepEqual(data.ClientAddress, remoteAddress) || reflect.DeepEqual(data.ClientAddress, altRemoteAddress)) {
 				requestAllowed = true
 			}
 		}
 	}
 
 	if !requestAllowed {
-		return errors.New("subscription request not conforming a request from a client to a server of the same type")
+		msg := "subscription request not conforming a request from a client to a server of the same type"
+		c.log.Println(msg)
+		return errors.New(msg)
 	}
 
 	subscriptionEntry := model.SubscriptionManagementEntryDataType{
