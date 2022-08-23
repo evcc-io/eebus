@@ -36,6 +36,9 @@ type ConnectionController struct {
 	clientData *EVSEClientDataType
 	// EVCC specific
 	dataUpdateHandler func(EVDataElementUpdateType, *EVSEClientDataType)
+
+	// defines the system voltage
+	Voltage float64
 }
 
 func NewConnectionController(log util.Logger, conn ship.Conn, local spine.Device) *ConnectionController {
@@ -57,6 +60,7 @@ func NewConnectionController(log util.Logger, conn ship.Conn, local spine.Device
 		localDevice:          local,
 		clientData:           &clientData,
 		sequencesController:  NewSequencesController(log),
+		Voltage:              230.0,
 	}
 
 	return c
@@ -322,9 +326,6 @@ func (c *ConnectionController) updateMeasurementData() {
 	var measurementChargeID uint
 	var measurementSoCID uint
 
-	// Default voltage is 230V
-	voltage := 230.0
-
 	for _, item := range measurementDescription {
 		switch item.ScopeType {
 		case model.ScopeTypeEnumTypeACCurrent:
@@ -406,7 +407,7 @@ func (c *ConnectionController) updateMeasurementData() {
 		minTotalPower := 0.0
 		var phase uint
 		for phase = 1; phase <= c.clientData.EVData.ConnectedPhases; phase++ {
-			minTotalPower += c.clientData.EVData.Limits[phase].Min * voltage
+			minTotalPower += c.clientData.EVData.Limits[phase].Min * c.Voltage
 		}
 
 		minCurrent := 6.0
@@ -419,7 +420,7 @@ func (c *ConnectionController) updateMeasurementData() {
 
 		if minTotalPower < c.clientData.EVData.LimitsPower.Min {
 			// Adjust min current to match min power
-			minCurrent = c.clientData.EVData.LimitsPower.Min / voltage / float64(c.clientData.EVData.ConnectedPhases)
+			minCurrent = c.clientData.EVData.LimitsPower.Min / c.Voltage / float64(c.clientData.EVData.ConnectedPhases)
 		}
 
 		var thePhase uint
@@ -444,8 +445,8 @@ func (c *ConnectionController) updateMeasurementData() {
 				continue
 			}
 
-			minPower += c.clientData.EVData.Limits[thePhase].Min * voltage
-			maxPower += c.clientData.EVData.Limits[thePhase].Max * voltage
+			minPower += c.clientData.EVData.Limits[thePhase].Min * c.Voltage
+			maxPower += c.clientData.EVData.Limits[thePhase].Max * c.Voltage
 		}
 		if c.clientData.EVData.LimitsPower.Min < minPower {
 			c.clientData.EVData.LimitsPower.Min = minPower
@@ -491,7 +492,7 @@ func (c *ConnectionController) updateMeasurementData() {
 				// in case we didn't receive power measurements, use current measurements
 				if item.Value == 0 && phaseCurrent != 0 {
 					c.log.Printf("L%d power fallback\n", phase)
-					item.Value = phaseCurrent * voltage
+					item.Value = phaseCurrent * c.Voltage
 				}
 			}
 			c.clientData.EVData.Measurements.Power[phase] = item.Value
@@ -503,7 +504,7 @@ func (c *ConnectionController) updateMeasurementData() {
 				// in case we didn't receive power measurements, use current measurements
 				if phaseCurrent != 0 {
 					c.log.Printf("L%d power fallback\n", phase)
-					item.Value = phaseCurrent * voltage
+					item.Value = phaseCurrent * c.Voltage
 				}
 			}
 			c.clientData.EVData.Measurements.Power[phase] = item.Value
@@ -515,7 +516,7 @@ func (c *ConnectionController) updateMeasurementData() {
 		var phase uint
 		for phase = 1; phase <= c.clientData.EVData.ConnectedPhases; phase++ {
 			if phaseCurrent, ok := c.clientData.EVData.Measurements.Current[phase]; ok {
-				c.clientData.EVData.Measurements.Power[phase] = phaseCurrent * voltage
+				c.clientData.EVData.Measurements.Power[phase] = phaseCurrent * c.Voltage
 			}
 		}
 	}
