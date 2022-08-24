@@ -2,6 +2,7 @@ package communication
 
 import (
 	"errors"
+	"sync"
 	"time"
 )
 
@@ -51,8 +52,8 @@ type EVSEClientDataType struct {
 
 type EVMeasurementsType struct {
 	Timestamp     time.Time
-	Current       map[uint]float64
-	Power         map[uint]float64
+	Current       sync.Map
+	Power         sync.Map
 	ChargedEnergy float64
 	SoC           float64
 }

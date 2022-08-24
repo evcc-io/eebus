@@ -47,8 +47,8 @@ func NewConnectionController(log util.Logger, conn ship.Conn, local spine.Device
 			ConnectedPhases: 1,
 			Limits:          make(map[uint]EVCurrentLimitType),
 			Measurements: EVMeasurementsType{
-				Current: make(map[uint]float64),
-				Power:   make(map[uint]float64),
+				Current: sync.Map{},
+				Power:   sync.Map{},
 			},
 		},
 	}
@@ -481,33 +481,33 @@ func (c *ConnectionController) updateMeasurementData() {
 		_, found := FindValueInSlice(measurementCurrentIds, item.MeasurementId)
 		if found {
 			c.clientData.EVData.Measurements.Timestamp = item.Timestamp
-			c.clientData.EVData.Measurements.Current[phase] = item.Value
+			c.clientData.EVData.Measurements.Current.Store(phase, item.Value)
 		}
 
 		_, found = FindValueInSlice(measurementPowerIds, item.MeasurementId)
 		if found {
 			c.clientData.EVData.Measurements.Timestamp = item.Timestamp
 
-			if phaseCurrent, ok := c.clientData.EVData.Measurements.Current[phase]; ok {
+			if phaseCurrent, ok := c.clientData.EVData.Measurements.Current.Load(phase); ok {
 				// in case we didn't receive power measurements, use current measurements
 				if item.Value == 0 && phaseCurrent != 0 {
 					c.log.Printf("L%d power fallback\n", phase)
-					item.Value = phaseCurrent * c.Voltage
+					item.Value = phaseCurrent.(float64) * c.Voltage
 				}
 			}
-			c.clientData.EVData.Measurements.Power[phase] = item.Value
+			c.clientData.EVData.Measurements.Power.Store(phase, item.Value)
 		} else {
 			c.clientData.EVData.Measurements.Timestamp = item.Timestamp
 			item.Value = 0
 
-			if phaseCurrent, ok := c.clientData.EVData.Measurements.Current[phase]; ok {
+			if phaseCurrent, ok := c.clientData.EVData.Measurements.Current.Load(phase); ok {
 				// in case we didn't receive power measurements, use current measurements
 				if phaseCurrent != 0 {
 					c.log.Printf("L%d power fallback\n", phase)
-					item.Value = phaseCurrent * c.Voltage
+					item.Value = phaseCurrent.(float64) * c.Voltage
 				}
 			}
-			c.clientData.EVData.Measurements.Power[phase] = item.Value
+			c.clientData.EVData.Measurements.Power.Store(phase, item.Value)
 		}
 	}
 
@@ -515,8 +515,8 @@ func (c *ConnectionController) updateMeasurementData() {
 		// we did not receive any Power measurements, so calculate them
 		var phase uint
 		for phase = 1; phase <= c.clientData.EVData.ConnectedPhases; phase++ {
-			if phaseCurrent, ok := c.clientData.EVData.Measurements.Current[phase]; ok {
-				c.clientData.EVData.Measurements.Power[phase] = phaseCurrent * c.Voltage
+			if phaseCurrent, ok := c.clientData.EVData.Measurements.Current.Load(phase); ok {
+				c.clientData.EVData.Measurements.Power.Store(phase, phaseCurrent.(float64)*c.Voltage)
 			}
 		}
 	}
@@ -529,11 +529,11 @@ func (c *ConnectionController) updateMeasurementData() {
 	powerLog := "current power: "
 
 	for phase = 1; phase <= c.clientData.EVData.ConnectedPhases; phase++ {
-		if phaseCurrent, ok := c.clientData.EVData.Measurements.Current[phase]; ok {
+		if phaseCurrent, ok := c.clientData.EVData.Measurements.Current.Load(phase); ok {
 			currentsLog += fmt.Sprintf("L%d %.1fA ", phase, phaseCurrent)
 		}
-		if phasePower, ok := c.clientData.EVData.Measurements.Power[phase]; ok {
-			totalPower += phasePower
+		if phasePower, ok := c.clientData.EVData.Measurements.Power.Load(phase); ok {
+			totalPower += phasePower.(float64)
 			powerLog += fmt.Sprintf("L%d %.1fW ", phase, phasePower)
 		}
 	}
@@ -855,7 +855,7 @@ func (c *ConnectionController) WriteChargingPlan(chargingPlan EVChargingPlan) er
 }
 
 // TODO error handling and returning
-func (c *ConnectionController) WriteCurrentLimitData(overloadProtectionCurrentsPerPhase []float64, selfConsumptionCurrentsPerPhase []float64, evData EVDataType) error {
+func (c *ConnectionController) WriteCurrentLimitData(overloadProtectionCurrentsPerPhase []float64, selfConsumptionCurrentsPerPhase []float64, evData *EVDataType) error {
 	var electricalParameterDescription []feature.ElectricalConnectionParameterDescriptionDataType
 	var measurementDescription []feature.MeasurementDatasetDefinitionsType
 	var limitDescription []feature.LoadControlLimitDescriptionDataType
