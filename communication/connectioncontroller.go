@@ -317,10 +317,6 @@ func (c *ConnectionController) updateMeasurementData() {
 		electricalPermittedData = f.GetElectricalConnectionPermittedData()
 	}
 
-	if measurementDescription == nil || measurementData == nil || electricalParameterDescription == nil || electricalDescription == nil || electricalPermittedData == nil {
-		return
-	}
-
 	var measurementCurrentIds []uint
 	var measurementPowerIds []uint
 	var measurementChargeID uint
