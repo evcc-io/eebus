@@ -46,10 +46,6 @@ func NewConnectionController(log util.Logger, conn ship.Conn, local spine.Device
 		EVData: EVDataType{
 			ConnectedPhases: 1,
 			Limits:          make(map[uint]EVCurrentLimitType),
-			Measurements: EVMeasurementsType{
-				Current: sync.Map{},
-				Power:   sync.Map{},
-			},
 		},
 	}
 
