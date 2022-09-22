@@ -19,17 +19,20 @@ import (
 )
 
 type ConnectionController struct {
-	msgNum               uint64 // 64bit values need to be defined on top of the struct to make atomic commands work on 32bit systems
-	heartBeatNum         uint64 // see https://github.com/golang/go/issues/11891
-	subscriptionNum      uint64
-	log                  util.Logger
-	conn                 ship.Conn
-	localDevice          spine.Device
-	remoteDevice         spine.Device // TODO multiple remote devices
-	sequencesController  *SequencesController
-	stopMux              sync.Mutex
-	stopHeartbeatC       chan struct{}
-	stopKeepSpineAliveC  chan struct{}
+	msgNum              uint64 // 64bit values need to be defined on top of the struct to make atomic commands work on 32bit systems
+	heartBeatNum        uint64 // see https://github.com/golang/go/issues/11891
+	subscriptionNum     uint64
+	log                 util.Logger
+	conn                ship.Conn
+	localDevice         spine.Device
+	remoteDevice        spine.Device // TODO multiple remote devices
+	sequencesController *SequencesController
+	stopMux             sync.Mutex
+	stopHeartbeatC      chan struct{}
+	stopKeepSpineAliveC chan struct{}
+	lastSpineMsg        time.Time
+	spineMsgMux         sync.Mutex
+
 	subscriptionEntries  []model.SubscriptionManagementEntryDataType
 	specificationVersion model.SpecificationVersionType
 	// EV specific data
@@ -191,9 +194,11 @@ func (c *ConnectionController) stopKeepSpineAlive() {
 	}
 }
 
+// this is a hack to get the websocket connection to an Elli device open
+// as it gets closed when there are no messages sent or received within 10 minutes
 func (c *ConnectionController) keepSpineAlive() {
 	c.stopKeepSpineAliveC = make(chan struct{})
-	ticker := time.NewTicker(8 * time.Minute)
+	ticker := time.NewTicker(1 * time.Minute)
 
 	for {
 		select {
@@ -205,6 +210,10 @@ func (c *ConnectionController) keepSpineAlive() {
 			// is this an Elli device?
 			if brand != "Elli" {
 				return
+			}
+			// only proceed if the last sent of received SPINE message is more than 8 minutes old
+			if timeDiff := time.Since(c.lastSpineMsg); timeDiff.Minutes() < 8.0 {
+				continue
 			}
 			if err := c.requestNodeManagementUseCaseData(); err != nil {
 				c.log.Println("Sending UseCaseData read request failed: ", err)

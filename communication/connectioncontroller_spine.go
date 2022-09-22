@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"sync/atomic"
+	"time"
 
 	"github.com/evcc-io/eebus/spine"
 	"github.com/evcc-io/eebus/spine/model"
@@ -53,6 +54,13 @@ func (c *ConnectionController) sendSpineMessage(datagram model.DatagramType) err
 	}
 
 	err = c.conn.Write(json.RawMessage(payload))
+
+	// sending a proper spine message succeeded
+	if err == nil {
+		c.spineMsgMux.Lock()
+		c.lastSpineMsg = time.Now()
+		c.spineMsgMux.Unlock()
+	}
 
 	return err
 }
@@ -151,6 +159,13 @@ func (c *ConnectionController) processDatagram(datagram model.DatagramType) erro
 
 	if err != nil {
 		return err
+	}
+
+	// we received a proper SPINE message
+	if err == nil {
+		c.spineMsgMux.Lock()
+		c.lastSpineMsg = time.Now()
+		c.spineMsgMux.Unlock()
 	}
 
 	// TODO we need to process resultData responses also!
