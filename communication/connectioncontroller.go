@@ -30,7 +30,7 @@ type ConnectionController struct {
 	stopMux             sync.Mutex
 	stopHeartbeatC      chan struct{}
 	stopKeepSpineAliveC chan struct{}
-	lastSpineMsg        time.Time
+	lastRecvdSpineMsg   time.Time // timestamp of last SPINE message received, for fixing the 10 minutes timeout disconnect with Elli
 	spineMsgMux         sync.Mutex
 
 	subscriptionEntries  []model.SubscriptionManagementEntryDataType
@@ -212,7 +212,7 @@ func (c *ConnectionController) keepSpineAlive() {
 				return
 			}
 			// only proceed if the last sent of received SPINE message is more than 8 minutes old
-			if timeDiff := time.Since(c.lastSpineMsg); timeDiff.Minutes() < 8.0 {
+			if timeDiff := time.Since(c.lastRecvdSpineMsg); timeDiff.Minutes() < 8.0 {
 				continue
 			}
 			if err := c.requestNodeManagementUseCaseData(); err != nil {

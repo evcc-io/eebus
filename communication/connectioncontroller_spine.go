@@ -55,13 +55,6 @@ func (c *ConnectionController) sendSpineMessage(datagram model.DatagramType) err
 
 	err = c.conn.Write(json.RawMessage(payload))
 
-	// sending a proper spine message succeeded
-	if err == nil {
-		c.spineMsgMux.Lock()
-		c.lastSpineMsg = time.Now()
-		c.spineMsgMux.Unlock()
-	}
-
 	return err
 }
 
@@ -164,7 +157,7 @@ func (c *ConnectionController) processDatagram(datagram model.DatagramType) erro
 	// we received a proper SPINE message
 	if err == nil {
 		c.spineMsgMux.Lock()
-		c.lastSpineMsg = time.Now()
+		c.lastRecvdSpineMsg = time.Now()
 		c.spineMsgMux.Unlock()
 	}
 
