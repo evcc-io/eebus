@@ -3,7 +3,7 @@ package ship
 import (
 	"fmt"
 
-	"github.com/denisbrodbeck/machineid"
+	"github.com/panta/machineid"
 )
 
 // UniqueID creates ship ID with given prefix and salted by appID

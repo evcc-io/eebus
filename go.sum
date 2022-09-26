@@ -12,6 +12,8 @@ github.com/miekg/dns v1.1.43/go.mod h1:+evo5L0630/F6ca/Z9+GAqzhjGyn8/c+TBaOyfEl0
 github.com/mitchellh/mapstructure v1.4.1 h1:CpVNEelQCZBooIPDn+AR3NpivK/TIKU8bDxdASFVQag=
 github.com/mitchellh/mapstructure v1.4.1/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
 github.com/onsi/gomega v1.17.0 h1:9Luw4uT5HTjHTN8+aNcSThgH1vdXnmdJ8xIfZ4wyTRE=
+github.com/panta/machineid v1.0.1 h1:IUIF47trYWR813A3cO/MnTEpesPFOhvejyauCGh1KI0=
+github.com/panta/machineid v1.0.1/go.mod h1:JXdlT3pyUqvDz7Pf1VeU2hRa1DIfOu0zBrj+xSvVbDg=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/rickb777/date v1.17.0 h1:Qk1MUtTLFfIWYhRaNRyk1t7LmjfkjOEELacQPsoh7Nw=
 github.com/rickb777/date v1.17.0/go.mod h1:b3AnLwjEdg1YWLUFnAd/lUq3JDJmMRXi/Onm8q0zlQg=
