@@ -103,7 +103,7 @@ func (c *Transport) readPump() {
 			if err == nil {
 				if len(b) > 2 {
 					b = bytes.TrimSuffix(b, []byte{0x00}) // workaround
-					c.log().Println("recv:", string(b))
+					c.log().Println("recv:", string(b[1:]))
 				}
 
 				if typ != websocket.BinaryMessage {
