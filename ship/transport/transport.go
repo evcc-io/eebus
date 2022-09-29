@@ -190,7 +190,7 @@ func (c *Transport) writePump() {
 			}
 
 			if len(msg) > 2 {
-				c.log().Println("send:", string(msg))
+				c.log().Println("send:", string(msg[1:]))
 			}
 
 			err := c.conn.WriteMessage(websocket.BinaryMessage, msg)

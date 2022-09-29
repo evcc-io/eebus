@@ -42,7 +42,11 @@ func (c *ConnectionController) UpdateDevice(stateChange model.NetworkManagementS
 	if stateChange == model.NetworkManagementStateChangeTypeAdded && isEVConnected {
 		c.log.Println("detected ev connection")
 
-		c.clientData.EVData.ChargeState = EVChargeStateEnumTypeActive
+		// a new EV is connected, so reset all data
+		c.clientData.EVData = EVDataType{
+			ChargeState: EVChargeStateEnumTypeActive,
+			Limits:      make(map[uint]EVCurrentLimitType),
+		}
 
 		err := c.requestNodeManagementUseCaseData()
 		if err != nil {

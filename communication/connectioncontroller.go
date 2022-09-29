@@ -19,23 +19,29 @@ import (
 )
 
 type ConnectionController struct {
-	msgNum               uint64 // 64bit values need to be defined on top of the struct to make atomic commands work on 32bit systems
-	heartBeatNum         uint64 // see https://github.com/golang/go/issues/11891
-	subscriptionNum      uint64
-	log                  util.Logger
-	conn                 ship.Conn
-	localDevice          spine.Device
-	remoteDevice         spine.Device // TODO multiple remote devices
-	sequencesController  *SequencesController
-	stopMux              sync.Mutex
-	stopHeartbeatC       chan struct{}
-	stopKeepSpineAliveC  chan struct{}
+	msgNum              uint64 // 64bit values need to be defined on top of the struct to make atomic commands work on 32bit systems
+	heartBeatNum        uint64 // see https://github.com/golang/go/issues/11891
+	subscriptionNum     uint64
+	log                 util.Logger
+	conn                ship.Conn
+	localDevice         spine.Device
+	remoteDevice        spine.Device // TODO multiple remote devices
+	sequencesController *SequencesController
+	stopMux             sync.Mutex
+	stopHeartbeatC      chan struct{}
+	stopKeepSpineAliveC chan struct{}
+	lastRecvdSpineMsg   time.Time // timestamp of last SPINE message received, for fixing the 10 minutes timeout disconnect with Elli
+	spineMsgMux         sync.Mutex
+
 	subscriptionEntries  []model.SubscriptionManagementEntryDataType
 	specificationVersion model.SpecificationVersionType
 	// EV specific data
 	clientData *EVSEClientDataType
 	// EVCC specific
 	dataUpdateHandler func(EVDataElementUpdateType, *EVSEClientDataType)
+
+	// defines the system voltage
+	Voltage float64
 }
 
 func NewConnectionController(log util.Logger, conn ship.Conn, local spine.Device) *ConnectionController {
@@ -43,10 +49,6 @@ func NewConnectionController(log util.Logger, conn ship.Conn, local spine.Device
 		EVData: EVDataType{
 			ConnectedPhases: 1,
 			Limits:          make(map[uint]EVCurrentLimitType),
-			Measurements: EVMeasurementsType{
-				Current: make(map[uint]float64),
-				Power:   make(map[uint]float64),
-			},
 		},
 	}
 
@@ -57,6 +59,7 @@ func NewConnectionController(log util.Logger, conn ship.Conn, local spine.Device
 		localDevice:          local,
 		clientData:           &clientData,
 		sequencesController:  NewSequencesController(log),
+		Voltage:              230.0,
 	}
 
 	return c
@@ -191,9 +194,11 @@ func (c *ConnectionController) stopKeepSpineAlive() {
 	}
 }
 
+// this is a hack to get the websocket connection to an Elli device open
+// as it gets closed when there are no messages sent or received within 10 minutes
 func (c *ConnectionController) keepSpineAlive() {
 	c.stopKeepSpineAliveC = make(chan struct{})
-	ticker := time.NewTicker(8 * time.Minute)
+	ticker := time.NewTicker(1 * time.Minute)
 
 	for {
 		select {
@@ -205,6 +210,10 @@ func (c *ConnectionController) keepSpineAlive() {
 			// is this an Elli device?
 			if brand != "Elli" {
 				return
+			}
+			// only proceed if the last sent of received SPINE message is more than 8 minutes old
+			if timeDiff := time.Since(c.lastRecvdSpineMsg); timeDiff.Minutes() < 8.0 {
+				continue
 			}
 			if err := c.requestNodeManagementUseCaseData(); err != nil {
 				c.log.Println("Sending UseCaseData read request failed: ", err)
@@ -313,17 +322,10 @@ func (c *ConnectionController) updateMeasurementData() {
 		electricalPermittedData = f.GetElectricalConnectionPermittedData()
 	}
 
-	if measurementDescription == nil || measurementData == nil || electricalParameterDescription == nil || electricalDescription == nil || electricalPermittedData == nil {
-		return
-	}
-
 	var measurementCurrentIds []uint
 	var measurementPowerIds []uint
 	var measurementChargeID uint
 	var measurementSoCID uint
-
-	// Default voltage is 230V
-	voltage := 230.0
 
 	for _, item := range measurementDescription {
 		switch item.ScopeType {
@@ -406,7 +408,7 @@ func (c *ConnectionController) updateMeasurementData() {
 		minTotalPower := 0.0
 		var phase uint
 		for phase = 1; phase <= c.clientData.EVData.ConnectedPhases; phase++ {
-			minTotalPower += c.clientData.EVData.Limits[phase].Min * voltage
+			minTotalPower += c.clientData.EVData.Limits[phase].Min * c.Voltage
 		}
 
 		minCurrent := 6.0
@@ -419,7 +421,7 @@ func (c *ConnectionController) updateMeasurementData() {
 
 		if minTotalPower < c.clientData.EVData.LimitsPower.Min {
 			// Adjust min current to match min power
-			minCurrent = c.clientData.EVData.LimitsPower.Min / voltage / float64(c.clientData.EVData.ConnectedPhases)
+			minCurrent = c.clientData.EVData.LimitsPower.Min / c.Voltage / float64(c.clientData.EVData.ConnectedPhases)
 		}
 
 		var thePhase uint
@@ -444,8 +446,8 @@ func (c *ConnectionController) updateMeasurementData() {
 				continue
 			}
 
-			minPower += c.clientData.EVData.Limits[thePhase].Min * voltage
-			maxPower += c.clientData.EVData.Limits[thePhase].Max * voltage
+			minPower += c.clientData.EVData.Limits[thePhase].Min * c.Voltage
+			maxPower += c.clientData.EVData.Limits[thePhase].Max * c.Voltage
 		}
 		if c.clientData.EVData.LimitsPower.Min < minPower {
 			c.clientData.EVData.LimitsPower.Min = minPower
@@ -480,33 +482,33 @@ func (c *ConnectionController) updateMeasurementData() {
 		_, found := FindValueInSlice(measurementCurrentIds, item.MeasurementId)
 		if found {
 			c.clientData.EVData.Measurements.Timestamp = item.Timestamp
-			c.clientData.EVData.Measurements.Current[phase] = item.Value
+			c.clientData.EVData.Measurements.Current.Store(phase, item.Value)
 		}
 
 		_, found = FindValueInSlice(measurementPowerIds, item.MeasurementId)
 		if found {
 			c.clientData.EVData.Measurements.Timestamp = item.Timestamp
 
-			if phaseCurrent, ok := c.clientData.EVData.Measurements.Current[phase]; ok {
+			if phaseCurrent, ok := c.clientData.EVData.Measurements.Current.Load(phase); ok {
 				// in case we didn't receive power measurements, use current measurements
 				if item.Value == 0 && phaseCurrent != 0 {
 					c.log.Printf("L%d power fallback\n", phase)
-					item.Value = phaseCurrent * voltage
+					item.Value = phaseCurrent.(float64) * c.Voltage
 				}
 			}
-			c.clientData.EVData.Measurements.Power[phase] = item.Value
+			c.clientData.EVData.Measurements.Power.Store(phase, item.Value)
 		} else {
 			c.clientData.EVData.Measurements.Timestamp = item.Timestamp
 			item.Value = 0
 
-			if phaseCurrent, ok := c.clientData.EVData.Measurements.Current[phase]; ok {
+			if phaseCurrent, ok := c.clientData.EVData.Measurements.Current.Load(phase); ok {
 				// in case we didn't receive power measurements, use current measurements
 				if phaseCurrent != 0 {
 					c.log.Printf("L%d power fallback\n", phase)
-					item.Value = phaseCurrent * voltage
+					item.Value = phaseCurrent.(float64) * c.Voltage
 				}
 			}
-			c.clientData.EVData.Measurements.Power[phase] = item.Value
+			c.clientData.EVData.Measurements.Power.Store(phase, item.Value)
 		}
 	}
 
@@ -514,8 +516,8 @@ func (c *ConnectionController) updateMeasurementData() {
 		// we did not receive any Power measurements, so calculate them
 		var phase uint
 		for phase = 1; phase <= c.clientData.EVData.ConnectedPhases; phase++ {
-			if phaseCurrent, ok := c.clientData.EVData.Measurements.Current[phase]; ok {
-				c.clientData.EVData.Measurements.Power[phase] = phaseCurrent * voltage
+			if phaseCurrent, ok := c.clientData.EVData.Measurements.Current.Load(phase); ok {
+				c.clientData.EVData.Measurements.Power.Store(phase, phaseCurrent.(float64)*c.Voltage)
 			}
 		}
 	}
@@ -528,11 +530,11 @@ func (c *ConnectionController) updateMeasurementData() {
 	powerLog := "current power: "
 
 	for phase = 1; phase <= c.clientData.EVData.ConnectedPhases; phase++ {
-		if phaseCurrent, ok := c.clientData.EVData.Measurements.Current[phase]; ok {
+		if phaseCurrent, ok := c.clientData.EVData.Measurements.Current.Load(phase); ok {
 			currentsLog += fmt.Sprintf("L%d %.1fA ", phase, phaseCurrent)
 		}
-		if phasePower, ok := c.clientData.EVData.Measurements.Power[phase]; ok {
-			totalPower += phasePower
+		if phasePower, ok := c.clientData.EVData.Measurements.Power.Load(phase); ok {
+			totalPower += phasePower.(float64)
 			powerLog += fmt.Sprintf("L%d %.1fW ", phase, phasePower)
 		}
 	}
@@ -854,7 +856,7 @@ func (c *ConnectionController) WriteChargingPlan(chargingPlan EVChargingPlan) er
 }
 
 // TODO error handling and returning
-func (c *ConnectionController) WriteCurrentLimitData(overloadProtectionCurrentsPerPhase []float64, selfConsumptionCurrentsPerPhase []float64, evData EVDataType) error {
+func (c *ConnectionController) WriteCurrentLimitData(overloadProtectionCurrentsPerPhase []float64, selfConsumptionCurrentsPerPhase []float64, evData *EVDataType) error {
 	var electricalParameterDescription []feature.ElectricalConnectionParameterDescriptionDataType
 	var measurementDescription []feature.MeasurementDatasetDefinitionsType
 	var limitDescription []feature.LoadControlLimitDescriptionDataType
