@@ -53,9 +53,7 @@ func (c *connection) IsConnectionClosed() bool {
 }
 
 func (c *connection) Read() (json.RawMessage, error) {
-	timer := time.NewTimer(600 * time.Second)
-
-	msg, err := c.t.ReadMessage(timer.C)
+	msg, err := c.t.ReadMessage(nil)
 	if err != nil {
 		return nil, err
 	}
