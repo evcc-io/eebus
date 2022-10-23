@@ -55,7 +55,7 @@ func main() {
 
 	cert := certificate(details)
 
-	id, err := ship.UniqueID(details.BrandName, "eebus")
+	id, err := ship.UniqueIDWithProtectedID(details.BrandName, "eebus")
 	if err != nil {
 		panic(err)
 	}
