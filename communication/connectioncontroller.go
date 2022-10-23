@@ -122,7 +122,6 @@ func (c *ConnectionController) Boot() error {
 	c.sequencesController.Boot()
 
 	go c.Run()
-	go c.keepSpineAlive()
 
 	err := c.requestNodeManagementDetailedDiscoveryData()
 	if err != nil {
@@ -133,7 +132,6 @@ func (c *ConnectionController) Boot() error {
 }
 
 func (c *ConnectionController) CloseConnection(err error) {
-	c.stopKeepSpineAlive()
 	c.stopHeartbeat()
 	_ = c.conn.Close()
 }
@@ -170,62 +168,9 @@ func (c *ConnectionController) Run() {
 		c.log.Println("error processing incoming message: ", err)
 	}
 
-	c.stopKeepSpineAlive()
 	c.stopHeartbeat()
 	_ = c.conn.Close()
 }
-
-// Workaround for Elli Charger closing the connection 10 minutes after the last message
-// when no EV is connected and no more messages are exchanged in that timeframe.
-
-func (c *ConnectionController) IsKeepAliveClosed() bool {
-	select {
-	case <-c.stopKeepSpineAliveC:
-		return true
-	default:
-	}
-
-	return false
-}
-
-func (c *ConnectionController) stopKeepSpineAlive() {
-	if c.stopKeepSpineAliveC != nil && !c.IsKeepAliveClosed() {
-		close(c.stopKeepSpineAliveC)
-	}
-}
-
-// this is a hack to get the websocket connection to an Elli device open
-// as it gets closed when there are no messages sent or received within 10 minutes
-func (c *ConnectionController) keepSpineAlive() {
-	c.stopKeepSpineAliveC = make(chan struct{})
-	ticker := time.NewTicker(1 * time.Minute)
-
-	for {
-		select {
-		case <-ticker.C:
-			brand := c.clientData.EVSEData.Manufacturer.BrandName
-			if c.remoteDevice == nil || brand == "" {
-				continue
-			}
-			// is this an Elli device?
-			if brand != "Elli" {
-				return
-			}
-			// only proceed if the last sent of received SPINE message is more than 8 minutes old
-			if timeDiff := time.Since(c.lastRecvdSpineMsg); timeDiff.Minutes() < 8.0 {
-				continue
-			}
-			if err := c.requestNodeManagementUseCaseData(); err != nil {
-				c.log.Println("Sending UseCaseData read request failed: ", err)
-				return
-			}
-		case <-c.stopKeepSpineAliveC:
-			return
-		}
-	}
-}
-
-// end workaround
 
 // Feature specific
 
